@@ -24,18 +24,17 @@ export default function ContactPage() {
     <>
       <Navbar />
       <main>
-        <section className="section-dark cyber-grid" style={{ paddingTop: 140, paddingBottom: 100 }}>
-          <div className="glow-orb glow-orb-purple" style={{ width: 500, height: 500, top: -150, right: -150, opacity: 0.35 }} />
+        <section className="section-hero-light dot-pattern" style={{ paddingTop: 140, paddingBottom: 100 }}>
+          <div className="glow-orb glow-orb-purple" style={{ width: 420, height: 420, top: -120, right: -120, opacity: 0.14 }} />
           <div className="section-container" style={{ position: "relative", zIndex: 1 }}>
             <motion.p {...fin(0)} className="text-overline" style={{ marginBottom: 16 }}>Get In Touch</motion.p>
-            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: "white", marginBottom: 16, lineHeight: 1.1 }}>
+            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: "#4C1D95", marginBottom: 16, lineHeight: 1.1 }}>
               Start Your <span className="text-gold-shimmer">Certification Journey</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(255,255,255,0.55)", maxWidth: 520, lineHeight: 1.75 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.6)", maxWidth: 520, lineHeight: 1.75 }}>
               Our certification team is ready to assess your business and guide you through the process.
             </motion.p>
           </div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, background: "linear-gradient(to bottom, transparent, var(--bg-light))", zIndex: 2, pointerEvents: "none" }} />
         </section>
 
         <section style={{ padding: "80px 0", background: "var(--bg-light)" }}>

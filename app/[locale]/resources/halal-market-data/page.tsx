@@ -29,14 +29,14 @@ export default function HalalMarketDataPage() {
     <>
       <Navbar />
       <main style={{ paddingTop: 72 }}>
-        <section style={{ padding: "80px 0 60px", background: "var(--gradient-hero)", position: "relative", overflow: "hidden" }}>
-          <div className="glow-orb glow-orb-gold" style={{ width: 500, height: 500, top: -100, right: -100 }} />
+        <section style={{ padding: "80px 0 60px", background: "var(--bg-surface)", position: "relative", overflow: "hidden" }}>
+          <div className="glow-orb glow-orb-purple" style={{ width: 450, height: 450, top: -100, right: -100, opacity: 0.14 }} />
           <div className="pattern-overlay" />
           <div className="section-container" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ fontFamily: "var(--font-accent)", fontSize: 11, letterSpacing: "0.25em", color: "var(--color-text-gold)", marginBottom: 20, textTransform: "uppercase" }}>
               Market Intelligence
             </motion.p>
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(32px,4vw,54px)", fontWeight: 300, marginBottom: 20 }}>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(32px,4vw,54px)", fontWeight: 300, marginBottom: 20, color: "#4C1D95" }}>
               Halal Economy Intelligence Hub
             </motion.h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "var(--color-text-muted)", maxWidth: 540, margin: "0 auto" }}>

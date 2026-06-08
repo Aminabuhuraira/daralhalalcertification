@@ -30,18 +30,17 @@ export default function LearnPage() {
     <>
       <Navbar />
       <main>
-        <section className="section-dark cyber-grid" style={{ paddingTop: 140, paddingBottom: 100 }}>
-          <div className="glow-orb glow-orb-purple" style={{ width: 500, height: 500, bottom: -100, right: -100, opacity: 0.3 }} />
+        <section className="section-hero-light dot-pattern" style={{ paddingTop: 140, paddingBottom: 100 }}>
+          <div className="glow-orb glow-orb-purple" style={{ width: 420, height: 420, bottom: -80, right: -80, opacity: 0.14 }} />
           <div className="section-container" style={{ position: "relative", zIndex: 1 }}>
             <motion.p {...fin(0)} className="text-overline" style={{ marginBottom: 20 }}>Knowledge Hub</motion.p>
-            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "white", marginBottom: 20, lineHeight: 1.1 }}>
+            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, lineHeight: 1.1 }}>
               Master <span className="text-gold-shimmer">Halal Compliance</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(255,255,255,0.55)", maxWidth: 520, lineHeight: 1.75 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.6)", maxWidth: 520, lineHeight: 1.75 }}>
               Professional courses for business owners, compliance officers, and quality managers. Learn at your own pace.
             </motion.p>
           </div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, background: "linear-gradient(to bottom, transparent, var(--bg-light))", zIndex: 2, pointerEvents: "none" }} />
         </section>
 
         <section style={{ padding: "80px 0", background: "var(--bg-light)" }}>

@@ -30,14 +30,14 @@ export default function VerifyPage() {
     <>
       <Navbar />
       <main>
-        <section className="section-dark cyber-grid" style={{ paddingTop: 140, paddingBottom: 100 }}>
-          <div className="glow-orb glow-orb-gold" style={{ width: 400, height: 400, bottom: -100, left: "50%", transform: "translateX(-50%)", opacity: 0.2 }} />
+        <section className="section-hero-light dot-pattern" style={{ paddingTop: 140, paddingBottom: 100 }}>
+          <div className="glow-orb glow-orb-purple" style={{ width: 380, height: 380, bottom: -80, left: "50%", transform: "translateX(-50%)", opacity: 0.14 }} />
           <div className="section-container" style={{ position: "relative", zIndex: 1, maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-overline" style={{ marginBottom: 20 }}>Certificate Lookup</motion.p>
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: "white", marginBottom: 20 }}>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20 }}>
               Verify <span className="text-gold-shimmer">Halal Certification</span>
             </motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(255,255,255,0.55)", marginBottom: 40, lineHeight: 1.7 }}>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.6)", marginBottom: 40, lineHeight: 1.7 }}>
               Enter the certificate ID printed on the product label to verify its authenticity and current validity.
             </motion.p>
 
@@ -52,9 +52,8 @@ export default function VerifyPage() {
               />
               <button onClick={verify} className="btn-solid-gold" style={{ borderRadius: 6, margin: 6, padding: "10px 24px" }}>Verify</button>
             </motion.div>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 12 }}>Certificate numbers start with "DAH" — try DAH-2024-0001</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", marginTop: 12 }}>Certificate numbers start with "DAH" — try DAH-2024-0001</p>
           </div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, background: "linear-gradient(to bottom, transparent, var(--bg-light))", zIndex: 2, pointerEvents: "none" }} />
         </section>
 
         {result !== "idle" && (

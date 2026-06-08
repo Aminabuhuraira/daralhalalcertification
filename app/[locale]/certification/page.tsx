@@ -41,14 +41,14 @@ export default function CertificationPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="section-dark cyber-grid" style={{ paddingTop: 140, paddingBottom: 100 }}>
-          <div className="glow-orb glow-orb-gold" style={{ width: 500, height: 500, bottom: -150, right: -100, opacity: 0.25 }} />
+        <section className="section-hero-light dot-pattern" style={{ paddingTop: 140, paddingBottom: 100 }}>
+          <div className="glow-orb glow-orb-purple" style={{ width: 450, height: 450, bottom: -120, right: -80, opacity: 0.14 }} />
           <div className="section-container" style={{ position: "relative", zIndex: 1 }}>
             <motion.p {...fin(0)} className="text-overline" style={{ marginBottom: 20 }}>Halal Certification</motion.p>
-            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "white", marginBottom: 20, maxWidth: 680, lineHeight: 1.1 }}>
+            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, maxWidth: 680, lineHeight: 1.1 }}>
               Certification Built for<br /><span className="text-gold-shimmer">Global Markets</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(255,255,255,0.6)", maxWidth: 560, lineHeight: 1.75, marginBottom: 36 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(10,21,53,0.6)", maxWidth: 560, lineHeight: 1.75, marginBottom: 36 }}>
               Our copyright-protected certification mark is recognized in 57+ countries. Get certified and access Africa, the Middle East, Southeast Asia, and beyond.
             </motion.p>
             <motion.div {...fin(0.45)} style={{ display: "flex", gap: 12 }}>
@@ -56,7 +56,6 @@ export default function CertificationPage() {
               <Link href={`/${locale}/verify`} className="btn-ghost">Verify a Certificate</Link>
             </motion.div>
           </div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, background: "linear-gradient(to bottom, transparent, var(--bg-light))", zIndex: 2, pointerEvents: "none" }} />
         </section>
 
         {/* 12 Sectors */}

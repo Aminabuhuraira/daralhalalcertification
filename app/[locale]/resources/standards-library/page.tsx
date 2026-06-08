@@ -33,9 +33,9 @@ export default function StandardsLibraryPage() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 72, minHeight: "100vh", background: "var(--gradient-hero)" }}>
+      <main style={{ paddingTop: 72, minHeight: "100vh", background: "var(--bg-surface)" }}>
         <section style={{ padding: "80px 0 100px", position: "relative", overflow: "hidden" }}>
-          <div className="glow-orb glow-orb-purple" style={{ width: 500, height: 500, top: -100, right: -100 }} />
+          <div className="glow-orb glow-orb-purple" style={{ width: 450, height: 450, top: -100, right: -100, opacity: 0.14 }} />
           <div className="pattern-overlay" />
 
           <div className="section-container" style={{ position: "relative", zIndex: 1 }}>
@@ -43,7 +43,7 @@ export default function StandardsLibraryPage() {
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ fontFamily: "var(--font-accent)", fontSize: 11, letterSpacing: "0.25em", color: "var(--color-text-gold)", marginBottom: 20, textTransform: "uppercase" }}>
                 Reference Library
               </motion.p>
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(32px,4vw,52px)", fontWeight: 300, marginBottom: 16 }}>
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(32px,4vw,52px)", fontWeight: 300, marginBottom: 16, color: "#4C1D95" }}>
                 Halal Standards Library
               </motion.h1>
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "var(--color-text-muted)", maxWidth: 540, margin: "0 auto" }}>

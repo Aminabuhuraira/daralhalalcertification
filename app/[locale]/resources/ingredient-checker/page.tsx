@@ -58,7 +58,7 @@ export default function IngredientCheckerPage() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 72, minHeight: "100vh", background: "var(--gradient-hero)" }}>
+      <main style={{ paddingTop: 72, minHeight: "100vh", background: "var(--bg-surface)" }}>
         <section style={{ padding: "80px 0 100px", position: "relative", overflow: "hidden" }}>
           <div className="glow-orb glow-orb-gold" style={{ width: 500, height: 500, top: -100, right: -100 }} />
           <div className="pattern-overlay" />

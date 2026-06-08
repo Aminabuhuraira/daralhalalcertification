@@ -27,18 +27,17 @@ export default function AboutPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="section-dark cyber-grid" style={{ paddingTop: 140, paddingBottom: 100 }}>
-          <div className="glow-orb glow-orb-purple" style={{ width: 600, height: 600, top: -200, right: -200, opacity: 0.4 }} />
+        <section className="section-hero-light dot-pattern" style={{ paddingTop: 140, paddingBottom: 100 }}>
+          <div className="glow-orb glow-orb-purple" style={{ width: 500, height: 500, top: -180, right: -180, opacity: 0.18 }} />
           <div className="section-container" style={{ position: "relative", zIndex: 1 }}>
             <motion.p {...fin(0)} className="text-overline" style={{ marginBottom: 20 }}>Our Story</motion.p>
-            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "white", marginBottom: 20, maxWidth: 700, lineHeight: 1.1 }}>
+            <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, maxWidth: 700, lineHeight: 1.1 }}>
               Building the World's Most<br /><span className="text-gold-shimmer">Trusted Halal Authority</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(255,255,255,0.6)", maxWidth: 580, lineHeight: 1.75 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(10,21,53,0.6)", maxWidth: 580, lineHeight: 1.75 }}>
               From Abuja, Nigeria, to the world — one halal certification at a time. We verify quality standards that connect Nigerian businesses to global markets.
             </motion.p>
           </div>
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, background: "linear-gradient(to bottom, transparent, var(--bg-light))", zIndex: 2, pointerEvents: "none" }} />
         </section>
 
         {/* Mission + Vision */}
