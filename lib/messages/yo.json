@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Ile",
+    "about": "Nipa Wa",
+    "certify": "Gba Iwe-ẹri Halal",
+    "verify": "Ṣe Àtúpalẹ̀",
+    "learn": "Kọ",
+    "resources": "Awọn Ohun-elo",
+    "contact": "Kan Si Wa",
+    "getCertified": "Bẹwẹ Bayi"
+  },
+  "hero": {
+    "supertitle": "ÀJỌ HALAL ÀKỌ́KỌGBÀ NÍLẸ̀ NÀÌJÍRÍÀ",
+    "headline1": "Ọ̀nà Rẹ Sí",
+    "headline2": "Ọjà Halal Àgbáyé",
+    "subheadline": "Iwe-ẹri halal kii ṣe aami ẹsin nikan — o jẹ aami didara, imototo ati iṣelọpọ ọṣọ ti a mọ ni agbaye. Ṣí iṣowo rẹ si eto-ọrọ halal àgbáyé ti dọla tiriliọnu 3.",
+    "ctaPrimary": "Gba Iwe-ẹri Loni",
+    "ctaSecondary": "Ṣe Àtúpalẹ̀ Ọja",
+    "stat1": "Awọn Ọjà Afirika 54",
+    "stat2": "Awọn Ẹka 12 ti a Fọwọsi",
+    "stat3": "Awọn Ọja 2,400+ ti a Fọwọsi"
+  },
+  "footer": {
+    "tagline": "Àjọ Halal ti Nàìjíríà",
+    "newsletter": "Duro niwaju ọjà halal",
+    "subscribe": "Forukọsilẹ",
+    "noSpam": "Ko si spam. Ìmọ̀ ọjà nikan.",
+    "copyright": "© 2025 Dar Al Halal Certification. Gbogbo ẹtọ wa ni ipamọ.",
+    "proudly": "Yorùbá pẹlu Igberaga. Mọ ni Àgbáyé."
+  }
+}

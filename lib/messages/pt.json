@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "certify": "Certificação",
+    "verify": "Verificar",
+    "learn": "Aprender",
+    "resources": "Recursos",
+    "contact": "Contato",
+    "getCertified": "Candidatar-se"
+  },
+  "hero": {
+    "supertitle": "PRINCIPAL AUTORIDADE HALAL DA NIGÉRIA",
+    "headline1": "Sua Porta de Entrada para o",
+    "headline2": "Mercado Halal Global",
+    "subheadline": "A certificação halal é mais do que um rótulo religioso — é uma marca de qualidade, higiene e produção ética reconhecida globalmente. Abra seu negócio para a economia halal global de US$ 3 trilhões.",
+    "ctaPrimary": "Obter Certificação Hoje",
+    "ctaSecondary": "Verificar Produto",
+    "stat1": "54 Mercados Africanos",
+    "stat2": "12 Setores Certificados",
+    "stat3": "Mais de 2.400 Produtos Certificados"
+  },
+  "footer": {
+    "tagline": "Autoridade Halal da Nigéria",
+    "newsletter": "Fique à frente do mercado halal",
+    "subscribe": "Assinar",
+    "noSpam": "Sem spam. Apenas insights de mercado.",
+    "copyright": "© 2025 Dar Al Halal Certification. Todos os direitos reservados.",
+    "proudly": "Orgulhosamente Nigeriano. Reconhecido Mundialmente."
+  }
+}

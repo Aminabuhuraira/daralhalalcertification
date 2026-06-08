@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Utama",
+    "about": "Tentang",
+    "certify": "Pensijilan",
+    "verify": "Sahkan",
+    "learn": "Belajar",
+    "resources": "Sumber",
+    "contact": "Hubungi",
+    "getCertified": "Daftar Sekarang"
+  },
+  "hero": {
+    "supertitle": "AUTORITI HALAL TERKEMUKA NIGERIA",
+    "headline1": "Pintu Masuk Anda ke",
+    "headline2": "Pasaran Halal Global",
+    "subheadline": "Pensijilan halal bukan sekadar label agama — ia adalah tanda kualiti, kebersihan dan pengeluaran beretika yang diiktiraf di seluruh dunia. Buka perniagaan anda kepada ekonomi halal global bernilai $3 trilion.",
+    "ctaPrimary": "Dapatkan Pensijilan",
+    "ctaSecondary": "Sahkan Produk",
+    "stat1": "54 Pasaran Afrika",
+    "stat2": "12 Sektor Bertauliah",
+    "stat3": "Lebih 2,400 Produk Bertauliah"
+  },
+  "footer": {
+    "tagline": "Autoriti Halal Nigeria",
+    "newsletter": "Kekal terdahulu dalam pasaran halal",
+    "subscribe": "Langgan",
+    "noSpam": "Tiada spam. Wawasan pasaran sahaja.",
+    "copyright": "© 2025 Dar Al Halal Certification. Hak cipta terpelihara.",
+    "proudly": "Berbangga Nigeria. Diiktiraf Dunia."
+  }
+}

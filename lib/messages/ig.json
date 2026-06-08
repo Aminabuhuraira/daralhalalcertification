@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Ụlọ",
+    "about": "Maka Anyị",
+    "certify": "Nweta Ihe Odide Halal",
+    "verify": "Nyochaa",
+    "learn": "Mụta",
+    "resources": "Akụ",
+    "contact": "Kpọtụrụ Anyị",
+    "getCertified": "Tinye Akwụkwọ Ugbu a"
+  },
+  "hero": {
+    "supertitle": "ỌRỤ HALAL KACHASỊ NKE NAỊJIRỊA",
+    "headline1": "Ọ Bụ Uzo Gị Gaa",
+    "headline2": "Ahịa Halal Ụwa",
+    "subheadline": "Ihe odide halal abụghị naanị akara okpukpe — ọ bụ akara nke àgwà, ọcha na mmepụta atụ egwu nke a nabatara n'ụwa niile. Mepee azụmaahịa gị n'akụ ụwa nke halal nke dọla tiriliọn 3.",
+    "ctaPrimary": "Nweta Ihe Odide Taa",
+    "ctaSecondary": "Nyochaa Ngwaahịa",
+    "stat1": "Ahịa Afrịka 54",
+    "stat2": "Ngalaba 12 e Kwadoro",
+    "stat3": "Ngwaahịa 2,400+ e Kwadoro"
+  },
+  "footer": {
+    "tagline": "Ọrụ Halal Naịjirịa",
+    "newsletter": "Nọrọ n'iru ahịa halal",
+    "subscribe": "Debanye Aha",
+    "noSpam": "Enweghị spam. Ozi ahịa naanị.",
+    "copyright": "© 2025 Dar Al Halal Certification. Ikike niile echekwara.",
+    "proudly": "Ndị Igbo n'Otuto. A Maara n'Ụwa Niile."
+  }
+}

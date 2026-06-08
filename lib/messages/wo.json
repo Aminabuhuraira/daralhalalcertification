@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Kër",
+    "about": "Nun Xam",
+    "certify": "Jël Sertifikaa",
+    "verify": "Wér",
+    "learn": "Jàng",
+    "resources": "Yëkëtu",
+    "contact": "Jokkoo",
+    "getCertified": "Dëmël Léegi"
+  },
+  "hero": {
+    "supertitle": "DËKK BI HALAL BU NJËKK CI NIJERIYA",
+    "headline1": "Sa Biir ci",
+    "headline2": "Màrse Halal Aduna",
+    "subheadline": "Sertifikaasioŋ halal du dëkk aji-joge réew ci kanam — mooy sigil tëralinu, niit ak liggéeyul i bàyyiku ci aduna. Fenku sa liggéey ci économii halal aduna bi $3 trillion.",
+    "ctaPrimary": "Jël Sertifikaa Tey",
+    "ctaSecondary": "Wér Mbindaaxu",
+    "stat1": "Màrse 54 yi Afrika",
+    "stat2": "Domeen 12 yu Wéruñu",
+    "stat3": "Mbindaaxu 2 400+ yu Wéruñu"
+  },
+  "footer": {
+    "tagline": "Dëkk bi Halal Nijeriya",
+    "newsletter": "Yokk ci màrse halal",
+    "subscribe": "Bindu",
+    "noSpam": "Dara spam. Xam xam màrse rekk.",
+    "copyright": "© 2025 Dar Al Halal Certification. Ndëkëtu yëpp di ci am.",
+    "proudly": "Nijeriyaan ak Ñëw. Dëkkante ci Aduna."
+  }
+}

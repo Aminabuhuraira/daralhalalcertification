@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Guriga",
+    "about": "Naga Ah",
+    "certify": "Shahaado Hel",
+    "verify": "Xaqiiji",
+    "learn": "Baaro",
+    "resources": "Kheyraadka",
+    "contact": "La Xiriir",
+    "getCertified": "Codso Hadda"
+  },
+  "hero": {
+    "supertitle": "XUKUUMADDA HALAL EE HORUMARSAN NIGERIA",
+    "headline1": "Albaabkaaga Suuqa",
+    "headline2": "Halal ee Adduunka",
+    "subheadline": "Shahaadada halal ma aha oo kaliya calaamad diimeed — waxay tahay calaamad tayo, nadiifnimo iyo wax soo saarka anshaxa ah ee aqoonsiga adduunka. Fur ganacsigaaga suuqa halal adduunka ee $3 trillion.",
+    "ctaPrimary": "Hel Shahaadada Maanta",
+    "ctaSecondary": "Xaqiiji Alaabta",
+    "stat1": "Suuqyada Afrika 54",
+    "stat2": "Qaybood 12 Oo La Xaqiijiyay",
+    "stat3": "Alaab 2,400+ Oo La Xaqiijiyay"
+  },
+  "footer": {
+    "tagline": "Xukuumadda Halal Nigeria",
+    "newsletter": "Ku soo deg horumarinta suuqa halal",
+    "subscribe": "Iska Diiwaangeli",
+    "noSpam": "Xog xun ma jirto. Macluumaadka suuqa oo keliya.",
+    "copyright": "© 2025 Dar Al Halal Certification. Xuquuqda oo dhammi way dhawrantahay.",
+    "proudly": "Naijeerigaan iyo Xoogga. Caalamka lagu aqoonsaday."
+  }
+}

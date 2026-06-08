@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımızda",
+    "certify": "Sertifika Al",
+    "verify": "Doğrula",
+    "learn": "Öğren",
+    "resources": "Kaynaklar",
+    "contact": "İletişim",
+    "getCertified": "Hemen Başvur"
+  },
+  "hero": {
+    "supertitle": "NİJERYA'NIN ÖNCÜ HELAL OTORİTESİ",
+    "headline1": "Küresel Helal Pazarına",
+    "headline2": "Kapınız",
+    "subheadline": "Helal sertifikası yalnızca bir dini etiket değil — dünya genelinde tanınan kalite, hijyen ve etik üretim standardıdır. İşletmenizi 3 trilyon dolarlık küresel helal ekonomisine açın.",
+    "ctaPrimary": "Bugün Sertifika Alın",
+    "ctaSecondary": "Ürün Doğrula",
+    "stat1": "54 Afrika Pazarı",
+    "stat2": "12 Sertifikalı Sektör",
+    "stat3": "2.400+ Sertifikalı Ürün"
+  },
+  "footer": {
+    "tagline": "Nijerya Helal Otoritesi",
+    "newsletter": "Helal pazarında öne geçin",
+    "subscribe": "Abone Ol",
+    "noSpam": "Spam yok. Yalnızca pazar içgörüleri.",
+    "copyright": "© 2025 Dar Al Halal Certification. Tüm hakları saklıdır.",
+    "proudly": "Gururla Nijeryalı. Dünyaca Tanınan."
+  }
+}

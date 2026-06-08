@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Gida",
+    "about": "Game da Mu",
+    "certify": "Samu Takardar Halal",
+    "verify": "Tabbatar",
+    "learn": "Koyarwa",
+    "resources": "Albarkatu",
+    "contact": "Tuntuɓi",
+    "getCertified": "Yi Amfani Yanzu"
+  },
+  "hero": {
+    "supertitle": "HUKUMAR HALAL TA FARKO A NAJERIYA",
+    "headline1": "Kofarku Zuwa",
+    "headline2": "Kasuwar Halal ta Duniya",
+    "subheadline": "Takardar halal ba kawai alamar addini ba ce — ita ce alamar inganci, tsabta da samarwa mai ɗa'a da ake gane ta a duk duniya. Bude kasuwancin ku ga tattalin arzikin halal na dolar tiriliyan 3.",
+    "ctaPrimary": "Samu Takardar Yau",
+    "ctaSecondary": "Tabbatar da Kaya",
+    "stat1": "Kasuwannin Afirka 54",
+    "stat2": "Sassa 12 da aka Tabbatar",
+    "stat3": "Kayayyaki 2,400+ da aka Tabbatar"
+  },
+  "footer": {
+    "tagline": "Hukumar Halal ta Najeriya",
+    "newsletter": "Kasance a gaban kasuwar halal",
+    "subscribe": "Yi Rajista",
+    "noSpam": "Babu spam. Bayanin kasuwa kawai.",
+    "copyright": "© 2025 Dar Al Halal Certification. Duk hakkokin an kiyaye.",
+    "proudly": "Najeriya da Alfahari. An Gane ta a Duniya."
+  }
+}

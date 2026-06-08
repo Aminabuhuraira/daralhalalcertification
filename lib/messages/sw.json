@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Nyumbani",
+    "about": "Kuhusu",
+    "certify": "Kupata Cheti",
+    "verify": "Thibitisha",
+    "learn": "Jifunza",
+    "resources": "Rasilimali",
+    "contact": "Wasiliana",
+    "getCertified": "Omba Sasa"
+  },
+  "hero": {
+    "supertitle": "MAMLAKA YA KWANZA YA HALAL NCHINI NIGERIA",
+    "headline1": "Lango Lako kwa",
+    "headline2": "Soko la Kimataifa la Halal",
+    "subheadline": "Uthibitisho wa halal si lebo ya kidini tu — ni alama ya ubora, usafi na uzalishaji wa kimaadili inayotambuliwa duniani kote. Fungua biashara yako kwa uchumi wa halal wa trilioni $3.",
+    "ctaPrimary": "Pata Cheti Leo",
+    "ctaSecondary": "Thibitisha Bidhaa",
+    "stat1": "Masoko 54 ya Afrika",
+    "stat2": "Sekta 12 Zilizothibitishwa",
+    "stat3": "Bidhaa 2,400+ Zilizothibitishwa"
+  },
+  "footer": {
+    "tagline": "Mamlaka ya Halal ya Nigeria",
+    "newsletter": "Kaa mbele ya soko la halal",
+    "subscribe": "Jiandikishe",
+    "noSpam": "Hakuna spam. Maarifa ya soko tu.",
+    "copyright": "© 2025 Dar Al Halal Certification. Haki zote zimehifadhiwa.",
+    "proudly": "Wa Nigeria kwa Fahari. Kutambulika Ulimwenguni."
+  }
+}

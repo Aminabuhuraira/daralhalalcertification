@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "首页",
+    "about": "关于我们",
+    "certify": "清真认证",
+    "verify": "验证",
+    "learn": "学习",
+    "resources": "资源",
+    "contact": "联系我们",
+    "getCertified": "立即申请"
+  },
+  "hero": {
+    "supertitle": "尼日利亚领先的清真认证机构",
+    "headline1": "通往全球清真",
+    "headline2": "市场的门户",
+    "subheadline": "清真认证不仅仅是宗教标签——它是全球公认的质量、卫生和道德生产标准。将您的业务向价值3万亿美元的全球清真经济开放。",
+    "ctaPrimary": "立即获得认证",
+    "ctaSecondary": "验证产品",
+    "stat1": "54个非洲市场",
+    "stat2": "12个认证行业",
+    "stat3": "2,400+认证产品"
+  },
+  "footer": {
+    "tagline": "尼日利亚清真认证机构",
+    "newsletter": "掌握清真市场最新动态",
+    "subscribe": "订阅",
+    "noSpam": "无垃圾邮件。仅限市场洞察。",
+    "copyright": "© 2025 Dar Al Halal Certification. 版权所有。",
+    "proudly": "自豪的尼日利亚人。举世公认。"
+  }
+}

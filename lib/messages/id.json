@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "about": "Tentang",
+    "certify": "Sertifikasi",
+    "verify": "Verifikasi",
+    "learn": "Belajar",
+    "resources": "Sumber Daya",
+    "contact": "Kontak",
+    "getCertified": "Daftar Sekarang"
+  },
+  "hero": {
+    "supertitle": "OTORITAS HALAL TERKEMUKA NIGERIA",
+    "headline1": "Gerbang Anda Menuju",
+    "headline2": "Pasar Halal Global",
+    "subheadline": "Sertifikasi halal bukan sekadar label agama — ini adalah tanda kualitas, kebersihan, dan produksi etis yang diakui secara global. Buka bisnis Anda ke ekonomi halal global senilai $3 triliun.",
+    "ctaPrimary": "Dapatkan Sertifikasi",
+    "ctaSecondary": "Verifikasi Produk",
+    "stat1": "54 Pasar Afrika",
+    "stat2": "12 Sektor Tersertifikasi",
+    "stat3": "2.400+ Produk Tersertifikasi"
+  },
+  "footer": {
+    "tagline": "Otoritas Halal Nigeria",
+    "newsletter": "Tetap terdepan di pasar halal",
+    "subscribe": "Berlangganan",
+    "noSpam": "Tanpa spam. Wawasan pasar saja.",
+    "copyright": "© 2025 Dar Al Halal Certification. Hak cipta dilindungi.",
+    "proudly": "Bangga Nigeria. Diakui Dunia."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über Uns",
+    "certify": "Zertifizierung",
+    "verify": "Verifizieren",
+    "learn": "Lernen",
+    "resources": "Ressourcen",
+    "contact": "Kontakt",
+    "getCertified": "Jetzt Bewerben"
+  },
+  "hero": {
+    "supertitle": "NIGERIAS FÜHRENDE HALAL-BEHÖRDE",
+    "headline1": "Ihr Zugang zum",
+    "headline2": "Globalen Halal-Markt",
+    "subheadline": "Halal-Zertifizierung ist mehr als ein religiöses Etikett — es ist ein weltweit anerkanntes Zeichen für Qualität, Hygiene und ethische Produktion. Öffnen Sie Ihr Unternehmen für die 3-Billionen-Dollar-Halal-Wirtschaft.",
+    "ctaPrimary": "Zertifizierung Erhalten",
+    "ctaSecondary": "Produkt Verifizieren",
+    "stat1": "54 Afrikanische Märkte",
+    "stat2": "12 Zertifizierte Sektoren",
+    "stat3": "Über 2.400 Zertifizierte Produkte"
+  },
+  "footer": {
+    "tagline": "Nigerias Halal-Behörde",
+    "newsletter": "Bleiben Sie dem Halal-Markt voraus",
+    "subscribe": "Abonnieren",
+    "noSpam": "Kein Spam. Nur Markteinblicke.",
+    "copyright": "© 2025 Dar Al Halal Certification. Alle Rechte vorbehalten.",
+    "proudly": "Stolz nigerianisch. Weltweit anerkannt."
+  }
+}
