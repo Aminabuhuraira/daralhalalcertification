@@ -2,10 +2,11 @@
 "use client";
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, Check, Eye, EyeOff, Building2, BookOpen, Search, Users } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { motion } from "framer-motion";
+import { ArrowRight, ArrowLeft, Check, Eye, EyeOff, Building2, BookOpen, Search, Users, Loader2 } from "lucide-react";
 
 const STEPS = ["Account Type", "Business Info", "Profile", "Confirm"];
 
@@ -20,10 +21,54 @@ const SECTORS = ["Food & Beverage", "Cosmetics & Beauty", "Pharmaceuticals", "Ho
 
 export default function RegisterPage() {
   const params = useParams();
+  const router = useRouter();
   const locale = (params?.locale as string) || "en";
   const [step, setStep] = useState(0);
   const [showPass, setShowPass] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({ accountType: "", businessName: "", sector: "", state: "", phone: "", fullName: "", email: "", password: "", confirmPassword: "", newsletter: false, updates: true });
+
+  const handleCreateAccount = async () => {
+    if (!agreed || submitting) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.fullName,
+          email: form.email,
+          password: form.password,
+          businessName: form.businessName || undefined,
+          sector: form.sector || undefined,
+          phone: form.phone || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+      const result = await signIn("credentials", {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      });
+      if (result?.error) {
+        setError("Account created — please sign in.");
+        router.push(`/${locale}/auth/login`);
+        return;
+      }
+      router.push(`/${locale}/dashboard`);
+    } catch {
+      setError("Network error. Please try again.");
+      setSubmitting(false);
+    }
+  };
 
   const inputStyle = { width: "100%", padding: "12px 16px", border: "1.5px solid var(--color-border)", borderRadius: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-primary)", background: "white", outline: "none", transition: "border-color 0.3s" };
   const focus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = "var(--color-gold-300)");
@@ -152,11 +197,12 @@ export default function RegisterPage() {
                   ))}
                 </div>
                 <div style={{ marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 10 }}>
-                  <input type="checkbox" id="terms" required style={{ marginTop: 2, accentColor: "var(--color-gold-400)" }} />
+                  <input type="checkbox" id="terms" checked={agreed} onChange={e => setAgreed(e.target.checked)} style={{ marginTop: 2, accentColor: "var(--color-gold-400)" }} />
                   <label htmlFor="terms" style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--color-text-secondary)", lineHeight: 1.5 }}>
-                    I agree to the <Link href="#" style={{ color: "var(--color-text-gold)" }}>Terms of Service</Link> and <Link href="#" style={{ color: "var(--color-text-gold)" }}>Privacy Policy</Link>
+                    I agree to the <Link href="../../terms" style={{ color: "var(--color-text-gold)" }}>Terms of Service</Link> and <Link href="../../privacy" style={{ color: "var(--color-text-gold)" }}>Privacy Policy</Link>
                   </label>
                 </div>
+                {error && <p style={{ color: "#ef4444", fontSize: 13, fontFamily: "var(--font-body)", marginBottom: 8 }}>{error}</p>}
               </>
             )}
 
@@ -168,11 +214,15 @@ export default function RegisterPage() {
                 </button>
               )}
               <button
-                onClick={() => step < 3 ? setStep(s => s + 1) : undefined}
-                disabled={!canNext()}
-                style={{ flex: 2, padding: "13px", background: canNext() ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", color: "white", border: "none", borderRadius: 12, cursor: canNext() ? "pointer" : "not-allowed", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: canNext() ? "0 4px 16px rgba(219,168,32,0.3)" : "none" }}
+                onClick={() => {
+                  if (step === 3) { handleCreateAccount(); return; }
+                  setStep(s => s + 1);
+                }}
+                disabled={!canNext() || (step === 3 && (!agreed || submitting))}
+                style={{ flex: 2, padding: "13px", background: (canNext() && !(step === 3 && !agreed)) ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", color: "white", border: "none", borderRadius: 12, cursor: (canNext() && !(step === 3 && (!agreed || submitting))) ? "pointer" : "not-allowed", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: canNext() ? "0 4px 16px rgba(219,168,32,0.3)" : "none" }}
               >
-                {step === 3 ? "Create My Account" : "Continue"} <ArrowRight size={16} />
+                {submitting ? <Loader2 size={16} style={{ animation: "rotateSeal 1s linear infinite" }} /> : step === 3 ? "Create My Account" : "Continue"}
+                {!submitting && <ArrowRight size={16} />}
               </button>
             </div>
 

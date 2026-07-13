@@ -25,12 +25,12 @@ const cinzel = Cinzel({
 
 export const metadata: Metadata = {
   title: {
-    default: "Dar Al Halal Certification | Nigeria's Premier Halal Authority",
+    default: "Dar Al Halal Certification | Global Halal Certification, Made Accessible",
     template: "%s | Dar Al Halal Certification",
   },
   description:
-    "Nigeria's leading halal certification authority. Get certified to access the $3 trillion global halal economy. Serving food, cosmetics, pharmaceuticals and more.",
-  keywords: ["halal certification", "Nigeria", "halal authority", "food certification", "Africa halal"],
+    "Global halal certification, made accessible. Get certified to access the $3 trillion global halal economy. Serving food, cosmetics, pharmaceuticals and more.",
+  keywords: ["halal certification", "Nigeria", "halal certification authority", "food certification", "Africa halal"],
   authors: [{ name: "Dar Al Halal Certification" }],
   creator: "Dar Al Halal Certification",
   openGraph: {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://daralhalalcertification.com",
     siteName: "Dar Al Halal Certification",
-    title: "Dar Al Halal Certification | Nigeria's Premier Halal Authority",
+    title: "Dar Al Halal Certification | Global Halal Certification, Made Accessible",
     description:
       "Nigeria's gateway to the $3 trillion global halal economy. Certified halal products trusted across Africa and global halal markets.",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Dar Al Halal Certification",
-    description: "Nigeria's Premier Halal Authority",
+    description: "Global Halal Certification, Made Accessible",
   },
   robots: {
     index: true,

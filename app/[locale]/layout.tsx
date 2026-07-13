@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import DARIChatbot from "@/components/features/DARIChatbot";
+import SessionProvider from "@/components/layout/SessionProvider";
 
 const locales = [
   "en","ar","ha","yo","ig","fr","sw","id",
@@ -35,10 +36,12 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <div dir={isRTL ? "rtl" : "ltr"} lang={locale}>
-        {children}
-        <DARIChatbot />
-      </div>
+      <SessionProvider>
+        <div dir={isRTL ? "rtl" : "ltr"} lang={locale}>
+          {children}
+          <DARIChatbot />
+        </div>
+      </SessionProvider>
     </NextIntlClientProvider>
   );
 }

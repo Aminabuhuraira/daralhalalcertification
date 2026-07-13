@@ -31,21 +31,22 @@ export default function GlowingCard({ children, style, className = "" }: Props) 
       style={{
         position: "relative",
         borderRadius: 16,
-        border: "1px solid rgba(255,255,255,0.08)",
-        background: "rgba(13,27,71,0.6)",
+        border: "1px solid rgba(10,21,53,0.1)",
+        background: "rgba(255,255,255,0.95)",
         backdropFilter: "blur(16px)",
-        transition: "border-color 0.3s",
+        boxShadow: "0 2px 16px rgba(10,21,53,0.06)",
+        transition: "border-color 0.3s, box-shadow 0.3s",
         ...style,
       }}
     >
-      {/* Gradient border glow on hover */}
+      {/* Gold shimmer on hover */}
       <div
         style={{
           position: "absolute",
           inset: -1,
           borderRadius: 17,
           background: hovered
-            ? `radial-gradient(circle at ${pos.x}% ${pos.y}%, rgba(201,162,39,0.4) 0%, transparent 50%)`
+            ? `radial-gradient(circle at ${pos.x}% ${pos.y}%, rgba(201,162,39,0.18) 0%, transparent 55%)`
             : "transparent",
           transition: "opacity 0.3s",
           zIndex: 0,

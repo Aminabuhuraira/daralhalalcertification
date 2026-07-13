@@ -1,0 +1,239 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  USER
+  REVIEWER
+  INSPECTOR
+  ADMIN
+}
+
+model PlatformSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+enum CertTier {
+  COMPLETION
+  DISTINCTION
+  BUSINESS
+}
+
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum CertIssueMode {
+  ON_APPROVAL
+  ON_PAYMENT
+  MANUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(USER)
+  businessName String?
+  sector       String?
+  phone        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  enrollments       Enrollment[]
+  quizAttempts      QuizAttempt[]
+  certificates      Certificate[]
+  payments          Payment[]
+  certificationApps CertificationApplication[]
+}
+
+model Course {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  description   String
+  category      String
+  level         String
+  durationLabel String
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  modules      Module[]
+  quiz         Quiz?
+  enrollments  Enrollment[]
+  certificates Certificate[]
+
+  @@index([published])
+}
+
+model Module {
+  id       String @id @default(cuid())
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title    String
+  order    Int
+
+  lessons Lesson[]
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String  @id @default(cuid())
+  moduleId    String
+  module      Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  title       String
+  order       Int
+  contentMd   String
+  videoUrl    String?
+  durationMin Int     @default(0)
+
+  progress LessonProgress[]
+
+  @@index([moduleId])
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId    String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+
+  lessonProgress LessonProgress[]
+
+  @@unique([userId, courseId])
+  @@index([userId])
+}
+
+model LessonProgress {
+  id           String     @id @default(cuid())
+  enrollmentId String
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lessonId     String
+  lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completed    Boolean    @default(false)
+  completedAt  DateTime?
+
+  @@unique([enrollmentId, lessonId])
+}
+
+model Quiz {
+  id        String @id @default(cuid())
+  courseId  String @unique
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title     String
+  passScore Int    @default(70)
+
+  questions Question[]
+  attempts  QuizAttempt[]
+}
+
+model Question {
+  id           String  @id @default(cuid())
+  quizId       String
+  quiz         Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  order        Int
+  text         String
+  options      String
+  correctIndex Int
+  explanation  String?
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  score     Int
+  passed    Boolean
+  answers   String
+  createdAt DateTime @default(now())
+
+  @@index([userId, quizId])
+}
+
+model Certificate {
+  id            String                    @id @default(cuid())
+  userId        String
+  user          User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId      String?
+  course        Course?                   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  applicationId String?                   @unique
+  application   CertificationApplication? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  tier          CertTier
+  serial        String                    @unique
+  issuedAt      DateTime                  @default(now())
+
+  @@unique([userId, courseId, tier])
+  @@index([serial])
+}
+
+model CertificationApplication {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName  String
+  sector        String
+  productList   String
+  notes         String?
+  status        ApplicationStatus @default(PENDING)
+  certIssueMode CertIssueMode     @default(MANUAL)
+  reviewedBy    String?
+  reviewNotes   String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  payments    Payment[]
+  certificate Certificate?
+
+  @@index([status])
+}
+
+model Payment {
+  id            String                    @id @default(cuid())
+  userId        String
+  user          User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId String?
+  application   CertificationApplication? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  provider      String?
+  providerRef   String?
+  amount        Int
+  currency      String                    @default("NGN")
+  status        PaymentStatus             @default(PENDING)
+  description   String
+  createdAt     DateTime                  @default(now())
+
+  @@index([userId])
+  @@index([applicationId])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  inquiry   String?
+  message   String
+  createdAt DateTime @default(now())
+}

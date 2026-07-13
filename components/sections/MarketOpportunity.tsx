@@ -51,7 +51,7 @@ export default function MarketOpportunity() {
               transition={{ delay: 0.45, duration: 0.7 }}
               style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.65)", lineHeight: 1.85, marginBottom: 32, textAlign: "justify" as const }}
             >
-              {"Businesses certified by Dar Al Halal don\u2019t just sell locally \u2014 they gain access to a "}<strong style={{ color: "#0A1535" }}>$3 trillion global halal economy</strong>{" spanning food, cosmetics, pharmaceuticals, finance, and logistics."}
+              {"Businesses certified by Dar Al Halal don\u2019t just sell locally \u2014 they gain access to a "}<strong style={{ color: "#0A1535" }}>$7.7 trillion global halal economy</strong>{" spanning food, cosmetics, pharmaceuticals, finance, and logistics."}
             </motion.p>
             <motion.div
               initial={{ opacity: 0, x: -20 }}

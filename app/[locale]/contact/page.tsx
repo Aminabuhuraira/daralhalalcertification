@@ -18,7 +18,35 @@ const inputStyle: React.CSSProperties = {
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setSubmitted(true); };
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [inquiry, setInquiry] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, inquiry: inquiry || undefined, message }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setError(data?.error || "Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Network error. Please try again.");
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -73,19 +101,20 @@ export default function ContactPage() {
                   <form onSubmit={handleSubmit}>
                     <h3 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 300, color: "white", marginBottom: 28 }}>Send Us a Message</h3>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-                      <input required style={inputStyle} placeholder="Your Name" onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")} />
-                      <input required type="email" style={inputStyle} placeholder="Email Address" onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")} />
+                      <input required value={name} onChange={e => setName(e.target.value)} style={inputStyle} placeholder="Your Name" onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")} />
+                      <input required type="email" value={email} onChange={e => setEmail(e.target.value)} style={inputStyle} placeholder="Email Address" onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")} />
                     </div>
-                    <select style={{ ...inputStyle, marginBottom: 16, cursor: "pointer" }} onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")}>
+                    <select value={inquiry} onChange={e => setInquiry(e.target.value)} style={{ ...inputStyle, marginBottom: 16, cursor: "pointer" }} onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")}>
                       <option value="">Inquiry Type</option>
                       <option>New Certification</option>
                       <option>Certificate Renewal</option>
                       <option>General Question</option>
                       <option>Partnership</option>
                     </select>
-                    <textarea required rows={5} style={{ ...inputStyle, marginBottom: 20, resize: "vertical" }} placeholder="Your message..." onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")} />
-                    <button type="submit" className="btn-primary" style={{ width: "100%", justifyContent: "center", border: "1.5px solid var(--gold-500)" }}>
-                      <Send size={15} /> Send Message
+                    <textarea required rows={5} value={message} onChange={e => setMessage(e.target.value)} style={{ ...inputStyle, marginBottom: 20, resize: "vertical" }} placeholder="Your message..." onFocus={e => (e.target.style.borderColor = "var(--gold-400)")} onBlur={e => (e.target.style.borderColor = "rgba(201,162,39,0.2)")} />
+                    {error && <p style={{ color: "#f87171", fontSize: 13, fontFamily: "var(--font-body)", marginBottom: 16 }}>{error}</p>}
+                    <button type="submit" disabled={submitting} className="btn-primary" style={{ width: "100%", justifyContent: "center", border: "1.5px solid var(--gold-500)", opacity: submitting ? 0.6 : 1, cursor: submitting ? "not-allowed" : "pointer" }}>
+                      <Send size={15} /> {submitting ? "Sending..." : "Send Message"}
                     </button>
                   </form>
                 )}

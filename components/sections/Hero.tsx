@@ -87,7 +87,7 @@ export default function Hero() {
               boxShadow: "0 0 8px rgba(34,197,94,0.6)", animation: "goldPulse 2s infinite", flexShrink: 0 }} />
             <span style={{ fontFamily: "var(--font-accent)", fontSize: 10.5, color: "#6D28D9",
               letterSpacing: "0.2em", textTransform: "uppercase" }}>
-              Nigeria's Premier Halal Authority
+              Global Halal Certification, Made Accessible
             </span>
           </motion.div>
 
@@ -128,7 +128,7 @@ export default function Hero() {
             <strong style={{ color: "#0A1535", fontWeight: 500 }}>
               quality, hygiene and ethical production
             </strong>
-            . Open your business to the $3 trillion global halal economy — regardless of your background.
+            . Open your business to the $7.7 trillion global halal economy — regardless of your background.
           </motion.p>
 
           {/* CTAs */}

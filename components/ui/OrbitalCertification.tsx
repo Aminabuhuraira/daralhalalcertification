@@ -21,31 +21,35 @@ const CX = 230;
 const CY = 230;
 const R  = 170; // orbital radius
 const STEP_DEG = 360 / N;
+const TRAVEL_DURATION = 1.85; // seconds — how long the glow takes to travel between nodes
 
 /* ─── Helpers ────────────────────────────────────────── */
-function angleRad(i: number) {
-  return ((i * STEP_DEG) - 90) * (Math.PI / 180);
+function posAtAngleDeg(deg: number) {
+  const a = (deg * Math.PI) / 180;
+  return { x: CX + R * Math.cos(a), y: CY + R * Math.sin(a) };
 }
 function nodePos(i: number) {
-  const a = angleRad(i);
-  return { x: CX + R * Math.cos(a), y: CY + R * Math.sin(a) };
+  return posAtAngleDeg(i * STEP_DEG - 90);
 }
 
 /* ─── Component ──────────────────────────────────────── */
 export default function OrbitalCertification() {
+  // `active` = the node the traveling glow is currently heading toward (updates immediately)
+  // `lit`    = the node that visually "lights up" once the glow arrives (delayed by travel time)
   const [active, setActive] = useState(0);
-  const [rotDeg, setRotDeg] = useState(0);
-  // delay center-panel update so text changes AFTER node arrives at top
-  const [display, setDisplay] = useState(0);
+  const [lit, setLit] = useState(0);
+  // cumulative clockwise rotation applied to the traveling glow group — always increases,
+  // so the glow only ever sweeps forward (clockwise), never snaps backward
+  const [markerDeg, setMarkerDeg] = useState(0);
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const startInterval = () => {
     intervalRef.current = setInterval(() => {
-      setActive(p => {
+      setActive((p) => {
         const next = (p + 1) % N;
-        setRotDeg(r => r - STEP_DEG);
-        setTimeout(() => setDisplay(next), 900);
+        setMarkerDeg((d) => d + STEP_DEG);
+        setTimeout(() => setLit(next), TRAVEL_DURATION * 1000);
         return next;
       });
     }, 3800);
@@ -58,14 +62,21 @@ export default function OrbitalCertification() {
 
   const handleNodeClick = (i: number) => {
     if (i === active) return;
-    const stepsForward = ((i - active + N) % N);
+    const stepsForward = (i - active + N) % N;
     setActive(i);
-    setRotDeg(r => r - stepsForward * STEP_DEG);
-    setTimeout(() => setDisplay(i), 900);
-    // Reset timer
+    setMarkerDeg((d) => d + stepsForward * STEP_DEG);
+    setTimeout(() => setLit(i), TRAVEL_DURATION * 1000);
     if (intervalRef.current) clearInterval(intervalRef.current);
     startInterval();
   };
+
+  // Comet trail behind the traveling glow — local angles before group rotation is applied
+  const trailDots = [
+    { offset: 0,   r: 5,   opacity: 1 },
+    { offset: -7,  r: 3.6, opacity: 0.55 },
+    { offset: -14, r: 2.6, opacity: 0.3 },
+    { offset: -21, r: 1.7, opacity: 0.14 },
+  ];
 
   return (
     <motion.div
@@ -104,6 +115,15 @@ export default function OrbitalCertification() {
             </feMerge>
           </filter>
 
+          {/* Traveling glow marker filter */}
+          <filter id="oc-mglow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
           {/* Wide ambient glow around sphere */}
           <radialGradient id="oc-ambient" cx="50%" cy="50%" r="50%">
             <stop offset="0%"   stopColor="rgba(27,42,123,0.35)" />
@@ -114,7 +134,7 @@ export default function OrbitalCertification() {
         {/* ── Ambient glow behind sphere ─────────── */}
         <circle cx={CX} cy={CY} r={90} fill="url(#oc-ambient)" />
 
-        {/* ── Outer orbital ring ──────────────────── */}
+        {/* ── Outer orbital ring — static ──────────── */}
         <circle
           cx={CX} cy={CY} r={R}
           fill="none"
@@ -130,111 +150,99 @@ export default function OrbitalCertification() {
           strokeWidth={0.8}
         />
 
-        {/* ── Spotlight indicator (fixed at 12 o'clock = top) ─ */}
-        <circle
-          cx={CX} cy={CY - R}
-          r={38}
-          fill="rgba(201,162,39,0.04)"
-          stroke="rgba(201,162,39,0.3)"
-          strokeWidth={1.5}
-        />
+        {/* ── Spokes (fixed — do not rotate) + sparkle particles ── */}
+        {STEPS.map((_, i) => {
+          const p = nodePos(i);
+          const isLit = i === lit;
+          const dPath = `M ${CX} ${CY} L ${p.x} ${p.y}`;
+          return (
+            <g key={`line-${i}`}>
+              <line
+                x1={CX} y1={CY} x2={p.x} y2={p.y}
+                stroke={`rgba(201,162,39,${isLit ? 0.32 : 0.08})`}
+                strokeWidth={isLit ? 1.4 : 0.7}
+                strokeDasharray={isLit ? "none" : "3 7"}
+              />
+              <circle r={2.4} fill="#F5C842" filter="url(#oc-sglow)">
+                <animateMotion path={dPath} dur="2.5s" repeatCount="indefinite" begin={`${-(i * 0.35)}s`} />
+              </circle>
+              <circle r={1.4} fill="#DBA820" opacity={0.65}>
+                <animateMotion path={dPath} dur="2.5s" repeatCount="indefinite" begin={`${-(i * 0.35 + 1.25)}s`} />
+              </circle>
+            </g>
+          );
+        })}
 
-        {/* ── Rotating group ──────────────────────── */}
+        {/* ── Nodes — fixed positions, light up when the glow reaches them ── */}
+        {STEPS.map((step, i) => {
+          const p = nodePos(i);
+          const isLit = i === lit;
+          return (
+            <g key={`node-${i}`} onClick={() => handleNodeClick(i)} style={{ cursor: "pointer" }}>
+              {isLit && (
+                <circle cx={p.x} cy={p.y} r={42} fill="none" stroke="rgba(201,162,39,0.22)" strokeWidth={1}>
+                  <animate attributeName="r"       values="38;48;38" dur="2.2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.4;0;0.4" dur="2.2s" repeatCount="indefinite" />
+                </circle>
+              )}
+
+              <circle
+                cx={p.x} cy={p.y}
+                r={isLit ? 30 : 23}
+                fill={isLit ? "rgba(27,42,123,0.95)" : "rgba(7,14,40,0.88)"}
+                stroke={`rgba(201,162,39,${isLit ? 0.72 : 0.2})`}
+                strokeWidth={isLit ? 1.8 : 1}
+                filter={isLit ? "url(#oc-nglow)" : undefined}
+                style={{ transition: "all 0.4s ease" }}
+              />
+
+              <text
+                x={p.x} y={p.y - 7}
+                textAnchor="middle"
+                fill={`rgba(201,162,39,${isLit ? 0.85 : 0.42})`}
+                fontSize={isLit ? 8.5 : 7}
+                fontFamily="'Courier New', monospace"
+                fontWeight="700"
+                letterSpacing="0.1em"
+              >
+                {step.num}
+              </text>
+
+              <text
+                x={p.x} y={p.y + 8}
+                textAnchor="middle"
+                fill={isLit ? "#F5C842" : "rgba(201,162,39,0.52)"}
+                fontSize={isLit ? 13 : 11}
+                fontFamily="serif"
+              >
+                {step.sym}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* ── Traveling glow — the only thing that moves; sweeps clockwise ── */}
         <motion.g
-          animate={{ rotate: rotDeg }}
-          transition={{ duration: 1.85, ease: [0.23, 1, 0.32, 1] }}
+          animate={{ rotate: markerDeg }}
+          transition={{ duration: TRAVEL_DURATION, ease: [0.23, 1, 0.32, 1] }}
           style={{ transformOrigin: `${CX}px ${CY}px` }}
         >
-          {/* Connection lines + sparkle particles */}
-          {STEPS.map((_, i) => {
-            const p = nodePos(i);
-            const isAct = i === active;
-            // sparkle travels from center to node
-            const dPath = `M ${CX} ${CY} L ${p.x} ${p.y}`;
+          {trailDots.map((dot, idx) => {
+            const tp = posAtAngleDeg(-90 + dot.offset);
             return (
-              <g key={`line-${i}`}>
-                {/* Dashed connection line */}
-                <line
-                  x1={CX} y1={CY} x2={p.x} y2={p.y}
-                  stroke={`rgba(201,162,39,${isAct ? 0.32 : 0.08})`}
-                  strokeWidth={isAct ? 1.4 : 0.7}
-                  strokeDasharray={isAct ? "none" : "3 7"}
-                />
-                {/* Sparkle particle 1 */}
-                <circle r={2.4} fill="#F5C842" filter="url(#oc-sglow)">
-                  <animateMotion
-                    path={dPath}
-                    dur="2.5s"
-                    repeatCount="indefinite"
-                    begin={`${-(i * 0.35)}s`}
-                  />
-                </circle>
-                {/* Sparkle particle 2 — trailing, smaller */}
-                <circle r={1.4} fill="#DBA820" opacity={0.65}>
-                  <animateMotion
-                    path={dPath}
-                    dur="2.5s"
-                    repeatCount="indefinite"
-                    begin={`${-(i * 0.35 + 1.25)}s`}
-                  />
-                </circle>
-              </g>
-            );
-          })}
-
-          {/* Nodes */}
-          {STEPS.map((step, i) => {
-            const p   = nodePos(i);
-            const isAct = i === active;
-            return (
-              <g key={`node-${i}`} onClick={() => handleNodeClick(i)} style={{ cursor: "pointer" }}>
-                {/* Pulse ring for active node */}
-                {isAct && (
-                  <circle cx={p.x} cy={p.y} r={42} fill="none" stroke="rgba(201,162,39,0.22)" strokeWidth={1}>
-                    <animate attributeName="r"       values="38;48;38" dur="2.2s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.4;0;0.4" dur="2.2s" repeatCount="indefinite" />
-                  </circle>
-                )}
-
-                {/* Node background circle */}
-                <circle
-                  cx={p.x} cy={p.y}
-                  r={isAct ? 30 : 23}
-                  fill={isAct ? "rgba(27,42,123,0.95)" : "rgba(7,14,40,0.88)"}
-                  stroke={`rgba(201,162,39,${isAct ? 0.72 : 0.2})`}
-                  strokeWidth={isAct ? 1.8 : 1}
-                  filter={isAct ? "url(#oc-nglow)" : undefined}
-                />
-
-                {/* Step number — small label above symbol */}
-                <text
-                  x={p.x} y={p.y - 7}
-                  textAnchor="middle"
-                  fill={`rgba(201,162,39,${isAct ? 0.85 : 0.42})`}
-                  fontSize={isAct ? 8.5 : 7}
-                  fontFamily="'Courier New', monospace"
-                  fontWeight="700"
-                  letterSpacing="0.1em"
-                >
-                  {step.num}
-                </text>
-
-                {/* Step symbol */}
-                <text
-                  x={p.x} y={p.y + 8}
-                  textAnchor="middle"
-                  fill={isAct ? "#F5C842" : "rgba(201,162,39,0.52)"}
-                  fontSize={isAct ? 13 : 11}
-                  fontFamily="serif"
-                >
-                  {step.sym}
-                </text>
-              </g>
+              <circle
+                key={idx}
+                cx={tp.x} cy={tp.y}
+                r={dot.r}
+                fill="#F5C842"
+                opacity={dot.opacity}
+                filter={idx === 0 ? "url(#oc-mglow)" : undefined}
+              />
             );
           })}
         </motion.g>
 
-        {/* ── Center sphere (rendered above rotating group) ── */}
+        {/* ── Center sphere (rendered above everything else) ── */}
         <circle cx={CX} cy={CY} r={72} fill="url(#oc-sphere)" stroke="rgba(201,162,39,0.42)" strokeWidth={1.5} />
         <circle cx={CX} cy={CY} r={62} fill="none" stroke="rgba(201,162,39,0.08)" strokeWidth={0.7} strokeDasharray="2 5" />
 
@@ -273,7 +281,7 @@ export default function OrbitalCertification() {
       >
         <AnimatePresence mode="wait">
           <motion.div
-            key={display}
+            key={lit}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -289,7 +297,7 @@ export default function OrbitalCertification() {
                 marginBottom: 5,
               }}
             >
-              STEP {STEPS[display].num}
+              STEP {STEPS[lit].num}
             </div>
             <div
               style={{
@@ -301,7 +309,7 @@ export default function OrbitalCertification() {
                 marginBottom: 5,
               }}
             >
-              {STEPS[display].title}
+              {STEPS[lit].title}
             </div>
             <div
               style={{
@@ -311,43 +319,7 @@ export default function OrbitalCertification() {
                 lineHeight: 1.55,
               }}
             >
-              {STEPS[display].desc}
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* ── Step label below active node (at 12-o-clock) ─── */}
-      <div
-        style={{
-          position: "absolute",
-          top: `${((CY - R - 60) / H) * 100}%`,
-          left: `${(CX / W) * 100}%`,
-          transform: "translate(-50%, 0)",
-          textAlign: "center",
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={display}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.35 }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                fontWeight: 600,
-                color: "rgba(245,200,66,0.85)",
-                letterSpacing: "0.04em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {STEPS[display].title}
+              {STEPS[lit].desc}
             </div>
           </motion.div>
         </AnimatePresence>

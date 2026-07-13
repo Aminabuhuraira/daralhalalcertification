@@ -64,7 +64,7 @@ export default function PartnersSlider() {
             ))}
           </div>
           <p style={{ fontFamily: "var(--font-accent)", fontSize: 13, letterSpacing: "0.1em", color: "var(--color-text-secondary)" }}>
-            Rated Excellence — Nigeria&apos;s Most Trusted Halal Authority
+            Rated Excellence — Global Halal Certification, Made Accessible
           </p>
         </motion.div>
 

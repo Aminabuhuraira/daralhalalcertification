@@ -32,7 +32,7 @@ export default function AboutPage() {
           <div className="section-container" style={{ position: "relative", zIndex: 1 }}>
             <motion.p {...fin(0)} className="text-overline" style={{ marginBottom: 20 }}>Our Story</motion.p>
             <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, maxWidth: 700, lineHeight: 1.1 }}>
-              Building the World's Most<br /><span className="text-gold-shimmer">Trusted Halal Authority</span>
+              Global Halal Certification<br /><span className="text-gold-shimmer">Made Accessible</span>
             </motion.h1>
             <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(10,21,53,0.6)", maxWidth: 580, lineHeight: 1.75 }}>
               From Abuja, Nigeria, to the world — one halal certification at a time. We verify quality standards that connect Nigerian businesses to global markets.
@@ -45,7 +45,7 @@ export default function AboutPage() {
           <div className="section-container">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
               {[
-                { icon: Target, title: "Our Mission", text: "To be Nigeria's foremost halal certification authority, providing rigorous, credible, and globally recognized halal certification services that empower businesses to access international markets while upholding the highest standards of quality and compliance." },
+                { icon: Target, title: "Our Mission", text: "To make halal certification globally accessible, providing rigorous, credible, and internationally recognized certification services that empower businesses to access international markets while upholding the highest standards of quality and compliance." },
                 { icon: Eye, title: "Our Vision", text: "A world where every consumer has transparent access to certified halal products, and every business — regardless of faith background — can access the $3 trillion halal economy through trusted quality certification." },
               ].map(({ icon: Icon, title, text }, i) => (
                 <motion.div key={title} {...fin(i * 0.15)} style={{ padding: 40, background: "var(--bg-dark)", borderRadius: 20, border: "1px solid rgba(201,162,39,0.15)", position: "relative", overflow: "hidden" }}>
