@@ -79,18 +79,18 @@ export default function Footer() {
                 ✓ You're subscribed — thank you!
               </p>
             ) : (
-              <form onSubmit={subscribeNewsletter} style={{ display: "flex", gap: 0, background: "white", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 7, overflow: "hidden", maxWidth: 270, boxShadow: "0 2px 8px rgba(10,21,53,0.04)" }}>
-                <div style={{ display: "flex", alignItems: "center", padding: "0 12px" }}><Mail size={13} color="rgba(10,21,53,0.3)" /></div>
+              <form onSubmit={subscribeNewsletter} style={{ display: "flex", background: "white", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 7, overflow: "hidden", width: "100%", maxWidth: 320, boxShadow: "0 2px 8px rgba(10,21,53,0.04)" }}>
+                <div style={{ display: "flex", alignItems: "center", padding: "0 10px", flexShrink: 0 }}><Mail size={13} color="rgba(10,21,53,0.3)" /></div>
                 <input
                   type="email"
                   required
                   value={newsEmail}
                   onChange={e => setNewsEmail(e.target.value)}
                   placeholder="your@email.com"
-                  style={{ flex: 1, background: "transparent", border: "none", outline: "none", padding: "10px 4px", fontFamily: "var(--font-body)", fontSize: 14.5, color: "#0A1535" }}
+                  style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", padding: "11px 4px", fontFamily: "var(--font-body)", fontSize: 13.5, color: "#0A1535" }}
                 />
-                <button type="submit" style={{ padding: "10px 14px", background: "var(--navy-700)", border: "none", borderLeft: "1px solid rgba(10,21,53,0.08)", cursor: "pointer", color: "#F5C842", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 600 }}>
-                  Go <ArrowRight size={10} style={{ display: "inline", verticalAlign: "middle" }} />
+                <button type="submit" style={{ flexShrink: 0, padding: "11px 16px", background: "var(--navy-700)", border: "none", borderLeft: "1px solid rgba(10,21,53,0.08)", cursor: "pointer", color: "#F5C842", fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 5 }}>
+                  Subscribe <ArrowRight size={11} />
                 </button>
               </form>
             )}

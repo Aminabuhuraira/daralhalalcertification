@@ -117,8 +117,8 @@ export default function CertificationTrust() {
            HOLOGRAPHIC VERTICAL TIMELINE  (400 vh)
            Gold spine fills on scroll. Cards float in.
          ══════════════════════════════════════════════════ */}
-      <div ref={wrapperRef} style={{ height: "400vh", position: "relative" }}>
-        <div style={{
+      <div ref={wrapperRef} className="cert-timeline-wrapper" style={{ height: "400vh", position: "relative" }}>
+        <div className="cert-timeline-sticky" style={{
           position: "sticky", top: 72,
           height: "calc(100vh - 72px)", overflow: "hidden",
           background: "var(--bg-surface)",

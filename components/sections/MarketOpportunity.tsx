@@ -43,7 +43,7 @@ export default function MarketOpportunity() {
               transition={{ delay: 0.3, duration: 0.7 }}
               style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.65)", lineHeight: 1.85, marginBottom: 24, textAlign: "justify" as const }}
             >
-              {"Nigeria commands "}<strong style={{ color: "#0A1535" }}>Africa\u2019s largest halal market</strong>{" \u2014 95 million halal consumers and the continent\u2019s most connected trade economy. Nigerian certification is the recognised gateway for halal products reaching 400+ million consumers across Africa."}
+              {"Nigeria commands "}<strong style={{ color: "#0A1535" }}>Africa's largest halal market</strong>{" \u2014 95 million halal consumers and the continent's most connected trade economy. Nigerian certification is the recognised gateway for halal products reaching 400+ million consumers across Africa."}
             </motion.p>
             <motion.p
               initial={{ opacity: 0 }}
@@ -51,7 +51,7 @@ export default function MarketOpportunity() {
               transition={{ delay: 0.45, duration: 0.7 }}
               style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.65)", lineHeight: 1.85, marginBottom: 32, textAlign: "justify" as const }}
             >
-              {"Businesses certified by Dar Al Halal don\u2019t just sell locally \u2014 they gain access to a "}<strong style={{ color: "#0A1535" }}>$7.7 trillion global halal economy</strong>{" spanning food, cosmetics, pharmaceuticals, finance, and logistics."}
+              {"Businesses certified by Dar Al Halal don't just sell locally \u2014 they gain access to a "}<strong style={{ color: "#0A1535" }}>$7.7 trillion global halal economy</strong>{" spanning food, cosmetics, pharmaceuticals, finance, and logistics."}
             </motion.p>
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -75,6 +75,7 @@ export default function MarketOpportunity() {
 
           {/* Right — Africa Map */}
           <motion.div
+            className="market-map"
             initial={{ opacity: 0, x: 30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.4, duration: 0.8 }}

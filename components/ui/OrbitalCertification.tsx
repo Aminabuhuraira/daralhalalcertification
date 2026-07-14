@@ -3,15 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-/* ─── 7 Certification Process Steps ─────────────────── */
+/* ─── 9 Certification Process Steps ─────────────────── */
 const STEPS = [
-  { num: "01", sym: "⬡", title: "Application",      desc: "Submit business details, product list & initial documents." },
-  { num: "02", sym: "⊙", title: "Screening",         desc: "Initial eligibility review & preliminary compliance check." },
-  { num: "03", sym: "≡",  title: "Document Review",  desc: "Thorough ingredient, formulation & process analysis." },
-  { num: "04", sym: "⊞", title: "On-Site Audit",     desc: "Physical inspection of facilities & hygiene standards." },
-  { num: "05", sym: "✦", title: "Shariah Review",    desc: "Halal scholar panel review & official certification opinion." },
-  { num: "06", sym: "◈", title: "Decision",          desc: "Certification committee makes the final approval." },
-  { num: "07", sym: "★", title: "Certificate",       desc: "Your halal certificate & legally protected mark issued." },
+  { num: "01", sym: "⬡", title: "Application",      desc: "Submit business details, product list & initial documents to initiate the process." },
+  { num: "02", sym: "⊙", title: "Screening",         desc: "Initial eligibility review ensuring the business and products meet entry criteria." },
+  { num: "03", sym: "≡",  title: "Document Review",  desc: "Rigorous review of ingredients, formulations & production processes for compliance." },
+  { num: "04", sym: "⊞", title: "Onsite Audit",      desc: "Physical inspection of facilities, hygiene standards & supply chain integrity." },
+  { num: "05", sym: "✦", title: "Shariah Verify",    desc: "Shariah Panel evaluates all findings to ensure full Islamic compliance." },
+  { num: "06", sym: "◈", title: "Decision",          desc: "Certification Committee reviews all evidence and issues final approval decision." },
+  { num: "07", sym: "★", title: "Certificate",       desc: "Official Halal Certificate and copyright-protected mark issued to the business." },
+  { num: "08", sym: "⊛", title: "Surveillance",      desc: "Periodic audits verify ongoing compliance with halal standards between cycles." },
+  { num: "09", sym: "↺", title: "Renewal",           desc: "Annual renewal maintains uninterrupted Halal status and consumer confidence." },
 ];
 
 const N  = STEPS.length;

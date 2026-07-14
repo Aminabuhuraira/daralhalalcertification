@@ -321,11 +321,16 @@ body { font-family: var(--font-body); background: var(--bg-base); color: var(--t
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  /* Section container: reduce padding on mobile */
+  .section-container { padding: 0 16px !important; }
+
   .footer-grid { grid-template-columns: 1fr 1fr !important; }
   .footer-grid > :first-child { grid-column: 1 / -1; }
   .hero-grid {
     grid-template-columns: 1fr !important;
-    gap: 40px !important;
+    gap: 32px !important;
+    padding-top: 100px !important;
+    padding-bottom: 60px !important;
   }
   :root { --orbital-scale: 0.72; }
   /* Hide desktop nav on mobile */
@@ -338,23 +343,48 @@ body { font-family: var(--font-body); background: var(--bg-base); color: var(--t
   .callout-grid { grid-template-columns: 1fr !important; }
   /* Stats 4-col → 2x2 */
   .stats-strip { grid-template-columns: repeat(2, 1fr) !important; }
-  /* Market grid: handled inline */
   /* Team grid: 4-col → 2-col */
   .team-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  /* Orbital: hide on mobile, show content only */
+  /* Orbital: hide on mobile */
   .hero-orbital { display: none !important; }
   /* Process stepper: horizontal → vertical */
   .process-stepper { flex-direction: column !important; gap: 16px !important; }
   .process-stepper > div { flex: unset !important; width: 100% !important; padding: 0 0 0 16px !important; text-align: left !important; display: flex !important; align-items: center !important; gap: 12px !important; }
-  /* Reviews grid */
+  /* Reviews / partners grids */
   .reviews-grid { grid-template-columns: 1fr !important; }
-  /* Partners layout */
   .partners-layout { grid-template-columns: 1fr !important; }
+
+  /* CertificationTrust: collapse 400vh sticky timeline to a simple list */
+  .cert-timeline-wrapper { height: auto !important; }
+  .cert-timeline-sticky {
+    position: relative !important; height: auto !important;
+    padding: 32px 16px !important; display: flex !important;
+    flex-direction: column !important; gap: 16px !important;
+  }
+  .cert-timeline-sticky > * { position: relative !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; opacity: 1 !important; max-width: 100% !important; text-align: left !important; }
+  /* Spine: hide on mobile */
+  .cert-spine { display: none !important; }
+
+  /* Market opportunity: stack columns */
+  .market-grid { grid-template-columns: 1fr !important; }
+  .market-map { display: none !important; }
+
+  /* About stats grid */
+  .about-stats { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Admin / dashboard: tighten padding */
+  .dashboard-main { padding: 20px 16px !important; }
+
+  /* Certification page: steps grid → 1 col */
+  .cert-steps-grid { grid-template-columns: 1fr !important; }
 }
 @media (max-width: 480px) {
   .footer-grid { grid-template-columns: 1fr !important; }
   .footer-grid > :first-child { grid-column: 1 !important; }
+  .stats-strip { grid-template-columns: repeat(2, 1fr) !important; font-size: 12px; }
   :root { --orbital-scale: 0.5; }
+  /* Hero headline */
+  .hero-grid h1 { font-size: clamp(32px, 9vw, 48px) !important; }
 }
 
 /* ── Wide-screen / large desktop (1600px+) ── */
