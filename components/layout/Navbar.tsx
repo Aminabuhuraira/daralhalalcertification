@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, Menu, X, ChevronDown, Shield } from "lucide-react";
+import { Globe, Menu, X, ChevronDown, Shield, LogIn } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
@@ -243,6 +243,27 @@ export default function Navbar() {
               <Shield size={12} /> Get Certified
             </Link>
 
+            {/* Login button */}
+            <Link
+              href={lh("/auth/login")}
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "8px 16px",
+                background: "transparent",
+                border: scrolled ? "1.5px solid rgba(255,255,255,0.22)" : "1.5px solid rgba(10,21,53,0.18)",
+                color: scrolled ? "rgba(255,255,255,0.88)" : "#0A1535",
+                borderRadius: 8,
+                textDecoration: "none", fontFamily: "var(--font-body)",
+                fontSize: 13, fontWeight: 600, letterSpacing: "0.04em",
+                transition: "all 0.2s",
+                whiteSpace: "nowrap",
+              }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = scrolled ? "rgba(255,255,255,0.08)" : "rgba(10,21,53,0.06)"; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; }}
+            >
+              <LogIn size={13} /> Login
+            </Link>
+
             {/* Mobile hamburger — always visible, use CSS to control on desktop */}
             <button
               onClick={() => setMobileOpen(v => !v)}
@@ -289,6 +310,21 @@ export default function Navbar() {
                 </Link>
               </motion.div>
             ))}
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: NAV_ITEMS.length * 0.06 }} style={{ marginTop: 32 }}>
+              <Link
+                href={lh("/auth/login")}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  padding: "14px 28px", borderRadius: 10,
+                  background: "rgba(201,162,39,0.12)", border: "1.5px solid rgba(201,162,39,0.4)",
+                  color: "#F5C842", textDecoration: "none",
+                  fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 600,
+                }}
+              >
+                <LogIn size={16} /> Login
+              </Link>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
