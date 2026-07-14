@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import fs from "fs";
 import path from "path";
+import { seedDemoData } from "./demo-seed";
 
 const g = globalThis as unknown as { prisma?: PrismaClient; dbReady?: boolean };
 
@@ -50,4 +51,7 @@ async function _init() {
     }
   }
   g.dbReady = true;
+
+  // Populate with demo data if the database is freshly created
+  await seedDemoData(prisma).catch(() => {});
 }

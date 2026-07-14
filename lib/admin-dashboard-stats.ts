@@ -71,10 +71,10 @@ export async function getAdminDashboardStats() {
   ]);
 
   const totalCompanies = applications.length;
-  const allProductsCount   = applications.reduce((s, a) => s + countProducts(a.productList), 0);
-  const verifiedProductsCount = applications
-    .filter(a => a.status === "APPROVED")
-    .reduce((s, a) => s + countProducts(a.productList), 0);
+  // "All Products" = total product line items submitted across every application
+  const allProductsCount = applications.reduce((s, a) => s + countProducts(a.productList), 0);
+  // "Verified Products" = certificates of BUSINESS tier that have actually been issued
+  const verifiedProductsCount = await prisma.certificate.count({ where: { tier: "BUSINESS" } });
 
   // Production Scale breakdown
   const scaleMap = new Map<string, number>();
