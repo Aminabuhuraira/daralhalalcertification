@@ -12,7 +12,7 @@ export async function GET() {
     prisma.user.count(),
     prisma.enrollment.count(),
     prisma.certificate.count(),
-    prisma.certificationApplication.count({ where: { status: "PENDING" } }),
+    prisma.certificationApplication.count({ where: { status: { notIn: ["CERTIFIED", "REJECTED", "CLOSED_INCOMPLETE"] } } }),
     prisma.course.count(),
   ]);
 

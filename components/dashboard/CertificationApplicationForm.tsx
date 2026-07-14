@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import GlowingCard from "@/components/ui/GlowingCard";
-import { CERTIFICATION_SECTORS } from "@/lib/sectors";
+import { SCHEME_CODES } from "@/lib/sectors";
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "12px 16px",
@@ -22,22 +22,32 @@ const SCALES = [
 export default function CertificationApplicationForm() {
   const router = useRouter();
   const [businessName,    setBusinessName]    = useState("");
-  const [sector,          setSector]          = useState("");
+  const [schemeCode,      setSchemeCode]      = useState("");
   const [productionScale, setProductionScale] = useState("");
   const [productList,     setProductList]     = useState("");
   const [notes,           setNotes]           = useState("");
   const [submitting,      setSubmitting]      = useState(false);
   const [error,           setError]           = useState("");
 
+  const selectedScheme = SCHEME_CODES.find(s => s.code === schemeCode);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!schemeCode || !productionScale) return;
     setSubmitting(true);
     setError("");
     try {
       const res = await fetch("/api/certification-applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessName, sector, productionScale, productList, notes: notes || undefined }),
+        body: JSON.stringify({
+          businessName,
+          sector: selectedScheme?.label ?? schemeCode,
+          schemeCode,
+          productionScale,
+          productList,
+          notes: notes || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -58,18 +68,49 @@ export default function CertificationApplicationForm() {
         Submit New Application
       </h2>
       <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 20 }}>
-        Fill in your business details. Our team will review and quote your certification fee within 2 working days.
+        Fill in your business details. Our team will review and respond within 3 working days.
       </p>
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
         <input required value={businessName} onChange={(e) => setBusinessName(e.target.value)} style={inputStyle} placeholder="Business / Brand Name *" />
 
-        <select required value={sector} onChange={(e) => setSector(e.target.value)} style={{ ...inputStyle, cursor: "pointer" }}>
-          <option value="">Select Sector *</option>
-          {CERTIFICATION_SECTORS.map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
+        {/* Certification Scheme (DAHC scheme codes) */}
+        <div>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, color: "rgba(10,21,53,0.5)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            Certification Scheme *
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+            {SCHEME_CODES.map(s => {
+              const selected = schemeCode === s.code;
+              return (
+                <button
+                  key={s.code}
+                  type="button"
+                  onClick={() => setSchemeCode(s.code)}
+                  style={{
+                    padding: "12px 14px",
+                    borderRadius: 8,
+                    border: selected ? "2px solid #C9A227" : "2px solid rgba(109,40,217,0.18)",
+                    background: selected ? "rgba(201,162,39,0.06)" : "rgba(109,40,217,0.02)",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: selected ? "#9a7810" : "#6D28D9", letterSpacing: "0.05em", display: "block", marginBottom: 2 }}>
+                    {s.code}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: selected ? "#0A1535" : "rgba(10,21,53,0.6)", lineHeight: 1.3, display: "block" }}>
+                    {s.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {!schemeCode && (
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginTop: 6 }}>Select your certification scheme above</p>
+          )}
+        </div>
 
         {/* Production Scale */}
         <div>
@@ -104,9 +145,6 @@ export default function CertificationApplicationForm() {
               );
             })}
           </div>
-          {!productionScale && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginTop: 6 }}>Select your production scale above</p>
-          )}
         </div>
 
         <textarea
@@ -129,9 +167,9 @@ export default function CertificationApplicationForm() {
 
         <button
           type="submit"
-          disabled={submitting || !productionScale}
+          disabled={submitting || !schemeCode || !productionScale}
           className="btn-primary"
-          style={{ opacity: submitting || !productionScale ? 0.6 : 1, cursor: submitting || !productionScale ? "not-allowed" : "pointer" }}
+          style={{ opacity: submitting || !schemeCode || !productionScale ? 0.6 : 1, cursor: submitting || !schemeCode || !productionScale ? "not-allowed" : "pointer" }}
         >
           {submitting ? "Submitting…" : "Submit Application"}
         </button>

@@ -26,10 +26,21 @@ enum CertTier {
 }
 
 enum ApplicationStatus {
-  PENDING
-  UNDER_REVIEW
-  APPROVED
+  DRAFT
+  SUBMITTED
+  SCREENING
+  DEFICIENCY_NOTICE
+  ELIGIBILITY_REVIEW
+  TRC_ESCALATION
+  AWAITING_PAYMENT
+  PENDING_AUDIT
+  AUDITING
+  ACTION_REQUIRED_NCR
+  VERIFYING_NCR
+  BOARD_REVIEW
+  CERTIFIED
   REJECTED
+  CLOSED_INCOMPLETE
 }
 
 enum CertIssueMode {
@@ -197,10 +208,14 @@ model CertificationApplication {
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   businessName    String
   sector          String
+  schemeCode      String?
+  referenceNumber String?
   productionScale String?
   productList     String
   notes           String?
-  status          ApplicationStatus @default(PENDING)
+  deficiencyNotes String?
+  auditDate       DateTime?
+  status          ApplicationStatus @default(SUBMITTED)
   certIssueMode   CertIssueMode     @default(MANUAL)
   reviewedBy      String?
   reviewNotes     String?

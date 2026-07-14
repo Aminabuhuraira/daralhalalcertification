@@ -5,7 +5,12 @@ export type SectorCount = { sector: string; count: number };
 export type MonthCount = { month: string; count: number };
 export type CategoryCount = { category: string; count: number };
 
-const STATUS_ORDER = ["PENDING", "UNDER_REVIEW", "APPROVED", "REJECTED"] as const;
+const STATUS_ORDER = [
+  "SUBMITTED", "SCREENING", "DEFICIENCY_NOTICE", "ELIGIBILITY_REVIEW",
+  "TRC_ESCALATION", "AWAITING_PAYMENT", "PENDING_AUDIT", "AUDITING",
+  "ACTION_REQUIRED_NCR", "VERIFYING_NCR", "BOARD_REVIEW",
+  "CERTIFIED", "REJECTED", "CLOSED_INCOMPLETE",
+] as const;
 
 export async function getApplicationChartData() {
   const [statusGroups, sectorGroups, all, courseRows] = await Promise.all([
@@ -23,10 +28,13 @@ export async function getApplicationChartData() {
     .map(([category, count]) => ({ category, count }))
     .sort((a, b) => b.count - a.count);
 
-  const statusCounts: StatusCount[] = STATUS_ORDER.map((status) => ({
-    status,
-    count: statusGroups.find((g) => g.status === status)?._count._all ?? 0,
-  }));
+  // Only include statuses that have data
+  const statusCounts: StatusCount[] = STATUS_ORDER
+    .map((status) => ({
+      status,
+      count: statusGroups.find((g) => g.status === status)?._count._all ?? 0,
+    }))
+    .filter(s => s.count > 0);
 
   const sortedSectors = [...sectorGroups].sort((a, b) => b._count._all - a._count._all);
   const TOP_N = 6;
@@ -37,7 +45,6 @@ export async function getApplicationChartData() {
     ...(otherCount > 0 ? [{ sector: "Other", count: otherCount }] : []),
   ];
 
-  // Trailing 6 months, oldest first, so every application's submission month is represented.
   const now = new Date();
   const monthBuckets: { key: string; label: string }[] = [];
   for (let i = 5; i >= 0; i--) {

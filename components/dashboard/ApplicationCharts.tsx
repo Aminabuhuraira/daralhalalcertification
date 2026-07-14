@@ -8,16 +8,44 @@ import type { StatusCount, SectorCount, MonthCount, CategoryCount } from "@/lib/
 // ── colour palettes ────────────────────────────────────────────────────────────
 
 const STATUS_COLOR: Record<string, string> = {
-  PENDING:      "#D97706",   // amber
-  UNDER_REVIEW: "#2563EB",   // blue
-  APPROVED:     "#16A34A",   // green
-  REJECTED:     "#DC2626",   // red
+  SUBMITTED:            "#6366F1",
+  SCREENING:            "#3B82F6",
+  DEFICIENCY_NOTICE:    "#F59E0B",
+  ELIGIBILITY_REVIEW:   "#8B5CF6",
+  TRC_ESCALATION:       "#7C3AED",
+  AWAITING_PAYMENT:     "#0EA5E9",
+  PENDING_AUDIT:        "#14B8A6",
+  AUDITING:             "#0891B2",
+  ACTION_REQUIRED_NCR:  "#F97316",
+  VERIFYING_NCR:        "#FB923C",
+  BOARD_REVIEW:         "#84CC16",
+  CERTIFIED:            "#22C55E",
+  REJECTED:             "#EF4444",
+  CLOSED_INCOMPLETE:    "#6B7280",
+  // Legacy
+  PENDING:              "#D97706",
+  UNDER_REVIEW:         "#2563EB",
+  APPROVED:             "#22C55E",
 };
 const STATUS_LABEL: Record<string, string> = {
-  PENDING:      "Pending",
-  UNDER_REVIEW: "Under Review",
-  APPROVED:     "Approved",
-  REJECTED:     "Rejected",
+  SUBMITTED:            "Submitted",
+  SCREENING:            "Screening",
+  DEFICIENCY_NOTICE:    "Action Required",
+  ELIGIBILITY_REVIEW:   "Eligibility Review",
+  TRC_ESCALATION:       "TRC / Shariah Review",
+  AWAITING_PAYMENT:     "Awaiting Payment",
+  PENDING_AUDIT:        "Audit Scheduled",
+  AUDITING:             "Auditing",
+  ACTION_REQUIRED_NCR:  "NCR Issued",
+  VERIFYING_NCR:        "Verifying NCR",
+  BOARD_REVIEW:         "Board Review",
+  CERTIFIED:            "Certified",
+  REJECTED:             "Rejected",
+  CLOSED_INCOMPLETE:    "Closed",
+  // Legacy
+  PENDING:              "Pending",
+  UNDER_REVIEW:         "Under Review",
+  APPROVED:             "Approved",
 };
 
 // Distinct, professional multi-series palette

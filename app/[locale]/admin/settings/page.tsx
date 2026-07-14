@@ -14,7 +14,7 @@ export default async function AdminSettingsPage({ params }: Params) {
   const [userCount, courseCount, pendingApplications, certificateCount] = await Promise.all([
     prisma.user.count().catch(() => 0),
     prisma.course.count().catch(() => 0),
-    prisma.certificationApplication.count({ where: { status: "PENDING" } }).catch(() => 0),
+    prisma.certificationApplication.count({ where: { status: { notIn: ["CERTIFIED", "REJECTED", "CLOSED_INCOMPLETE"] } } }).catch(() => 0),
     prisma.certificate.count().catch(() => 0),
   ]);
 

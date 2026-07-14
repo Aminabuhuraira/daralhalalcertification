@@ -8,9 +8,21 @@ export async function GET(req: Request) {
   if (!session?.user || (session.user as { role?: string }).role !== "ADMIN") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
-  const status = new URL(req.url).searchParams.get("status");
+  const url    = new URL(req.url);
+  const status = url.searchParams.get("status");
+  const q      = url.searchParams.get("q") ?? "";
+
   const applications = await prisma.certificationApplication.findMany({
-    where: status ? { status: status as never } : undefined,
+    where: {
+      ...(status ? { status: status as never } : {}),
+      ...(q ? {
+        OR: [
+          { businessName:    { contains: q } },
+          { referenceNumber: { contains: q } },
+          { schemeCode:      { contains: q } },
+        ],
+      } : {}),
+    },
     include: { user: { select: { name: true, email: true } }, payments: true, certificate: true },
     orderBy: { createdAt: "desc" },
   });
@@ -20,6 +32,7 @@ export async function GET(req: Request) {
 const createApplicationSchema = z.object({
   businessName:    z.string().min(1).max(160),
   sector:          z.string().min(1).max(120),
+  schemeCode:      z.enum(["FB", "FP", "AQ", "SL", "CS", "PH", "CG", "LG"]).optional(),
   productionScale: z.enum(["LARGE", "MEDIUM", "SMALL"]).optional(),
   productList:     z.string().min(1),
   notes:           z.string().optional(),
@@ -37,7 +50,7 @@ export async function POST(req: Request) {
   }
 
   const application = await prisma.certificationApplication.create({
-    data: { userId, ...parsed.data },
+    data: { userId, ...parsed.data, status: "SUBMITTED" },
   });
   return NextResponse.json({ application }, { status: 201 });
 }

@@ -24,9 +24,10 @@ export default async function ReviewerPage({ params }: Params) {
     orderBy: { createdAt: "desc" },
   });
 
-  const pending   = applications.filter((a) => a.status === "PENDING").length;
-  const reviewing = applications.filter((a) => a.status === "UNDER_REVIEW").length;
-  const approved  = applications.filter((a) => a.status === "APPROVED").length;
+  const TERMINAL = ["CERTIFIED", "REJECTED", "CLOSED_INCOMPLETE"];
+  const pending   = applications.filter((a) => !TERMINAL.includes(a.status) && a.status !== "BOARD_REVIEW").length;
+  const reviewing = applications.filter((a) => a.status === "BOARD_REVIEW").length;
+  const approved  = applications.filter((a) => a.status === "CERTIFIED").length;
 
   const roleLabel = user.role === "INSPECTOR" ? "Inspector" : "Reviewer";
 

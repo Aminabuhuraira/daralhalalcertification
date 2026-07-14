@@ -18,12 +18,6 @@ export async function issueCertificateIfNeeded(userId: string, courseId: string,
   });
 }
 
-/**
- * Issues the verifiable business halal certificate for an approved certification
- * application. Idempotent — safe to call from multiple trigger points (approval,
- * payment confirmation, manual admin action) since one certificate per application
- * is enforced by the unique applicationId constraint.
- */
 export async function issueApplicationCertificateIfNeeded(applicationId: string) {
   const existing = await prisma.certificate.findUnique({ where: { applicationId } });
   if (existing) return existing;
@@ -36,15 +30,17 @@ export async function issueApplicationCertificateIfNeeded(applicationId: string)
   });
 }
 
-/**
- * Called after a Payment tied to a CertificationApplication is confirmed COMPLETED
- * (via Paystack webhook or callback). Issues the certificate only if the admin
- * configured this application to issue on payment, and compliance was approved.
- */
 export async function maybeIssueOnPaymentCompleted(applicationId: string | null) {
   if (!applicationId) return null;
   const application = await prisma.certificationApplication.findUnique({ where: { id: applicationId } });
   if (!application) return null;
-  if (application.status !== "APPROVED" || application.certIssueMode !== "ON_PAYMENT") return null;
-  return issueApplicationCertificateIfNeeded(applicationId);
+  // In the new workflow, payment confirmation moves app to PENDING_AUDIT — certs are only
+  // issued when an admin explicitly transitions to CERTIFIED via the board approval step.
+  if (application.status !== "AWAITING_PAYMENT" || application.certIssueMode !== "ON_PAYMENT") return null;
+  // Move to PENDING_AUDIT on confirmed payment
+  await prisma.certificationApplication.update({
+    where: { id: applicationId },
+    data: { status: "PENDING_AUDIT" },
+  });
+  return null;
 }

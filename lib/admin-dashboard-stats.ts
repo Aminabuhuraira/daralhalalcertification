@@ -28,11 +28,24 @@ const SCALE_LABEL: Record<string, string> = {
   MEDIUM: "Medium Scale",
   SMALL: "Small Scale",
 };
-const STATUS_LABEL: Record<string, string> = {
-  APPROVED:     "Verified",
-  PENDING:      "Pending",
-  UNDER_REVIEW: "Under Review",
-  REJECTED:     "Rejected",
+
+// Groups many workflow states into chart-friendly buckets
+const STATUS_BUCKET: Record<string, string> = {
+  DRAFT:                "Pending",
+  SUBMITTED:            "Pending",
+  SCREENING:            "Pending",
+  DEFICIENCY_NOTICE:    "Pending",
+  ELIGIBILITY_REVIEW:   "Pending",
+  TRC_ESCALATION:       "Pending",
+  AWAITING_PAYMENT:     "Pending",
+  PENDING_AUDIT:        "Pending",
+  AUDITING:             "Pending",
+  ACTION_REQUIRED_NCR:  "Pending",
+  VERIFYING_NCR:        "Pending",
+  BOARD_REVIEW:         "Pending",
+  CERTIFIED:            "Certified",
+  REJECTED:             "Rejected",
+  CLOSED_INCOMPLETE:    "Closed",
 };
 
 function countProducts(productList: string): number {
@@ -50,7 +63,7 @@ export async function getAdminDashboardStats() {
     prisma.certificationApplication.findMany({
       select: { id: true, status: true, productionScale: true, productList: true, businessName: true, createdAt: true },
     }),
-    prisma.certificationApplication.count({ where: { status: "APPROVED" } }),
+    prisma.certificationApplication.count({ where: { status: "CERTIFIED" } }),
     prisma.certificate.count({
       where: {
         tier: "BUSINESS",
@@ -71,9 +84,7 @@ export async function getAdminDashboardStats() {
   ]);
 
   const totalCompanies = applications.length;
-  // "All Products" = total product line items submitted across every application
   const allProductsCount = applications.reduce((s, a) => s + countProducts(a.productList), 0);
-  // "Verified Products" = certificates of BUSINESS tier that have actually been issued
   const verifiedProductsCount = await prisma.certificate.count({ where: { tier: "BUSINESS" } });
 
   // Production Scale breakdown
@@ -86,19 +97,19 @@ export async function getAdminDashboardStats() {
     .filter(k => scaleMap.has(k))
     .map(k => ({ scale: SCALE_LABEL[k] ?? k, count: scaleMap.get(k)! }));
 
-  // Company Status breakdown
-  const statusMap = new Map<string, number>();
+  // Company Status breakdown — aggregate new states into buckets
+  const bucketMap = new Map<string, number>();
   for (const a of applications) {
-    const label = STATUS_LABEL[a.status] ?? a.status;
-    statusMap.set(label, (statusMap.get(label) ?? 0) + 1);
+    const bucket = STATUS_BUCKET[a.status] ?? "Pending";
+    bucketMap.set(bucket, (bucketMap.get(bucket) ?? 0) + 1);
   }
-  const statusCounts: StatusCount[] = [...statusMap.entries()].map(([status, count]) => ({
+  const statusCounts: StatusCount[] = [...bucketMap.entries()].map(([status, count]) => ({
     status,
     count,
     label: status,
   }));
 
-  // Upcoming renewals (within 60 days)
+  // Upcoming renewals
   const upcomingRenewals: RenewalRow[] = recentCerts
     .filter(c => c.expiresAt !== null)
     .map(c => ({

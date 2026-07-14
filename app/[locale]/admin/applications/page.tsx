@@ -1,9 +1,11 @@
-import { prisma } from "@/lib/db";
+import { ensureDb, prisma } from "@/lib/db";
 import AdminApplicationList from "@/components/dashboard/AdminApplicationList";
 import ApplicationCharts from "@/components/dashboard/ApplicationCharts";
 import { getApplicationChartData } from "@/lib/application-stats";
 
 export default async function AdminApplicationsPage() {
+  await ensureDb();
+
   const [applications, chartData] = await Promise.all([
     prisma.certificationApplication.findMany({
       include: { user: { select: { name: true, email: true } }, payments: true, certificate: true },
@@ -18,10 +20,12 @@ export default async function AdminApplicationsPage() {
         Certification Applications
       </h1>
       <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
-        Review applications, leave notes, and issue fee invoices.
+        Manage applications through the 9-stage certification workflow. Search, filter, and advance each application.
       </p>
       <ApplicationCharts {...chartData} />
-      <AdminApplicationList applications={applications} />
+      <div style={{ marginTop: 28 }}>
+        <AdminApplicationList applications={applications as never} />
+      </div>
     </div>
   );
 }

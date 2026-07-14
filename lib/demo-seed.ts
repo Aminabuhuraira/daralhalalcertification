@@ -7,7 +7,9 @@
  * Is idempotent: checks for existing applications before inserting.
  *
  * 21 companies  ·  6 LARGE (28.57%)  ·  7 MEDIUM (33.33%)  ·  8 SMALL (38.10%)
- * 10 APPROVED (47.62%)  ·  5 PENDING (23.81%)  ·  6 REJECTED (28.57%)
+ * 10 CERTIFIED (47.62%)  ·  5 in-progress (23.81%)  ·  6 REJECTED (28.57%)
+ *
+ * In-progress spread: SCREENING / ELIGIBILITY_REVIEW / SUBMITTED / DEFICIENCY_NOTICE / AWAITING_PAYMENT
  */
 
 import bcrypt from "bcryptjs";
@@ -27,20 +29,25 @@ function daysFromNow(n: number) {
 }
 
 // ─── company master list ──────────────────────────────────────────────────────
+// status = new state-machine values
+// schemeCode = DAHC scheme codes: FB FP AQ SL CS PH CG LG
+// referenceNumber = DAHC/YY/SCH/XXXX (only for CERTIFIED companies)
 
 const COMPANIES = [
-  // ── APPROVED · LARGE (4) ────────────────────────────────────────────────────
+  // ── CERTIFIED · LARGE (4) ───────────────────────────────────────────────────
   {
     name: "Usman Aliyu",
     email: "usman@halalalimentos.ng",
     biz: "Halal Alimentos Ltd",
-    sector: "Food Processing",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: "DAHC/25/FB/0001",
     scale: "LARGE",
     products: "Halal Seasoned Chicken, Beef Suya Mix, Jollof Spice Blend",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: true,
     certDaysAgo: 180,
-    certExpiresIn: 45,   // within upcoming renewals, not an alert
+    certExpiresIn: 45,
     created: 210,
     reviewNotes: "All documentation verified. Shariah Panel approved.",
   },
@@ -48,13 +55,15 @@ const COMPANIES = [
     name: "Maryam Garba",
     email: "maryam@nigermeat.ng",
     biz: "NigerMeat Express",
-    sector: "Meat & Poultry",
+    sector: "Slaughterhouse / Meat and Poultry",
+    schemeCode: "SL",
+    refNumber: "DAHC/25/SL/0001",
     scale: "LARGE",
     products: "Fresh Halal Beef, Halal Mutton, Smoked Chicken Wings",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: true,
     certDaysAgo: 155,
-    certExpiresIn: 210,  // healthy, 7+ months
+    certExpiresIn: 210,
     created: 185,
     reviewNotes: "All documentation verified. Shariah Panel approved.",
   },
@@ -62,10 +71,12 @@ const COMPANIES = [
     name: "Abdullahi Tanko",
     email: "abdullahi@pharmaherb.ng",
     biz: "Pharmaherb Nigeria",
-    sector: "Pharmaceuticals",
+    sector: "Pharmaceuticals and Supplements",
+    schemeCode: "PH",
+    refNumber: "DAHC/25/PH/0001",
     scale: "LARGE",
     products: "Herbal Immune Tonic, Halal Vitamin Capsules",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -76,10 +87,12 @@ const COMPANIES = [
     name: "Suleiman Kano",
     email: "suleiman@kanodairy.ng",
     biz: "Kano Dairy Fresh",
-    sector: "Dairy & Dairy Products",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: "DAHC/25/FB/0002",
     scale: "LARGE",
     products: "Pasteurised Halal Milk, Yoghurt, Cheese",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -87,15 +100,17 @@ const COMPANIES = [
     reviewNotes: "All documentation verified. Shariah Panel approved.",
   },
 
-  // ── APPROVED · MEDIUM (4) ───────────────────────────────────────────────────
+  // ── CERTIFIED · MEDIUM (4) ──────────────────────────────────────────────────
   {
     name: "Fatima Bello",
     email: "fatima@greenleaf.ng",
     biz: "GreenLeaf Cosmetics",
-    sector: "Cosmetics & Personal Care",
+    sector: "Cosmetics and Personal Care",
+    schemeCode: "CS",
+    refNumber: "DAHC/25/CS/0001",
     scale: "MEDIUM",
     products: "Halal Face Cream, Natural Lip Balm, Body Lotion",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -106,10 +121,12 @@ const COMPANIES = [
     name: "Ibrahim Musa",
     email: "ibrahim@blessedbev.ng",
     biz: "Blessed Beverages",
-    sector: "Beverages & Soft Drinks",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: "DAHC/25/FB/0003",
     scale: "MEDIUM",
     products: "Zobo Concentrate, Tigernut Drink, Ginger Lemon Shot",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -120,10 +137,12 @@ const COMPANIES = [
     name: "Halima Sule",
     email: "halima@premiumtex.ng",
     biz: "Premium Textiles Co",
-    sector: "Textiles & Fashion",
+    sector: "Consumer Goods",
+    schemeCode: "CG",
+    refNumber: "DAHC/25/CG/0001",
     scale: "MEDIUM",
     products: "Halal-Dyed Cotton Fabric, Embroidered Prayer Mat",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -134,10 +153,12 @@ const COMPANIES = [
     name: "Zainab Danbatta",
     email: "zainab@swiftlogix.ng",
     biz: "SwiftLogix Nigeria",
-    sector: "Logistics & Supply Chain",
+    sector: "Logistics and Supply Chain",
+    schemeCode: "LG",
+    refNumber: "DAHC/25/LG/0001",
     scale: "MEDIUM",
     products: "Halal Cold-Chain Transport, Certified Storage Service",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -145,15 +166,17 @@ const COMPANIES = [
     reviewNotes: "All documentation verified. Shariah Panel approved.",
   },
 
-  // ── APPROVED · SMALL (2) ────────────────────────────────────────────────────
+  // ── CERTIFIED · SMALL (2) ───────────────────────────────────────────────────
   {
     name: "Aisha Bakr",
     email: "aisha@mamaskitchen.ng",
     biz: "Mama's Kitchen Ltd",
-    sector: "Restaurant & Catering",
+    sector: "Food Premises",
+    schemeCode: "FP",
+    refNumber: "DAHC/25/FP/0001",
     scale: "SMALL",
     products: "Halal Lunch Buffet, Outdoor Catering Service",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -164,10 +187,12 @@ const COMPANIES = [
     name: "Mohammed Bello",
     email: "mohammed@econaturals.ng",
     biz: "EcoNaturals Health",
-    sector: "Health & Wellness",
+    sector: "Pharmaceuticals and Supplements",
+    schemeCode: "PH",
+    refNumber: "DAHC/25/PH/0002",
     scale: "SMALL",
     products: "Moringa Powder, Black Seed Oil, Herbal Tea Blend",
-    status: "APPROVED",
+    status: "CERTIFIED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -175,45 +200,51 @@ const COMPANIES = [
     reviewNotes: "All documentation verified. Shariah Panel approved.",
   },
 
-  // ── PENDING · LARGE (2) ─────────────────────────────────────────────────────
+  // ── IN-PROGRESS · LARGE (2) ─────────────────────────────────────────────────
   {
     name: "Garba Ilyas",
     email: "garba@goldengrains.ng",
     biz: "Golden Grains Mills",
-    sector: "Grain & Milling",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: null,
     scale: "LARGE",
     products: "Stone-Milled Wheat Flour, Semolina, Rice Flour",
-    status: "PENDING",
+    status: "SCREENING",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
     created: 55,
-    reviewNotes: null,
+    reviewNotes: "Documents received. Screening in progress.",
   },
   {
     name: "Yusuf Ahmad",
     email: "yusuf@northeastfarm.ng",
     biz: "NorthEast Agro Ltd",
-    sector: "Agriculture & Fresh Produce",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: "DAHC/26/FB/0001",
     scale: "LARGE",
     products: "Certified Organic Vegetables, Sun-Dried Tomatoes",
-    status: "PENDING",
+    status: "ELIGIBILITY_REVIEW",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
     created: 45,
-    reviewNotes: null,
+    reviewNotes: "Documents complete. Eligibility review in progress.",
   },
 
-  // ── PENDING · MEDIUM (2) ────────────────────────────────────────────────────
+  // ── IN-PROGRESS · MEDIUM (2) ────────────────────────────────────────────────
   {
     name: "Hauwa Dogo",
     email: "hauwa@riverbend.ng",
     biz: "Riverbend Farms",
-    sector: "Agriculture & Fresh Produce",
+    sector: "Aquatic Animals and Fish Processing",
+    schemeCode: "AQ",
+    refNumber: null,
     scale: "MEDIUM",
     products: "Smoked Catfish, Dried Crayfish, Fish Sauce",
-    status: "PENDING",
+    status: "SUBMITTED",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
@@ -224,31 +255,35 @@ const COMPANIES = [
     name: "Ismail Lawan",
     email: "ismail@techfoods.ng",
     biz: "TechFoods NG",
-    sector: "Food Processing",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: null,
     scale: "MEDIUM",
     products: "Instant Noodles, Seasoning Cubes, Pepper Sauce",
-    status: "PENDING",
+    status: "DEFICIENCY_NOTICE",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
     created: 28,
-    reviewNotes: null,
+    reviewNotes: "Missing: NAFDAC registration certificates for 2 products.",
   },
 
-  // ── PENDING · SMALL (1) ─────────────────────────────────────────────────────
+  // ── IN-PROGRESS · SMALL (1) ─────────────────────────────────────────────────
   {
     name: "Bilkisu Hassan",
     email: "bilkisu@sunstarsnacks.ng",
     biz: "SunStar Snacks",
-    sector: "Food Processing",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: "DAHC/26/FB/0002",
     scale: "SMALL",
     products: "Groundnut Cake (Kuli-Kuli), Chin-Chin, Coconut Candy",
-    status: "PENDING",
+    status: "AWAITING_PAYMENT",
     issueCert: false,
     certDaysAgo: 0,
     certExpiresIn: 0,
     created: 18,
-    reviewNotes: null,
+    reviewNotes: "Eligible. Application approved for registration. Fee invoice sent.",
   },
 
   // ── REJECTED · MEDIUM (1) ───────────────────────────────────────────────────
@@ -256,7 +291,9 @@ const COMPANIES = [
     name: "Aminu Sale",
     email: "aminu@sahara.ng",
     biz: "Sahara Confectionery",
-    sector: "Confectionery & Sweets",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: null,
     scale: "MEDIUM",
     products: "Chocolate Truffle, Caramel Candy",
     status: "REJECTED",
@@ -272,7 +309,9 @@ const COMPANIES = [
     name: "Rabi Nuhu",
     email: "rabi@fortuna.ng",
     biz: "Fortuna Cosmetics",
-    sector: "Cosmetics & Personal Care",
+    sector: "Cosmetics and Personal Care",
+    schemeCode: "CS",
+    refNumber: null,
     scale: "SMALL",
     products: "Anti-Ageing Serum, Hair Relaxer",
     status: "REJECTED",
@@ -286,7 +325,9 @@ const COMPANIES = [
     name: "Sadiq Waziri",
     email: "sadiq@abujatex.ng",
     biz: "AbujaTex Industries",
-    sector: "Textiles & Fashion",
+    sector: "Consumer Goods",
+    schemeCode: "CG",
+    refNumber: null,
     scale: "SMALL",
     products: "Polyester Fabric, Synthetic Dye Bath",
     status: "REJECTED",
@@ -300,7 +341,9 @@ const COMPANIES = [
     name: "Ladi Bature",
     email: "ladi@lagosbakery.ng",
     biz: "Lagos Bakery House",
-    sector: "Bakery & Confectionery",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: null,
     scale: "SMALL",
     products: "Birthday Cake, Meat Pie, Cream Puff",
     status: "REJECTED",
@@ -314,7 +357,9 @@ const COMPANIES = [
     name: "Chukwuma Nwosu",
     email: "chukwuma@quickbite.ng",
     biz: "QuickBite Restaurants",
-    sector: "Restaurant & Catering",
+    sector: "Food Premises",
+    schemeCode: "FP",
+    refNumber: null,
     scale: "SMALL",
     products: "Street Food Stand, Mixed Grill Set",
     status: "REJECTED",
@@ -328,7 +373,9 @@ const COMPANIES = [
     name: "Grace Okonkwo",
     email: "grace@deltaspices.ng",
     biz: "Delta Spices Co",
-    sector: "Food Processing",
+    sector: "Food and Beverages",
+    schemeCode: "FB",
+    refNumber: null,
     scale: "SMALL",
     products: "Mixed Spice Blend",
     status: "REJECTED",
@@ -341,7 +388,6 @@ const COMPANIES = [
 ];
 
 // ─── payment rows ─────────────────────────────────────────────────────────────
-// amounts in kobo (÷100 = naira)  e.g. 35_000_000 = ₦350,000
 
 const PAYMENT_ROWS = [
   { idx: 0,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 209 },
@@ -355,18 +401,13 @@ const PAYMENT_ROWS = [
   { idx: 5,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 119 },
   { idx: 5,  desc: "Certification Fee — Medium Scale", type: "COMPANY", amt: 25_000_000, status: "COMPLETED", daysAgo: 100 },
   { idx: 6,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 109 },
-  { idx: 6,  desc: "Certification Fee — Medium Scale", type: "COMPANY", amt: 25_000_000, status: "COMPLETED", daysAgo: 90 },
-  { idx: 7,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 94 },
-  { idx: 7,  desc: "Certification Fee — Medium Scale", type: "COMPANY", amt: 25_000_000, status: "COMPLETED", daysAgo: 75 },
-  { idx: 8,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 79 },
-  { idx: 8,  desc: "Certification Fee — Small Scale",  type: "COMPANY", amt: 15_000_000, status: "PENDING",   daysAgo: 60 },
-  { idx: 9,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 69 },
-  { idx: 9,  desc: "Certification Fee — Small Scale",  type: "COMPANY", amt: 15_000_000, status: "PENDING",   daysAgo: 50 },
-  { idx: 10, desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 54 },
-  { idx: 11, desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "PENDING",   daysAgo: 44 },
-  { idx: 12, desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 34 },
-  { idx: 13, desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 27 },
-  { idx: 14, desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "PENDING",   daysAgo: 17 },
+  { idx: 6,  desc: "Certification Fee — Medium Scale", type: "COMPANY", amt: 25_000_000, status: "COMPLETED", daysAgo: 90  },
+  { idx: 7,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 94  },
+  { idx: 7,  desc: "Certification Fee — Medium Scale", type: "COMPANY", amt: 25_000_000, status: "COMPLETED", daysAgo: 75  },
+  { idx: 8,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 79  },
+  { idx: 8,  desc: "Certification Fee — Small Scale",  type: "COMPANY", amt: 15_000_000, status: "PENDING",   daysAgo: 60  },
+  { idx: 9,  desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 69  },
+  { idx: 14, desc: "Application Fee",                  type: "COMPANY", amt: 7_500_000,  status: "COMPLETED", daysAgo: 17  },
 ];
 
 // ─── platform settings ────────────────────────────────────────────────────────
@@ -442,44 +483,46 @@ export async function seedDemoData(prisma: PrismaClient) {
     });
     userIds.push(user.id);
 
-    const app = await prisma.certificationApplication.create({
+    const app = await (prisma.certificationApplication as unknown as {
+      create: (args: { data: Record<string, unknown> }) => Promise<{ id: string }>;
+    }).create({
       data: {
-        userId: user.id,
-        businessName: c.biz,
-        sector: c.sector,
+        userId:          user.id,
+        businessName:    c.biz,
+        sector:          c.sector,
+        schemeCode:      c.schemeCode,
+        referenceNumber: c.refNumber,
         productionScale: c.scale,
-        productList: c.products,
-        status: c.status as "PENDING" | "APPROVED" | "REJECTED" | "UNDER_REVIEW",
-        reviewNotes: c.reviewNotes,
-        createdAt: daysAgo(c.created),
-        updatedAt: daysAgo(c.created),
+        productList:     c.products,
+        status:          c.status,
+        reviewNotes:     c.reviewNotes,
+        createdAt:       daysAgo(c.created),
+        updatedAt:       daysAgo(c.created),
       },
     });
     appIds.push(app.id);
   }
 
-  // ── 4. Certificates (2 BUSINESS tier) ──
-  // Halal Alimentos — cert expiring in 45 days (shows in upcoming renewals)
+  // ── 4. Certificates (2 BUSINESS tier — Halal Alimentos & NigerMeat) ──
   await prisma.certificate.create({
     data: {
-      userId: userIds[0],
+      userId:        userIds[0],
       applicationId: appIds[0],
-      tier: "BUSINESS",
-      serial: "DAH-2025-000001",
-      issuedAt: daysAgo(COMPANIES[0].certDaysAgo),
-      expiresAt: daysFromNow(COMPANIES[0].certExpiresIn),
+      tier:          "BUSINESS",
+      serial:        "DAH-2025-000001",
+      issuedAt:      daysAgo(COMPANIES[0].certDaysAgo),
+      expiresAt:     daysFromNow(COMPANIES[0].certExpiresIn),
     },
   });
 
-  // NigerMeat Express — cert expiring in 210 days (healthy)
   await prisma.certificate.create({
     data: {
-      userId: userIds[1],
+      userId:        userIds[1],
       applicationId: appIds[1],
-      tier: "BUSINESS",
-      serial: "DAH-2025-000002",
-      issuedAt: daysAgo(COMPANIES[1].certDaysAgo),
-      expiresAt: daysFromNow(COMPANIES[1].certExpiresIn),
+      tier:          "BUSINESS",
+      serial:        "DAH-2025-000002",
+      issuedAt:      daysAgo(COMPANIES[1].certDaysAgo),
+      expiresAt:     daysFromNow(COMPANIES[1].certExpiresIn),
     },
   });
 
@@ -487,30 +530,33 @@ export async function seedDemoData(prisma: PrismaClient) {
   for (const row of PAYMENT_ROWS) {
     await prisma.payment.create({
       data: {
-        userId: userIds[row.idx],
+        userId:        userIds[row.idx],
         applicationId: appIds[row.idx],
-        description: row.desc,
-        paymentType: row.type,
-        amount: row.amt,
-        currency: "NGN",
-        status: row.status as "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED",
-        createdAt: daysAgo(row.daysAgo),
+        description:   row.desc,
+        paymentType:   row.type,
+        amount:        row.amt,
+        currency:      "NGN",
+        status:        row.status as "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED",
+        createdAt:     daysAgo(row.daysAgo),
       },
     });
   }
 
-  // ── 6. Demo user application (visible when logged in as demo user) ──
-  await prisma.certificationApplication.create({
+  // ── 6. Demo user application ──
+  await (prisma.certificationApplication as unknown as {
+    create: (args: { data: Record<string, unknown> }) => Promise<{ id: string }>;
+  }).create({
     data: {
-      userId: "demo-user-001",
-      businessName: "Demo Foods Nigeria",
-      sector: "Food Processing",
+      userId:          "demo-user-001",
+      businessName:    "Demo Foods Nigeria",
+      sector:          "Food and Beverages",
+      schemeCode:      "FB",
       productionScale: "SMALL",
-      productList: "Organic Groundnut Oil, Pure Honey",
-      notes: "We are a small startup looking to export to the GCC market.",
-      status: "PENDING",
-      createdAt: daysAgo(5),
-      updatedAt: daysAgo(5),
+      productList:     "Organic Groundnut Oil, Pure Honey",
+      notes:           "We are a small startup looking to export to the GCC market.",
+      status:          "SUBMITTED",
+      createdAt:       daysAgo(5),
+      updatedAt:       daysAgo(5),
     },
   });
 }
