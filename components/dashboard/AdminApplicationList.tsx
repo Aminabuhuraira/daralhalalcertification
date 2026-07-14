@@ -6,10 +6,15 @@ import ApplicationStages from "@/components/dashboard/ApplicationStages";
 
 type Payment = { id: string; amount: number; currency: string; status: string };
 type Certificate = { id: string; serial: string; issuedAt: string | Date };
+const SCALE_LABEL: Record<string, string> = {
+  LARGE: "Large Scale", MEDIUM: "Medium Scale", SMALL: "Small Scale",
+};
+
 type Application = {
   id: string;
   businessName: string;
   sector: string;
+  productionScale: string | null;
   productList: string;
   notes: string | null;
   status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED";
@@ -94,7 +99,14 @@ function ApplicationRow({ app: initialApp }: { app: Application }) {
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
         <div>
           <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 500, color: "#0A1535", marginBottom: 2 }}>{app.businessName}</h3>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>{app.user.name} · {app.user.email} · {app.sector}</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
+            {app.user.name} · {app.user.email} · {app.sector}
+            {app.productionScale && (
+              <span style={{ marginLeft: 8, padding: "2px 8px", borderRadius: 4, background: "rgba(201,162,39,0.1)", color: "#9a7810", fontWeight: 700, fontSize: 11 }}>
+                {SCALE_LABEL[app.productionScale] ?? app.productionScale}
+              </span>
+            )}
+          </p>
         </div>
         <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: STATUS_COLOR[app.status], padding: "4px 10px", borderRadius: 6, border: `1px solid ${STATUS_COLOR[app.status]}40`, background: `${STATUS_COLOR[app.status]}15`, height: "fit-content" }}>
           {app.status.replace("_", " ")}

@@ -18,10 +18,11 @@ export async function GET(req: Request) {
 }
 
 const createApplicationSchema = z.object({
-  businessName: z.string().min(1).max(160),
-  sector: z.string().min(1).max(120),
-  productList: z.string().min(1),
-  notes: z.string().optional(),
+  businessName:    z.string().min(1).max(160),
+  sector:          z.string().min(1).max(120),
+  productionScale: z.enum(["LARGE", "MEDIUM", "SMALL"]).optional(),
+  productList:     z.string().min(1),
+  notes:           z.string().optional(),
 });
 
 export async function POST(req: Request) {

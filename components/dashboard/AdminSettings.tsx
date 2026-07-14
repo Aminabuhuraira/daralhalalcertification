@@ -132,14 +132,41 @@ function CreateCourseForm() {
   );
 }
 
-const PRICING_FIELDS = [
-  { key: "price_application_basic",   label: "Application Fee (Basic)",     desc: "Single product / small business application" },
-  { key: "price_application_standard",label: "Application Fee (Standard)",  desc: "Multi-product or medium business" },
-  { key: "price_application_premium", label: "Application Fee (Premium)",   desc: "Large enterprise / export-grade certification" },
-  { key: "price_renewal",             label: "Annual Renewal Fee",          desc: "Per-year renewal for active certificates" },
-  { key: "price_inspection",          label: "Onsite Inspection Fee",       desc: "Added for businesses requiring facility audit" },
-  { key: "price_surveillance",        label: "Surveillance Audit Fee",      desc: "Periodic compliance surveillance visit" },
+const SCALE_PRICING = [
+  { key: "price_cert_large",  label: "Large Scale",  accent: "#0A1535", desc: "High-volume industrial or national distribution" },
+  { key: "price_cert_medium", label: "Medium Scale", accent: "#6D28D9", desc: "Regional distribution, mid-tier production" },
+  { key: "price_cert_small",  label: "Small Scale",  accent: "#C9A227", desc: "Local or startup business, limited production" },
 ] as const;
+
+const OTHER_PRICING = [
+  { key: "price_application",  label: "Application Fee",      desc: "Paid on submission of every new application" },
+  { key: "price_renewal",      label: "Annual Renewal Fee",   desc: "Per-year renewal for active certificates" },
+  { key: "price_inspection",   label: "Onsite Inspection Fee",desc: "Added for businesses requiring facility audit" },
+  { key: "price_surveillance", label: "Surveillance Audit",   desc: "Periodic compliance surveillance visit" },
+] as const;
+
+function PriceInput({ label, desc, value, onChange, accent = "rgba(10,21,53,0.12)" }: {
+  label: string; desc: string; value: string; onChange: (v: string) => void; accent?: string;
+}) {
+  return (
+    <div>
+      <label style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginBottom: 4, display: "block", fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.05em" }}>
+        {label}
+      </label>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginBottom: 7, margin: "0 0 7px" }}>{desc}</p>
+      <div style={{ display: "flex", alignItems: "center", border: `1.5px solid ${accent}`, borderRadius: 8, overflow: "hidden", background: "#fafafa" }}>
+        <span style={{ padding: "11px 14px", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, color: "rgba(10,21,53,0.4)", borderRight: "1px solid rgba(10,21,53,0.08)", background: "#f0f0f0", flexShrink: 0 }}>₦</span>
+        <input
+          type="number" min="0" step="500"
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder="0"
+          style={{ flex: 1, border: "none", outline: "none", padding: "11px 14px", fontFamily: "var(--font-body)", fontSize: 14, color: "#0A1535", background: "transparent" }}
+        />
+      </div>
+    </div>
+  );
+}
 
 function PricingPanel() {
   const [prices, setPrices]     = useState<Record<string, string>>({});
@@ -153,6 +180,8 @@ function PricingPanel() {
       .then(d => { setPrices(d.settings ?? {}); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
+
+  const set = (key: string, val: string) => setPrices(p => ({ ...p, [key]: val }));
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,37 +198,35 @@ function PricingPanel() {
   if (loading) return <div style={{ padding: 40, textAlign: "center" }}><Loader2 size={20} style={{ animation: "rotateSeal 1s linear infinite", color: "#C9A227" }} /></div>;
 
   return (
-    <div style={{ maxWidth: 620 }}>
+    <div style={{ maxWidth: 680 }}>
       <div style={{ background: "rgba(201,162,39,0.06)", border: "1px solid rgba(201,162,39,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 24, display: "flex", gap: 10 }}>
         <DollarSign size={15} color="#C9A227" style={{ marginTop: 1, flexShrink: 0 }} />
         <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#7a6010", margin: 0, lineHeight: 1.6 }}>
-          Set prices in Nigerian Naira (NGN). Prices reflect on the user billing page and in Paystack invoices once your Paystack API key is configured.
+          Set prices in Nigerian Naira (NGN). These prices appear on the user billing page and in payment invoices.
         </p>
       </div>
 
       <form onSubmit={save} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+        {/* Certification fee by scale */}
         <GlowingCard style={{ padding: "24px 28px" }}>
-          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 600, color: "#0A1535", marginBottom: 20 }}>Certification Fees (NGN)</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {PRICING_FIELDS.map(f => (
-              <div key={f.key}>
-                <label style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginBottom: 5, display: "block", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  {f.label}
-                </label>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginBottom: 7 }}>{f.desc}</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 0, border: "1px solid rgba(10,21,53,0.12)", borderRadius: 8, overflow: "hidden", background: "#fafafa" }}>
-                  <span style={{ padding: "11px 14px", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 600, color: "rgba(10,21,53,0.4)", borderRight: "1px solid rgba(10,21,53,0.08)", background: "#f5f5f5" }}>₦</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="500"
-                    value={prices[f.key] ?? ""}
-                    onChange={e => setPrices(p => ({ ...p, [f.key]: e.target.value }))}
-                    placeholder="0"
-                    style={{ flex: 1, border: "none", outline: "none", padding: "11px 14px", fontFamily: "var(--font-body)", fontSize: 14, color: "#0A1535", background: "transparent" }}
-                  />
-                </div>
-              </div>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 600, color: "#0A1535", marginBottom: 6 }}>Certification Fee — By Production Scale</h2>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.45)", marginBottom: 20 }}>
+            The annual certification fee varies by company size. Applicants select their production scale when applying.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+            {SCALE_PRICING.map(f => (
+              <PriceInput key={f.key} label={f.label} desc={f.desc} value={prices[f.key] ?? ""} onChange={v => set(f.key, v)} accent={f.accent} />
+            ))}
+          </div>
+        </GlowingCard>
+
+        {/* Other fees */}
+        <GlowingCard style={{ padding: "24px 28px" }}>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 600, color: "#0A1535", marginBottom: 20 }}>Other Fees</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            {OTHER_PRICING.map(f => (
+              <PriceInput key={f.key} label={f.label} desc={f.desc} value={prices[f.key] ?? ""} onChange={v => set(f.key, v)} />
             ))}
           </div>
         </GlowingCard>

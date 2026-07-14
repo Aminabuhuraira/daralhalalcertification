@@ -185,25 +185,27 @@ model Certificate {
   tier          CertTier
   serial        String                    @unique
   issuedAt      DateTime                  @default(now())
+  expiresAt     DateTime?
 
   @@unique([userId, courseId, tier])
   @@index([serial])
 }
 
 model CertificationApplication {
-  id            String            @id @default(cuid())
-  userId        String
-  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  businessName  String
-  sector        String
-  productList   String
-  notes         String?
-  status        ApplicationStatus @default(PENDING)
-  certIssueMode CertIssueMode     @default(MANUAL)
-  reviewedBy    String?
-  reviewNotes   String?
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  id              String            @id @default(cuid())
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName    String
+  sector          String
+  productionScale String?
+  productList     String
+  notes           String?
+  status          ApplicationStatus @default(PENDING)
+  certIssueMode   CertIssueMode     @default(MANUAL)
+  reviewedBy      String?
+  reviewNotes     String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   payments    Payment[]
   certificate Certificate?
@@ -222,6 +224,7 @@ model Payment {
   amount        Int
   currency      String                    @default("NGN")
   status        PaymentStatus             @default(PENDING)
+  paymentType   String                    @default("COMPANY")
   description   String
   createdAt     DateTime                  @default(now())
 

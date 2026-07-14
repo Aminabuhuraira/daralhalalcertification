@@ -1,22 +1,28 @@
-import { Users, BookOpen, Award, ClipboardCheck, GraduationCap } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { Building2, ShieldCheck, Package, Bell, Boxes } from "lucide-react";
+import { ensureDb, prisma } from "@/lib/db";
 import StatTile from "@/components/dashboard/StatTile";
-import ApplicationCharts from "@/components/dashboard/ApplicationCharts";
-import { getApplicationChartData } from "@/lib/application-stats";
+import AdminOverviewCharts from "@/components/dashboard/AdminOverviewCharts";
+import AdminPaymentPanel from "@/components/dashboard/AdminPaymentPanel";
+import { getAdminDashboardStats } from "@/lib/admin-dashboard-stats";
 
 export default async function AdminOverviewPage() {
-  const [userCount, enrollmentCount, certificateCount, pendingApplications, courseCount, chartData] = await Promise.all([
-    prisma.user.count().catch(() => 0),
-    prisma.enrollment.count().catch(() => 0),
-    prisma.certificate.count().catch(() => 0),
-    prisma.certificationApplication.count({ where: { status: "PENDING" } }).catch(() => 0),
-    prisma.course.count().catch(() => 0),
-    getApplicationChartData().catch(() => ({ statusCounts: [], sectorCounts: [], monthlyCounts: [], categoryCounts: [], total: 0 })),
-  ]);
+  await ensureDb();
+
+  const stats = await getAdminDashboardStats().catch(() => ({
+    totalCompanies: 0,
+    certifiedCount: 0,
+    verifiedProductsCount: 0,
+    renewalAlerts: 0,
+    allProductsCount: 0,
+    scaleCounts: [],
+    statusCounts: [],
+    upcomingRenewals: [],
+    recentPayments: [],
+  }));
 
   return (
     <div>
-      <div style={{ marginBottom: 32 }}>
+      <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Admin Overview
         </h1>
@@ -26,16 +32,27 @@ export default async function AdminOverviewPage() {
       </div>
 
       {/* ── Stat strip ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14, marginBottom: 28 }}>
-        <StatTile icon={<Users size={17} />}          label="Total Users"          value={userCount}            accent="#0A1535" />
-        <StatTile icon={<GraduationCap size={17} />}  label="Enrollments"          value={enrollmentCount}      accent="#2563EB" />
-        <StatTile icon={<Award size={17} />}          label="Certificates"         value={certificateCount}     accent="#C9A227" />
-        <StatTile icon={<ClipboardCheck size={17} />} label="Pending Applications" value={pendingApplications}  accent="#D97706" />
-        <StatTile icon={<BookOpen size={17} />}       label="Courses"              value={courseCount}          accent="#16A34A" />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14, marginBottom: 20 }}>
+        <StatTile icon={<Building2 size={17} />}   label="Total Companies"     value={stats.totalCompanies}        accent="#0A1535" />
+        <StatTile icon={<ShieldCheck size={17} />} label="Certified Companies" value={stats.certifiedCount}        accent="#16A34A" />
+        <StatTile icon={<Package size={17} />}     label="Verified Products"   value={stats.verifiedProductsCount} accent="#C9A227" />
+        <StatTile icon={<Bell size={17} />}        label="Renewal Alerts"      value={stats.renewalAlerts}         accent="#DC2626" />
+        <StatTile icon={<Boxes size={17} />}       label="All Products"        value={stats.allProductsCount}      accent="#6D28D9" />
       </div>
 
       {/* ── Charts ── */}
-      <ApplicationCharts {...chartData} />
+      <div style={{ marginBottom: 20 }}>
+        <AdminOverviewCharts
+          scaleCounts={stats.scaleCounts}
+          statusCounts={stats.statusCounts}
+        />
+      </div>
+
+      {/* ── Payments + Renewals ── */}
+      <AdminPaymentPanel
+        recentPayments={stats.recentPayments}
+        upcomingRenewals={stats.upcomingRenewals}
+      />
     </div>
   );
 }
