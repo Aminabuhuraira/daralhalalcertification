@@ -20,16 +20,18 @@ const FEATURES = [
 ];
 
 const PROCESS_STEPS = [
-  { num: "01", title: "Application",         desc: "Submit your business details, product list, and initial documentation." },
-  { num: "02", title: "Screening",           desc: "Initial review of your application and business eligibility criteria." },
-  { num: "03", title: "Document Review",     desc: "Thorough analysis of all ingredients, formulations, and production processes." },
-  { num: "04", title: "On-Site Audit",       desc: "Physical inspection of your facilities, hygiene standards, and supply chain." },
-  { num: "05", title: "Shariah Verification",desc: "Scholar panel review of all compliance findings and issuance of the official certification opinion." },
-  { num: "06", title: "Decision",            desc: "Certification committee reviews all findings and makes the final approval decision." },
-  { num: "07", title: "Certificate Issued",  desc: "Your halal certificate and legally copyright-protected mark are issued." },
+  { num: "01", title: "Application",            desc: "Applicants submit an application form providing essential information about their products, processes, facilities, and ingredients to initiate the Halal certification process." },
+  { num: "02", title: "Screening",              desc: "Initial eligibility review of the application — ensuring the business, product category, and submitted details meet Dar Al Halal's entry criteria." },
+  { num: "03", title: "Document Review",        desc: "A rigorous review of technical documents — ingredients, formulations, production processes, and supply chain records — to guarantee full regulatory and Shariah compliance." },
+  { num: "04", title: "Onsite Audit",           desc: "An on-site inspection evaluates physical operations, hygiene standards, and supply chain integrity, while technical experts review audit reports to ensure compliance and prevent contamination." },
+  { num: "05", title: "Shariah Verification",   desc: "Audit findings and all documentation are evaluated by the Shariah Panel to ensure full compliance with authentic Islamic principles and halal standards." },
+  { num: "06", title: "Certification Decision", desc: "The Halal Certification Committee reviews all gathered evidence, audit reports, and Shariah findings, then issues a final approval or rejection decision." },
+  { num: "07", title: "Certificate Issuance",   desc: "Upon approval, the official Halal Certificate and legally copyright-protected mark are issued to the business." },
+  { num: "08", title: "Surveillance",           desc: "Periodic surveillance audits are conducted to verify that certified businesses maintain ongoing compliance with halal standards between certification cycles." },
+  { num: "09", title: "Renewal",                desc: "Certification is renewed annually to maintain uninterrupted Halal status, ensuring continuous compliance and consumer confidence." },
 ];
 
-const N = PROCESS_STEPS.length; // 7
+const N = PROCESS_STEPS.length; // 9
 
 /* ── component ─────────────────────────────────────────── */
 export default function CertificationTrust() {
@@ -106,7 +108,7 @@ export default function CertificationTrust() {
         </div>
 
         {/* ── Process header (outside sticky) ── */}
-        <LampHeader eyebrow="7-Step Process" light>
+        <LampHeader eyebrow="9-Step Process" light>
           From Application to Certificate
         </LampHeader>
       </div>

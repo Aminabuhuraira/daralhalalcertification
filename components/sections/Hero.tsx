@@ -8,10 +8,10 @@ import MovingBorderButton from "@/components/ui/MovingBorderButton";
 import OrbitalCertification from "@/components/ui/OrbitalCertification";
 
 const STATS = [
-  { icon: Globe2, value: "54", label: "African Markets" },
+  { icon: Globe2, value: "#1", label: "Nigeria, Africa's Largest Halal Market" },
   { icon: BadgeCheck, value: "12", label: "Certified Sectors" },
   { icon: Package, value: "2,400+", label: "Certified Products" },
-  { icon: TrendingUp, value: "$3T", label: "Global Halal Economy" },
+  { icon: TrendingUp, value: "$7T", label: "Global Halal Economy" },
 ];
 
 const WORDS = ["Quality", "Trust", "Growth", "Integrity", "Access"];
