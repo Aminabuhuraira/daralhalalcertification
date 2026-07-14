@@ -30,10 +30,10 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
       where: { userId },
       include: { application: { select: { businessName: true } } },
       orderBy: { createdAt: "desc" },
-    }),
+    }).catch(() => []),
     prisma.platformSetting.findMany({
       where: { key: { startsWith: "price_" } },
-    }),
+    }).catch(() => []),
   ]);
 
   const priceMap: Record<string, string> = {};

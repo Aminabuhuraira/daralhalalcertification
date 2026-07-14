@@ -12,10 +12,10 @@ export default async function AdminSettingsPage({ params }: Params) {
   if (!user || user.role !== "ADMIN") redirect(`/${locale}/auth/login`);
 
   const [userCount, courseCount, pendingApplications, certificateCount] = await Promise.all([
-    prisma.user.count(),
-    prisma.course.count(),
-    prisma.certificationApplication.count({ where: { status: "PENDING" } }),
-    prisma.certificate.count(),
+    prisma.user.count().catch(() => 0),
+    prisma.course.count().catch(() => 0),
+    prisma.certificationApplication.count({ where: { status: "PENDING" } }).catch(() => 0),
+    prisma.certificate.count().catch(() => 0),
   ]);
 
   return (

@@ -21,11 +21,11 @@ export default async function DashboardCoursesPage({
       where: { published: true },
       include: { modules: { include: { lessons: true } } },
       orderBy: { createdAt: "asc" },
-    }),
+    }).catch(() => []),
     prisma.enrollment.findMany({
       where: { userId },
       include: { lessonProgress: true },
-    }),
+    }).catch(() => []),
   ]);
 
   const enrollmentByCourse = new Map(enrollments.map((e) => [e.courseId, e]));

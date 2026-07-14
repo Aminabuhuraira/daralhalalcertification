@@ -12,7 +12,7 @@ export default async function AdminQuizBuilderPage({
   const course = await prisma.course.findUnique({
     where: { id: courseId },
     include: { quiz: { include: { questions: { orderBy: { order: "asc" } } } } },
-  });
+  }).catch(() => null);
   if (!course) notFound();
 
   const quiz = course.quiz

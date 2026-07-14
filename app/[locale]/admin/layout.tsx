@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { ensureDb } from "@/lib/db";
 import DashboardShell from "@/components/layout/DashboardShell";
 
 export default async function AdminLayout({
@@ -14,6 +15,7 @@ export default async function AdminLayout({
   if (!session?.user) redirect(`/${locale}/auth/login`);
   const user = session.user as { name?: string | null; role?: string };
   if (user.role !== "ADMIN") redirect(`/${locale}/dashboard`);
+  await ensureDb();
 
   return (
     <DashboardShell variant="admin" userName={user.name || "Admin"} userRole={user.role || "ADMIN"}>

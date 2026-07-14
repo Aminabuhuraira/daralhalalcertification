@@ -18,7 +18,7 @@ export default async function CertificatesPage({
     where: { userId },
     include: { course: true, application: true },
     orderBy: { issuedAt: "desc" },
-  });
+  }).catch(() => []);
 
   const TIER_LABEL: Record<string, string> = {
     DISTINCTION: "Certificate of Distinction",

@@ -19,7 +19,7 @@ export default async function CourseTrainerPage({
       modules: { orderBy: { order: "asc" }, include: { lessons: { orderBy: { order: "asc" } } } },
       quiz: { select: { id: true } },
     },
-  });
+  }).catch(() => null);
   if (!course) notFound();
 
   const enrollment = await prisma.enrollment.upsert({
@@ -27,7 +27,7 @@ export default async function CourseTrainerPage({
     update: {},
     create: { userId, courseId },
     include: { lessonProgress: true },
-  });
+  }).catch(() => ({ lessonProgress: [] }));
 
   const completedLessonIds = enrollment.lessonProgress.filter((p) => p.completed).map((p) => p.lessonId);
   const totalLessons = course.modules.flatMap((m) => m.lessons).length;

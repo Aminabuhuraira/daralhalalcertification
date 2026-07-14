@@ -27,7 +27,7 @@ export default async function CertificationApplicationPage({
     where: { userId },
     orderBy: { createdAt: "desc" },
     include: { payments: true, certificate: true },
-  });
+  }).catch(() => []);
 
   const activeApplication = applications.find((a) => a.status !== "REJECTED") || applications[0] || null;
   const canApplyAgain = !activeApplication || activeApplication.status === "REJECTED";

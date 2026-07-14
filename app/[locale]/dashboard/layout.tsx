@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { ensureDb } from "@/lib/db";
 import DashboardShell from "@/components/layout/DashboardShell";
 
 export default async function DashboardLayout({
@@ -12,6 +13,7 @@ export default async function DashboardLayout({
   const { locale } = await params;
   const session = await auth();
   if (!session?.user) redirect(`/${locale}/auth/login`);
+  await ensureDb();
 
   const user = session.user as { name?: string | null; role?: string };
 

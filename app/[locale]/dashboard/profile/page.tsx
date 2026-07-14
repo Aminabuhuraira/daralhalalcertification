@@ -13,11 +13,18 @@ export default async function ProfilePage({
   if (!session?.user) redirect(`/${locale}/auth/login`);
   const userId = (session.user as { id: string }).id;
 
-  const user = await prisma.user.findUnique({
+  const dbUser = await prisma.user.findUnique({
     where: { id: userId },
     select: { name: true, email: true, businessName: true, sector: true, phone: true },
-  });
-  if (!user) redirect(`/${locale}/auth/login`);
+  }).catch(() => null);
+  // Fall back to session data for demo/bypass users not in the database
+  const user = dbUser ?? {
+    name: (session.user as { name?: string | null }).name ?? "",
+    email: session.user.email ?? "",
+    businessName: null,
+    sector: null,
+    phone: null,
+  };
 
   return (
     <div>

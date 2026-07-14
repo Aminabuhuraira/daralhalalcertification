@@ -5,7 +5,7 @@ export default async function AdminUsersPage() {
   const users = await prisma.user.findMany({
     select: { id: true, name: true, email: true, role: true, businessName: true, sector: true, createdAt: true },
     orderBy: { createdAt: "desc" },
-  });
+  }).catch(() => []);
 
   return (
     <div>

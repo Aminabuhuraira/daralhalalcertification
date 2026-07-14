@@ -11,11 +11,17 @@ export default async function UserSettingsPage({ params }: Params) {
   if (!session?.user) redirect(`/${locale}/auth/login`);
 
   const userId = (session.user as { id: string }).id;
-  const user = await prisma.user.findUnique({
+  const dbUser = await prisma.user.findUnique({
     where: { id: userId },
     select: { name: true, email: true, businessName: true, sector: true, phone: true },
-  });
-  if (!user) redirect(`/${locale}/auth/login`);
+  }).catch(() => null);
+  const user = dbUser ?? {
+    name: (session.user as { name?: string | null }).name ?? "",
+    email: session.user.email ?? "",
+    businessName: null,
+    sector: null,
+    phone: null,
+  };
 
   return (
     <div>

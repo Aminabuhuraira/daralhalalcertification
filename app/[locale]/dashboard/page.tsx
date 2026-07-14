@@ -20,9 +20,9 @@ export default async function DashboardOverviewPage({
       where: { userId },
       include: { course: { include: { modules: { include: { lessons: true } } } }, lessonProgress: true },
       orderBy: { enrolledAt: "desc" },
-    }),
-    prisma.certificate.count({ where: { userId } }),
-    prisma.certificationApplication.findFirst({ where: { userId }, orderBy: { createdAt: "desc" } }),
+    }).catch(() => []),
+    prisma.certificate.count({ where: { userId } }).catch(() => 0),
+    prisma.certificationApplication.findFirst({ where: { userId }, orderBy: { createdAt: "desc" } }).catch(() => null),
   ]);
 
   const lh = (href: string) => `/${locale}${href}`;

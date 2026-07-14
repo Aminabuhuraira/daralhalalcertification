@@ -8,8 +8,8 @@ export default async function AdminApplicationsPage() {
     prisma.certificationApplication.findMany({
       include: { user: { select: { name: true, email: true } }, payments: true, certificate: true },
       orderBy: { createdAt: "desc" },
-    }),
-    getApplicationChartData(),
+    }).catch(() => []),
+    getApplicationChartData().catch(() => ({ statusCounts: [], sectorCounts: [], monthlyCounts: [], categoryCounts: [], total: 0 })),
   ]);
 
   return (

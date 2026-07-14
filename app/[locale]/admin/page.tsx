@@ -6,12 +6,12 @@ import { getApplicationChartData } from "@/lib/application-stats";
 
 export default async function AdminOverviewPage() {
   const [userCount, enrollmentCount, certificateCount, pendingApplications, courseCount, chartData] = await Promise.all([
-    prisma.user.count(),
-    prisma.enrollment.count(),
-    prisma.certificate.count(),
-    prisma.certificationApplication.count({ where: { status: "PENDING" } }),
-    prisma.course.count(),
-    getApplicationChartData(),
+    prisma.user.count().catch(() => 0),
+    prisma.enrollment.count().catch(() => 0),
+    prisma.certificate.count().catch(() => 0),
+    prisma.certificationApplication.count({ where: { status: "PENDING" } }).catch(() => 0),
+    prisma.course.count().catch(() => 0),
+    getApplicationChartData().catch(() => ({ statusCounts: [], sectorCounts: [], monthlyCounts: [], categoryCounts: [], total: 0 })),
   ]);
 
   return (

@@ -13,7 +13,7 @@ export default async function AdminContactsPage({ params }: Params) {
 
   const messages = await prisma.contactMessage.findMany({
     orderBy: { createdAt: "desc" },
-  });
+  }).catch(() => []);
 
   return (
     <div>

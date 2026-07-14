@@ -17,7 +17,7 @@ export default async function AdminCourseContentPage({ params }: Params) {
         include: { lessons: { orderBy: { order: "asc" } } },
       },
     },
-  });
+  }).catch(() => null);
 
   if (!course) notFound();
 

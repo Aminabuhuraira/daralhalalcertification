@@ -5,7 +5,7 @@ export default async function AdminCoursesPage() {
   const courses = await prisma.course.findMany({
     include: { _count: { select: { enrollments: true, certificates: true } }, quiz: { select: { id: true } } },
     orderBy: { createdAt: "asc" },
-  });
+  }).catch(() => []);
 
   return (
     <div>
