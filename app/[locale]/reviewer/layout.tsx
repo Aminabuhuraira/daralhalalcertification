@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { ensureDb } from "@/lib/db";
 import DashboardShell from "@/components/layout/DashboardShell";
 
 export default async function ReviewerLayout({
@@ -17,6 +18,7 @@ export default async function ReviewerLayout({
   if (!user || !user.role || !allowedRoles.includes(user.role)) {
     redirect(`/${locale}/auth/login`);
   }
+  await ensureDb();
 
   return (
     <DashboardShell variant="reviewer" userName={user.name || ""} userRole={user.role}>

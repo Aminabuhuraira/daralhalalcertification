@@ -135,7 +135,7 @@ export default async function DashboardOverviewPage({
             {application ? (
               <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.25)", borderRadius: 6, padding: "2px 10px", fontSize: 12, fontWeight: 700, color: "#9a7810", marginRight: 8 }}>
-                  {application.status.replace("_", " ")}
+                  {application.status.replace(/_/g, " ")}
                 </span>
                 {application.businessName}
               </p>
