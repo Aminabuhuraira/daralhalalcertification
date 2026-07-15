@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import CertificationApplicationForm from "@/components/dashboard/CertificationApplicationForm";
 import ApplicationStages from "@/components/dashboard/ApplicationStages";
 import GlowingCard from "@/components/ui/GlowingCard";
+import DocumentUpload from "@/components/dashboard/DocumentUpload";
 
 // Spec-defined dashboard status block messages
 const STATUS_MESSAGE: Record<string, { title: string; body: string; color: string }> = {
@@ -172,6 +173,23 @@ export default async function CertificationApplicationPage({
                   <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 10 }}>
                     <strong style={{ color: "#6D28D9" }}>Reviewer note:</strong> {app.reviewNotes}
                   </p>
+                )}
+
+                {/* Document upload — always visible; required action on DEFICIENCY_NOTICE */}
+                {!["CERTIFIED", "REJECTED", "CLOSED_INCOMPLETE"].includes(app.status) && (
+                  <div style={{
+                    padding: "14px 16px", borderRadius: 10, marginBottom: 12,
+                    background: app.status === "DEFICIENCY_NOTICE"
+                      ? "rgba(245,158,11,0.05)" : "rgba(10,21,53,0.02)",
+                    border: `1px solid ${app.status === "DEFICIENCY_NOTICE"
+                      ? "rgba(245,158,11,0.25)" : "rgba(10,21,53,0.08)"}`,
+                  }}>
+                    <DocumentUpload
+                      appId={app.id}
+                      initialDocs={app.documents ? JSON.parse(app.documents) : []}
+                      label={app.status === "DEFICIENCY_NOTICE" ? "Upload Required Documents" : "Supporting Documents"}
+                    />
+                  </div>
                 )}
 
                 {/* Fee / payment info */}

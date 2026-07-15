@@ -215,6 +215,7 @@ model CertificationApplication {
   notes           String?
   deficiencyNotes String?
   auditDate       DateTime?
+  documents       String?
   status          ApplicationStatus @default(SUBMITTED)
   certIssueMode   CertIssueMode     @default(MANUAL)
   reviewedBy      String?

@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { Award, Search, X, ChevronDown, ChevronUp, Bell } from "lucide-react";
 import GlowingCard from "@/components/ui/GlowingCard";
 import ApplicationStages from "@/components/dashboard/ApplicationStages";
+import DocumentUpload from "@/components/dashboard/DocumentUpload";
 
 type Payment = { id: string; amount: number; currency: string; status: string };
 type Certificate = { id: string; serial: string; issuedAt: string | Date };
@@ -112,6 +113,7 @@ type Application = {
   notes: string | null;
   deficiencyNotes: string | null;
   auditDate: string | Date | null;
+  documents: string | null;
   status: AppStatus;
   certIssueMode: "ON_APPROVAL" | "ON_PAYMENT" | "MANUAL";
   reviewNotes: string | null;
@@ -237,6 +239,16 @@ function ApplicationRow({ app: initialApp, defaultOpen }: { app: Application; de
           {/* Products + notes */}
           <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 10, whiteSpace: "pre-wrap" }}>{app.productList}</p>
           {app.notes && <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", marginBottom: 10 }}>Client notes: {app.notes}</p>}
+
+          {/* Applicant documents */}
+          <div style={{ marginBottom: 14 }}>
+            <DocumentUpload
+              appId={app.id}
+              initialDocs={app.documents ? JSON.parse(app.documents) : []}
+              readOnly
+              label="Applicant Documents"
+            />
+          </div>
 
           {/* Payments */}
           {app.payments.length > 0 && (
