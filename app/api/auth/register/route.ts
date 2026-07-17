@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/db";
+import { prisma, ensureDb } from "@/lib/db";
 
 const registerSchema = z.object({
   name: z.string().min(2).max(120),
@@ -13,6 +13,7 @@ const registerSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  await ensureDb().catch(() => {});
   const body = await req.json().catch(() => null);
   const parsed = registerSchema.safeParse(body);
   if (!parsed.success) {

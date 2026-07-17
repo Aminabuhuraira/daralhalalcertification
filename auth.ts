@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { authConfig } from "./auth.config";
-import { prisma } from "@/lib/db";
+import { prisma, ensureDb } from "@/lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -10,23 +10,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       credentials: { email: {}, password: {} },
       async authorize(credentials) {
-        const email = credentials?.email as string | undefined;
+        const email    = credentials?.email    as string | undefined;
         const password = credentials?.password as string | undefined;
         if (!email || !password) return null;
 
-        // Demo admin bypass — no database needed. Set DEMO_ADMIN_PASSWORD in Vercel env.
-        const demoPass = process.env.DEMO_ADMIN_PASSWORD;
-        if (demoPass && email === "admin@daralhalalcertification.com" && password === demoPass) {
+        // Ensure the database is initialised before any query.
+        // This is critical on cold Vercel lambdas where the login route
+        // fires before any dashboard layout (which also calls ensureDb).
+        await ensureDb().catch(() => {});
+
+        // Demo admin bypass — works even before DB is seeded.
+        const demoAdminPass = process.env.DEMO_ADMIN_PASSWORD;
+        if (demoAdminPass && email === "admin@daralhalalcertification.com" && password === demoAdminPass) {
           return { id: "demo-admin-001", name: "Admin", email: "admin@daralhalalcertification.com", role: "ADMIN" };
         }
 
-        // Demo user bypass — no database needed. Set DEMO_USER_PASSWORD in Vercel env.
+        // Demo user bypass — works even before DB is seeded.
         const demoUserPass = process.env.DEMO_USER_PASSWORD;
         if (demoUserPass && email === "user@daralhalalcertification.com" && password === demoUserPass) {
           return { id: "demo-user-001", name: "Demo User", email: "user@daralhalalcertification.com", role: "USER" };
         }
 
-        // Regular database-backed auth
+        // Regular database-backed auth (covers seeded accounts + real registrations).
         try {
           const user = await prisma.user.findUnique({ where: { email } });
           if (!user) return null;
