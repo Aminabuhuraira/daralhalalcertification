@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation";
-import { Award, Download, ShieldCheck, Info } from "lucide-react";
+import { Award, Download, ShieldCheck, Info, FileWarning, ExternalLink } from "lucide-react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import CertificationApplicationForm from "@/components/dashboard/CertificationApplicationForm";
 import ApplicationStages from "@/components/dashboard/ApplicationStages";
 import GlowingCard from "@/components/ui/GlowingCard";
 import DocumentUpload from "@/components/dashboard/DocumentUpload";
+import DraftApplicationEditor from "@/components/dashboard/DraftApplicationEditor";
+import CertificationApplicationForm from "@/components/dashboard/CertificationApplicationForm";
+import PaymentCTA from "@/components/dashboard/PaymentCTA";
+import TrustmarkDownload from "@/components/dashboard/TrustmarkDownload";
 
 // Spec-defined dashboard status block messages
 const STATUS_MESSAGE: Record<string, { title: string; body: string; color: string }> = {
@@ -71,12 +74,12 @@ const STATUS_MESSAGE: Record<string, { title: string; body: string; color: strin
   },
   CERTIFIED: {
     title: "Congratulations — Certified!",
-    body: "Your Halal Certificate has been issued and is ready for download.",
+    body: "Your Halal Certificate has been issued and is ready for download. You may also download the authorised DAHC trustmark.",
     color: "#22C55E",
   },
   REJECTED: {
     title: "Application Not Approved",
-    body: "Your application was not approved. Please review the formal decision letter for further details. You may reapply.",
+    body: "Your application was not approved. Please review the formal decision letter for further details. You may submit a new application.",
     color: "#EF4444",
   },
   CLOSED_INCOMPLETE: {
@@ -104,8 +107,10 @@ export default async function CertificationApplicationPage({
     include: { payments: true, certificate: true },
   }).catch(() => []);
 
-  const activeApplication = applications.find(a => !TERMINAL_STATES.includes(a.status)) || applications[0] || null;
-  const canApplyAgain = !activeApplication || TERMINAL_STATES.includes(activeApplication.status);
+  const activeApplication = applications.find(a => !TERMINAL_STATES.includes(a.status)) || null;
+  const hasDraft = activeApplication?.status === "DRAFT";
+  const canApplyAgain = !activeApplication || TERMINAL_STATES.includes(activeApplication.status ?? "");
+  const allTerminal = applications.length > 0 && applications.every(a => TERMINAL_STATES.includes(a.status));
 
   return (
     <div>
@@ -116,11 +121,19 @@ export default async function CertificationApplicationPage({
         Apply for halal certification of your products or services.
       </p>
 
+      {/* Existing applications */}
       {applications.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32 }}>
           {applications.map((app) => {
-            const msg     = STATUS_MESSAGE[app.status];
+            const msg      = STATUS_MESSAGE[app.status];
             const msgColor = msg?.color ?? "#6B7280";
+            const isDraft  = app.status === "DRAFT";
+            const isNCR    = app.status === "ACTION_REQUIRED_NCR";
+            const isPendingAudit = app.status === "PENDING_AUDIT";
+            const isAwaitingPayment = app.status === "AWAITING_PAYMENT";
+            const isCertified = app.status === "CERTIFIED";
+            const isRejected  = app.status === "REJECTED";
+            const isClosed    = app.status === "CLOSED_INCOMPLETE";
 
             return (
               <GlowingCard key={app.id} style={{ padding: "20px 22px" }}>
@@ -129,7 +142,13 @@ export default async function CertificationApplicationPage({
                   <div>
                     <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 500, color: "#0A1535", marginBottom: 4 }}>{app.businessName}</h3>
                     <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
-                      {app.sector} · submitted {new Date(app.createdAt).toLocaleDateString()}
+                      {app.sector}
+                      {app.schemeCode && (
+                        <span style={{ marginLeft: 8, fontWeight: 700, color: "#6D28D9" }}>{app.schemeCode}</span>
+                      )}
+                      {" · "}
+                      {isDraft ? "started " : "submitted "}
+                      {new Date(app.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                       {app.referenceNumber && (
                         <span style={{ marginLeft: 10, fontWeight: 700, color: "#6D28D9" }}>{app.referenceNumber}</span>
                       )}
@@ -145,13 +164,15 @@ export default async function CertificationApplicationPage({
                   </span>
                 </div>
 
-                {/* Progress stages */}
-                <div style={{ marginBottom: 14, padding: "10px 4px" }}>
-                  <ApplicationStages status={app.status} certificateIssued={!!app.certificate} />
-                </div>
+                {/* Progress stages (not shown for DRAFT) */}
+                {!isDraft && (
+                  <div style={{ marginBottom: 14, padding: "10px 4px" }}>
+                    <ApplicationStages status={app.status} certificateIssued={!!app.certificate} />
+                  </div>
+                )}
 
                 {/* Status block message */}
-                {msg && app.status !== "CERTIFIED" && (
+                {msg && !isCertified && !isDraft && (
                   <div style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "12px 14px", borderRadius: 8, background: `${msgColor}10`, border: `1px solid ${msgColor}30`, marginBottom: 12 }}>
                     <Info size={15} color={msgColor} style={{ flexShrink: 0, marginTop: 1 }} />
                     <div>
@@ -161,66 +182,206 @@ export default async function CertificationApplicationPage({
                   </div>
                 )}
 
-                {/* Deficiency notes from admin */}
-                {app.status === "DEFICIENCY_NOTICE" && app.deficiencyNotes && (
-                  <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.3)", marginBottom: 12 }}>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#D97706", marginBottom: 4 }}>Documents Required:</p>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", whiteSpace: "pre-wrap" }}>{app.deficiencyNotes}</p>
-                  </div>
+                {/* ── DRAFT: show full editor ── */}
+                {isDraft && (
+                  <DraftApplicationEditor app={{
+                    id: app.id,
+                    businessName: app.businessName,
+                    sector: app.sector,
+                    schemeCode: app.schemeCode,
+                    productionScale: app.productionScale,
+                    productList: app.productList,
+                    notes: app.notes,
+                    documents: app.documents,
+                  }} />
                 )}
 
-                {app.reviewNotes && (
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 10 }}>
-                    <strong style={{ color: "#6D28D9" }}>Reviewer note:</strong> {app.reviewNotes}
-                  </p>
+                {/* ── DEFICIENCY_NOTICE: show admin note + upload ── */}
+                {app.status === "DEFICIENCY_NOTICE" && (
+                  <>
+                    {app.deficiencyNotes && (
+                      <div style={{ padding: "12px 14px", borderRadius: 8, background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.3)", marginBottom: 12 }}>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#D97706", marginBottom: 6 }}>
+                          <FileWarning size={13} style={{ display: "inline", marginRight: 5 }} />
+                          Documents Required by DAHC:
+                        </p>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{app.deficiencyNotes}</p>
+                      </div>
+                    )}
+                    <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(245,158,11,0.04)", border: "1px solid rgba(245,158,11,0.2)" }}>
+                      <DocumentUpload
+                        appId={app.id}
+                        initialDocs={app.documents ? JSON.parse(app.documents) : []}
+                        label="Upload Required Documents"
+                      />
+                    </div>
+                  </>
                 )}
 
-                {/* Document upload — always visible; required action on DEFICIENCY_NOTICE */}
-                {!["CERTIFIED", "REJECTED", "CLOSED_INCOMPLETE"].includes(app.status) && (
-                  <div style={{
-                    padding: "14px 16px", borderRadius: 10, marginBottom: 12,
-                    background: app.status === "DEFICIENCY_NOTICE"
-                      ? "rgba(245,158,11,0.05)" : "rgba(10,21,53,0.02)",
-                    border: `1px solid ${app.status === "DEFICIENCY_NOTICE"
-                      ? "rgba(245,158,11,0.25)" : "rgba(10,21,53,0.08)"}`,
-                  }}>
+                {/* ── Supporting documents (all non-terminal, non-DRAFT, non-DEFICIENCY) ── */}
+                {!isDraft && !["CERTIFIED", "REJECTED", "CLOSED_INCOMPLETE", "DEFICIENCY_NOTICE"].includes(app.status) && (
+                  <div style={{ padding: "12px 14px", borderRadius: 10, marginBottom: 12, background: "rgba(10,21,53,0.02)", border: "1px solid rgba(10,21,53,0.07)" }}>
                     <DocumentUpload
                       appId={app.id}
                       initialDocs={app.documents ? JSON.parse(app.documents) : []}
-                      label={app.status === "DEFICIENCY_NOTICE" ? "Upload Required Documents" : "Supporting Documents"}
+                      label="Supporting Documents"
                     />
                   </div>
                 )}
 
-                {/* Fee / payment info */}
-                {app.payments.length > 0 && (
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginBottom: app.certificate ? 14 : 0 }}>
-                    Fee: {app.payments[0].currency} {(app.payments[0].amount / 100).toLocaleString()} — {app.payments[0].status}.{" "}
-                    <a href={`/${locale}/dashboard/billing`} style={{ color: "#6D28D9" }}>View in billing</a>
+                {/* ── AWAITING_PAYMENT: payment CTA ── */}
+                {isAwaitingPayment && (
+                  <PaymentCTA
+                    appId={app.id}
+                    payments={app.payments as { id: string; amount: number; currency: string; status: string; description: string }[]}
+                    locale={locale}
+                  />
+                )}
+
+                {/* ── PENDING_AUDIT: audit date ── */}
+                {isPendingAudit && (
+                  <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)" }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0D9488", marginBottom: 4 }}>Audit Schedule</p>
+                    {app.auditDate ? (
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
+                        Your on-site audit is scheduled for{" "}
+                        <strong>{new Date(app.auditDate).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</strong>.
+                        Please ensure your facilities are ready for the DAHC inspection team.
+                      </p>
+                    ) : (
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)" }}>
+                        Our team will contact you shortly to confirm the audit date and logistics.
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* ── ACTION_REQUIRED_NCR: NCR report + evidence upload ── */}
+                {isNCR && (
+                  <>
+                    {app.ncrReport && (
+                      <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.25)" }}>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#C2410C", marginBottom: 6 }}>
+                          Non-Conformance Report (NCR)
+                        </p>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{app.ncrReport}</p>
+                      </div>
+                    )}
+                    {app.reviewNotes && (
+                      <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 12, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.08)" }}>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)" }}>
+                          <strong>Auditor note:</strong> {app.reviewNotes}
+                        </p>
+                      </div>
+                    )}
+                    <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(249,115,22,0.04)", border: "1px solid rgba(249,115,22,0.15)" }}>
+                      <DocumentUpload
+                        appId={app.id}
+                        initialDocs={app.documents ? JSON.parse(app.documents) : []}
+                        label="Upload Corrective Evidence (photos, procedures, documents)"
+                      />
+                    </div>
+                    <NCRSubmitButton appId={app.id} />
+                  </>
+                )}
+
+                {/* ── General reviewer note ── */}
+                {app.reviewNotes && !isNCR && !isRejected && !isCertified && (
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 12 }}>
+                    <strong style={{ color: "#6D28D9" }}>Reviewer note:</strong> {app.reviewNotes}
                   </p>
                 )}
 
-                {/* Certificate download */}
-                {app.certificate && (
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, padding: "14px 16px", borderRadius: 10, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <Award size={18} color="#22C55E" />
+                {/* ── CERTIFIED: certificate + trustmark + public registry ── */}
+                {isCertified && (
+                  <>
+                    <div style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "12px 14px", borderRadius: 8, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", marginBottom: 12 }}>
+                      <Info size={15} color="#22C55E" style={{ flexShrink: 0, marginTop: 1 }} />
                       <div>
-                        <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#22C55E" }}>Congratulations — You're Certified!</div>
-                        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>
-                          Serial {app.certificate.serial} · Issued {new Date(app.certificate.issuedAt).toLocaleDateString()}
-                        </div>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#22C55E", marginBottom: 2 }}>{msg?.title}</p>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)", lineHeight: 1.5 }}>{msg?.body}</p>
                       </div>
                     </div>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <a href={`/api/certificates/${app.certificate.id}/pdf`} target="_blank" rel="noreferrer" className="btn-primary" style={{ fontSize: 12.5, padding: "8px 14px" }}>
-                        <Download size={13} /> Download
-                      </a>
-                      <a href={`/${locale}/verify?serial=${app.certificate.serial}`} className="btn-ghost" style={{ fontSize: 12.5, padding: "8px 14px" }}>
-                        <ShieldCheck size={13} /> Verify
-                      </a>
+
+                    {app.certificate && (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, padding: "16px 18px", borderRadius: 10, background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", marginBottom: 10 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <Award size={20} color="#22C55E" />
+                          <div>
+                            <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#22C55E" }}>Halal Certificate</div>
+                            <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>
+                              Serial {app.certificate.serial} · Issued {new Date(app.certificate.issuedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                              {app.certificate.expiresAt && (
+                                <> · Expires {new Date(app.certificate.expiresAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <a href={`/api/certificates/${app.certificate.id}/pdf`} target="_blank" rel="noreferrer" className="btn-primary" style={{ fontSize: 12.5, padding: "8px 14px" }}>
+                            <Download size={13} /> Download Certificate
+                          </a>
+                          <a href={`/${locale}/verify?serial=${app.certificate.serial}`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, padding: "8px 14px", borderRadius: 6, border: "1px solid rgba(34,197,94,0.3)", color: "#16A34A", textDecoration: "none", background: "rgba(34,197,94,0.06)" }}>
+                            <ShieldCheck size={13} /> Verify Online
+                          </a>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Trustmark */}
+                    <TrustmarkDownload
+                      businessName={app.businessName}
+                      referenceNumber={app.referenceNumber}
+                      schemeCode={app.schemeCode}
+                    />
+
+                    {/* Public registry link */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderRadius: 8, background: "rgba(109,40,217,0.04)", border: "1px solid rgba(109,40,217,0.12)", marginTop: 8 }}>
+                      <ExternalLink size={13} color="#6D28D9" />
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)" }}>
+                        Your business is listed in the{" "}
+                        <a href={`/${locale}/registry`} style={{ color: "#6D28D9", textDecoration: "underline" }}>DAHC Public Halal Registry</a>.
+                      </p>
                     </div>
-                  </div>
+                  </>
+                )}
+
+                {/* ── REJECTED: reason + re-apply link ── */}
+                {isRejected && (
+                  <>
+                    {app.reviewNotes && (
+                      <div style={{ padding: "12px 14px", borderRadius: 8, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", marginBottom: 12 }}>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#DC2626", marginBottom: 4 }}>Formal Decision:</p>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", lineHeight: 1.6 }}>{app.reviewNotes}</p>
+                      </div>
+                    )}
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)", lineHeight: 1.5 }}>
+                      Once you have addressed the issues above, you may{" "}
+                      <a href={`/${locale}/dashboard/certification`} onClick={() => undefined} style={{ color: "#6D28D9", fontWeight: 600 }}>
+                        submit a new application
+                      </a>
+                      . Contact <a href="mailto:info@daralhalalcertification.com" style={{ color: "#6D28D9" }}>info@daralhalalcertification.com</a> for guidance.
+                    </p>
+                  </>
+                )}
+
+                {/* ── CLOSED_INCOMPLETE ── */}
+                {isClosed && (
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)", lineHeight: 1.5 }}>
+                    You may start a{" "}
+                    <a href={`/${locale}/dashboard/certification`} style={{ color: "#6D28D9", fontWeight: 600 }}>
+                      new application
+                    </a>{" "}
+                    at any time. Contact <a href="mailto:info@daralhalalcertification.com" style={{ color: "#6D28D9" }}>info@daralhalalcertification.com</a> for assistance.
+                  </p>
+                )}
+
+                {/* ── Payment info line (all states except terminal + AWAITING_PAYMENT) ── */}
+                {app.payments.length > 0 && !isAwaitingPayment && !isCertified && (
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", marginTop: 10 }}>
+                    Fee: {app.payments[0].currency} {(app.payments[0].amount / 100).toLocaleString()} — {app.payments[0].status}.{" "}
+                    <a href={`/${locale}/dashboard/billing`} style={{ color: "#6D28D9" }}>View in billing</a>
+                  </p>
                 )}
               </GlowingCard>
             );
@@ -228,15 +389,26 @@ export default async function CertificationApplicationPage({
         </div>
       )}
 
-      {canApplyAgain ? (
+      {/* New application form */}
+      {canApplyAgain && !hasDraft ? (
         <CertificationApplicationForm />
-      ) : (
+      ) : !hasDraft && !canApplyAgain ? (
         <GlowingCard style={{ padding: "24px" }}>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.6)" }}>
-            Your application is being processed. Our team will reach out via your registered email at each stage.
+            Your application is being processed. Our team will contact you via email at each stage.
           </p>
         </GlowingCard>
+      ) : null}
+
+      {/* Re-apply button when all are terminal */}
+      {allTerminal && (
+        <div style={{ marginTop: 8 }}>
+          <CertificationApplicationForm />
+        </div>
       )}
     </div>
   );
 }
+
+// Client component for NCR evidence submission button
+import NCRSubmitButton from "@/components/dashboard/NCRSubmitButton";

@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Search, Trash2, Loader2 } from "lucide-react";
 import { CERTIFICATION_SECTORS } from "@/lib/sectors";
 
-type Role = "USER" | "REVIEWER" | "INSPECTOR" | "ADMIN";
+type Role = "USER" | "REVIEWER" | "OPERATIONS_MANAGER" | "INSPECTOR" | "TECHNICAL" | "SHARIA_PANEL" | "SUPER_ADMIN" | "ADMIN";
 
 type AdminUser = {
   id: string;
@@ -16,10 +16,14 @@ type AdminUser = {
 };
 
 const ROLE_META: Record<Role, { label: string; color: string; bg: string; border: string }> = {
-  USER:      { label: "User",      color: "rgba(10,21,53,0.5)",  bg: "rgba(10,21,53,0.05)",      border: "rgba(10,21,53,0.1)" },
-  REVIEWER:  { label: "Reviewer",  color: "#2563EB",             bg: "rgba(37,99,235,0.08)",      border: "rgba(37,99,235,0.25)" },
-  INSPECTOR: { label: "Inspector", color: "#0891B2",             bg: "rgba(8,145,178,0.08)",      border: "rgba(8,145,178,0.25)" },
-  ADMIN:     { label: "Admin",     color: "#9a7810",             bg: "rgba(201,162,39,0.12)",     border: "rgba(201,162,39,0.3)" },
+  USER:               { label: "User",              color: "rgba(10,21,53,0.5)",  bg: "rgba(10,21,53,0.05)",    border: "rgba(10,21,53,0.1)" },
+  REVIEWER:           { label: "Reviewer",          color: "#2563EB",             bg: "rgba(37,99,235,0.08)",   border: "rgba(37,99,235,0.25)" },
+  OPERATIONS_MANAGER: { label: "Ops Manager",       color: "#8B5CF6",             bg: "rgba(139,92,246,0.08)",  border: "rgba(139,92,246,0.25)" },
+  INSPECTOR:          { label: "Inspector",         color: "#0891B2",             bg: "rgba(8,145,178,0.08)",   border: "rgba(8,145,178,0.25)" },
+  TECHNICAL:          { label: "Technical",         color: "#6366F1",             bg: "rgba(99,102,241,0.08)",  border: "rgba(99,102,241,0.25)" },
+  SHARIA_PANEL:       { label: "Shariah Panel",     color: "#65A30D",             bg: "rgba(101,163,13,0.08)",  border: "rgba(101,163,13,0.25)" },
+  SUPER_ADMIN:        { label: "Super Admin",       color: "#C2410C",             bg: "rgba(194,65,12,0.08)",   border: "rgba(194,65,12,0.25)" },
+  ADMIN:              { label: "Admin",             color: "#9a7810",             bg: "rgba(201,162,39,0.12)",  border: "rgba(201,162,39,0.3)" },
 };
 
 const ctrlStyle: React.CSSProperties = {
@@ -86,9 +90,13 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
           <div key={role} style={{ display: "flex", alignItems: "center", gap: 7, padding: "6px 12px", background: m.bg, border: `1px solid ${m.border}`, borderRadius: 8 }}>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: m.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</span>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.5)" }}>
-              {role === "USER" && "— standard account, course access only"}
-              {role === "REVIEWER" && "— can review and process applications"}
-              {role === "INSPECTOR" && "— can conduct and submit audit reports"}
+              {role === "USER" && "— standard account, course access"}
+              {role === "REVIEWER" && "— initial screening (submitted → deficiency)"}
+              {role === "OPERATIONS_MANAGER" && "— eligibility review & TRC escalation"}
+              {role === "INSPECTOR" && "— audit pipeline (audit → board review)"}
+              {role === "TECHNICAL" && "— technical certification preparation"}
+              {role === "SHARIA_PANEL" && "— final Shariah approval / rejection"}
+              {role === "SUPER_ADMIN" && "— full access + override authority"}
               {role === "ADMIN" && "— full platform access"}
             </span>
           </div>
@@ -105,7 +113,11 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
           <option value="ALL">All Roles</option>
           <option value="USER">User</option>
           <option value="REVIEWER">Reviewer</option>
+          <option value="OPERATIONS_MANAGER">Operations Manager</option>
           <option value="INSPECTOR">Inspector</option>
+          <option value="TECHNICAL">Technical</option>
+          <option value="SHARIA_PANEL">Shariah Panel</option>
+          <option value="SUPER_ADMIN">Super Admin</option>
           <option value="ADMIN">Admin</option>
         </select>
         <select value={sectorFilter} onChange={(e) => setSectorFilter(e.target.value)} style={ctrlStyle}>
@@ -156,7 +168,11 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
                         >
                           <option value="USER">User</option>
                           <option value="REVIEWER">Reviewer</option>
+                          <option value="OPERATIONS_MANAGER">Ops Manager</option>
                           <option value="INSPECTOR">Inspector</option>
+                          <option value="TECHNICAL">Technical</option>
+                          <option value="SHARIA_PANEL">Shariah Panel</option>
+                          <option value="SUPER_ADMIN">Super Admin</option>
                           <option value="ADMIN">Admin</option>
                         </select>
                       )}

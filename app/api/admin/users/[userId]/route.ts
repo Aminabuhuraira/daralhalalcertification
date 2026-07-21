@@ -5,11 +5,13 @@ import { prisma } from "@/lib/db";
 
 type Params = { params: Promise<{ userId: string }> };
 
-const updateSchema = z.object({ role: z.enum(["USER", "REVIEWER", "INSPECTOR", "ADMIN"]) });
+const ALL_ROLES = ["USER", "REVIEWER", "OPERATIONS_MANAGER", "INSPECTOR", "TECHNICAL", "SHARIA_PANEL", "SUPER_ADMIN", "ADMIN"] as const;
+const updateSchema = z.object({ role: z.enum(ALL_ROLES) });
 
 async function requireAdmin() {
   const session = await auth();
-  if (!session?.user || (session.user as { role?: string }).role !== "ADMIN") return null;
+  const role = (session?.user as { role?: string })?.role;
+  if (!session?.user || (role !== "ADMIN" && role !== "SUPER_ADMIN")) return null;
   return session;
 }
 

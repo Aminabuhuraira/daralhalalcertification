@@ -5,32 +5,35 @@ import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Award, CreditCard, Users, BookOpen,
   ClipboardCheck, ShieldCheck, LogOut, ArrowLeftRight, FileText,
-  Settings, Mail, Eye, Activity, ClipboardList,
+  Settings, Mail, Activity, ClipboardList, FileSearch,
+  Microscope, Moon, Briefcase,
 } from "lucide-react";
+
+type Variant = "user" | "admin" | "reviewer" | "ops" | "inspector" | "technical" | "sharia";
 
 type Props = {
   children: React.ReactNode;
-  variant: "user" | "admin" | "reviewer" | "inspector";
+  variant: Variant;
   userName: string;
   userRole: string;
 };
 
 const USER_NAV = [
-  { label: "Overview",      href: "/dashboard",               icon: LayoutDashboard },
-  { label: "Courses",       href: "/dashboard/courses",       icon: BookOpen },
-  { label: "Certification", href: "/dashboard/certification", icon: FileText },
-  { label: "Certificates",  href: "/dashboard/certificates",  icon: Award },
-  { label: "Billing",       href: "/dashboard/billing",       icon: CreditCard },
-  { label: "Settings",      href: "/dashboard/settings",      icon: Settings },
+  { label: "Overview",       href: "/dashboard",               icon: LayoutDashboard },
+  { label: "Courses",        href: "/dashboard/courses",       icon: BookOpen },
+  { label: "Certification",  href: "/dashboard/certification", icon: FileText },
+  { label: "Certificates",   href: "/dashboard/certificates",  icon: Award },
+  { label: "Billing",        href: "/dashboard/billing",       icon: CreditCard },
+  { label: "Settings",       href: "/dashboard/settings",      icon: Settings },
 ];
 
 const ADMIN_NAV = [
-  { label: "Overview",     href: "/admin",              icon: LayoutDashboard },
-  { label: "Users",        href: "/admin/users",        icon: Users },
-  { label: "Courses",      href: "/admin/courses",      icon: BookOpen },
-  { label: "Applications", href: "/admin/applications", icon: ClipboardCheck },
-  { label: "Contacts",     href: "/admin/contacts",     icon: Mail },
-  { label: "Settings",     href: "/admin/settings",     icon: Settings },
+  { label: "Overview",      href: "/admin",              icon: LayoutDashboard },
+  { label: "Users",         href: "/admin/users",        icon: Users },
+  { label: "Courses",       href: "/admin/courses",      icon: BookOpen },
+  { label: "Applications",  href: "/admin/applications", icon: ClipboardCheck },
+  { label: "Contacts",      href: "/admin/contacts",     icon: Mail },
+  { label: "Settings",      href: "/admin/settings",     icon: Settings },
 ];
 
 const REVIEWER_NAV = [
@@ -38,20 +41,49 @@ const REVIEWER_NAV = [
   { label: "My Profile",    href: "/dashboard/settings", icon: Settings },
 ];
 
+const OPS_NAV = [
+  { label: "Eligibility Queue", href: "/ops",              icon: FileSearch },
+  { label: "My Profile",        href: "/dashboard/settings", icon: Settings },
+];
+
 const INSPECTOR_NAV = [
   { label: "Audit Queue",   href: "/inspector",          icon: ClipboardList },
   { label: "My Profile",    href: "/dashboard/settings", icon: Settings },
 ];
 
+const TECHNICAL_NAV = [
+  { label: "Certification Prep", href: "/technical",          icon: Microscope },
+  { label: "My Profile",         href: "/dashboard/settings", icon: Settings },
+];
+
+const SHARIA_NAV = [
+  { label: "Shariah Review",  href: "/sharia",             icon: Moon },
+  { label: "My Profile",      href: "/dashboard/settings", icon: Settings },
+];
+
+// Role badge config per variant
+const ROLE_BADGE: Partial<Record<Variant, { label: string; sublabel: string; color: string; bg: string; border: string }>> = {
+  reviewer: { label: "ROLE", sublabel: "Certification Review Officer", color: "#6366F1", bg: "rgba(99,102,241,0.05)", border: "rgba(99,102,241,0.15)" },
+  ops:      { label: "ROLE", sublabel: "Operations Manager", color: "#8B5CF6", bg: "rgba(139,92,246,0.05)", border: "rgba(139,92,246,0.15)" },
+  inspector:{ label: "ROLE", sublabel: "Audit Inspector",  color: "#0891B2", bg: "rgba(8,145,178,0.05)", border: "rgba(8,145,178,0.15)" },
+  technical:{ label: "ROLE", sublabel: "Technical Review Team", color: "#6366F1", bg: "rgba(99,102,241,0.05)", border: "rgba(99,102,241,0.15)" },
+  sharia:   { label: "ROLE", sublabel: "Shariah Panel Member", color: "#65A30D", bg: "rgba(101,163,13,0.05)", border: "rgba(101,163,13,0.15)" },
+};
+
 export default function DashboardShell({ children, variant, userName, userRole }: Props) {
-  const params  = useParams();
+  const params   = useParams();
   const pathname = usePathname();
-  const locale  = (params?.locale as string) || "en";
+  const locale   = (params?.locale as string) || "en";
+
   const navItems =
     variant === "admin"     ? ADMIN_NAV     :
     variant === "reviewer"  ? REVIEWER_NAV  :
+    variant === "ops"       ? OPS_NAV       :
     variant === "inspector" ? INSPECTOR_NAV :
+    variant === "technical" ? TECHNICAL_NAV :
+    variant === "sharia"    ? SHARIA_NAV    :
     USER_NAV;
+
   const lh = (href: string) => `/${locale}${href}`;
 
   return (
@@ -75,7 +107,10 @@ export default function DashboardShell({ children, variant, userName, userRole }
           {navItems.map((item) => {
             const href   = lh(item.href);
             const active = pathname === href ||
-              (item.href !== "/dashboard" && item.href !== "/admin" && pathname?.startsWith(href));
+              (item.href !== "/dashboard" && item.href !== "/admin" &&
+               item.href !== "/reviewer"  && item.href !== "/ops" &&
+               item.href !== "/inspector" && item.href !== "/technical" &&
+               item.href !== "/sharia"    && pathname?.startsWith(href));
             return (
               <Link
                 key={item.href}
@@ -97,7 +132,7 @@ export default function DashboardShell({ children, variant, userName, userRole }
           })}
 
           {/* Cross-portal links */}
-          {variant === "user" && userRole === "ADMIN" && (
+          {variant === "user" && (userRole === "ADMIN" || userRole === "SUPER_ADMIN") && (
             <Link href={lh("/admin")} style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "#9a7810", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 600, marginTop: 10, border: "1px dashed rgba(201,162,39,0.4)" }}>
               <ShieldCheck size={15} /> Admin Panel
             </Link>
@@ -107,17 +142,23 @@ export default function DashboardShell({ children, variant, userName, userRole }
               <ArrowLeftRight size={15} /> User Dashboard
             </Link>
           )}
-          {variant === "reviewer" && (
-            <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 8, background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.15)" }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Role</p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>Certification Review Officer</p>
-            </div>
-          )}
-          {variant === "inspector" && (
-            <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 8, background: "rgba(8,145,178,0.05)", border: "1px solid rgba(8,145,178,0.15)" }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#0891B2", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Role</p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>Audit Inspector</p>
-            </div>
+
+          {/* Role badge for staff portals */}
+          {ROLE_BADGE[variant] && (() => {
+            const badge = ROLE_BADGE[variant]!;
+            return (
+              <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 8, background: badge.bg, border: `1px solid ${badge.border}` }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: badge.color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{badge.label}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>{badge.sublabel}</p>
+              </div>
+            );
+          })()}
+
+          {/* Cross-portal access for SUPER_ADMIN/ADMIN who land on staff portals */}
+          {(userRole === "ADMIN" || userRole === "SUPER_ADMIN") && variant !== "admin" && variant !== "user" && (
+            <Link href={lh("/admin")} style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "#9a7810", fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 600, marginTop: 10, border: "1px dashed rgba(201,162,39,0.4)" }}>
+              <Briefcase size={14} /> Admin Panel
+            </Link>
           )}
         </nav>
 
@@ -125,7 +166,7 @@ export default function DashboardShell({ children, variant, userName, userRole }
         <div style={{ borderTop: "1px solid rgba(10,21,53,0.08)", paddingTop: 16, marginTop: 16 }}>
           <div style={{ padding: "0 8px", marginBottom: 12 }}>
             <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userName}</div>
-            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole}</div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole.replace(/_/g, " ")}</div>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: `/${locale}` })}

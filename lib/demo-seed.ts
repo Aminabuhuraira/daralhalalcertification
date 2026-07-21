@@ -431,29 +431,24 @@ export async function seedDemoData(prisma: PrismaClient) {
   const hash = await bcrypt.hash("Demo1234!", 10);
 
   // ── 1. System accounts ──
-  await prisma.user.upsert({
-    where: { email: "admin@daralhalalcertification.com" },
-    update: {},
-    create: {
-      id: "demo-admin-001",
-      name: "Admin",
-      email: "admin@daralhalalcertification.com",
-      passwordHash: hash,
-      role: "ADMIN",
-    },
-  });
+  const SYSTEM_ACCOUNTS = [
+    { id: "demo-admin-001",   name: "System Administrator",          email: "admin@daralhalalcertification.com",        role: "ADMIN" as const },
+    { id: "demo-sadmin-001",  name: "Super Administrator",           email: "superadmin@daralhalalcertification.com",   role: "SUPER_ADMIN" as const },
+    { id: "demo-reviewer-001",name: "Amara Okonkwo (Reviewer)",      email: "reviewer@daralhalalcertification.com",     role: "REVIEWER" as const },
+    { id: "demo-opsmgr-001",  name: "Bello Abdullahi (Ops Manager)", email: "opsmanager@daralhalalcertification.com",   role: "OPERATIONS_MANAGER" as const },
+    { id: "demo-insp-001",    name: "Yusuf Aliyu (Inspector)",       email: "inspector@daralhalalcertification.com",    role: "INSPECTOR" as const },
+    { id: "demo-tech-001",    name: "Dr. Fatima Sule (Technical)",   email: "technical@daralhalalcertification.com",    role: "TECHNICAL" as const },
+    { id: "demo-sharia-001",  name: "Sheikh Ibrahim Kano (Shariah)", email: "shariah@daralhalalcertification.com",      role: "SHARIA_PANEL" as const },
+    { id: "demo-user-001",    name: "Demo User",                      email: "user@daralhalalcertification.com",         role: "USER" as const },
+  ];
 
-  await prisma.user.upsert({
-    where: { email: "user@daralhalalcertification.com" },
-    update: {},
-    create: {
-      id: "demo-user-001",
-      name: "Demo User",
-      email: "user@daralhalalcertification.com",
-      passwordHash: hash,
-      role: "USER",
-    },
-  });
+  for (const acct of SYSTEM_ACCOUNTS) {
+    await prisma.user.upsert({
+      where: { email: acct.email },
+      update: {},
+      create: { ...acct, passwordHash: hash },
+    });
+  }
 
   // ── 2. Platform pricing defaults ──
   for (const [key, value] of Object.entries(DEFAULT_SETTINGS)) {

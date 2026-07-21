@@ -15,7 +15,8 @@ export default async function InspectorLayout({
   if (!session?.user) redirect(`/${locale}/auth/login`);
 
   const user = session.user as { name?: string | null; role?: string };
-  if (user.role !== "INSPECTOR" && user.role !== "ADMIN") {
+  const inspectorAllowed = ["INSPECTOR", "ADMIN", "SUPER_ADMIN"];
+  if (!user.role || !inspectorAllowed.includes(user.role)) {
     redirect(`/${locale}/dashboard`);
   }
 

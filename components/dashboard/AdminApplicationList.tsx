@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import { Award, Search, X, ChevronDown, ChevronUp, Bell } from "lucide-react";
+import { Award, Search, X, ChevronDown, ChevronUp, Bell, Calendar, Filter } from "lucide-react";
 import GlowingCard from "@/components/ui/GlowingCard";
 import ApplicationStages from "@/components/dashboard/ApplicationStages";
 import DocumentUpload from "@/components/dashboard/DocumentUpload";
@@ -12,7 +12,6 @@ const SCALE_LABEL: Record<string, string> = {
   LARGE: "Large Scale", MEDIUM: "Medium Scale", SMALL: "Small Scale",
 };
 
-// Human-readable display names for each status
 const STATUS_DISPLAY: Record<string, string> = {
   DRAFT:               "Draft",
   SUBMITTED:           "Submitted",
@@ -29,13 +28,13 @@ const STATUS_DISPLAY: Record<string, string> = {
   CERTIFIED:           "Certified",
   REJECTED:            "Rejected",
   CLOSED_INCOMPLETE:   "Closed — Incomplete",
-  // Legacy
   PENDING:             "Pending",
   UNDER_REVIEW:        "Under Review",
   APPROVED:            "Approved",
 };
 
 const STATUS_COLOR: Record<string, string> = {
+  DRAFT:               "#9CA3AF",
   SUBMITTED:           "#6366F1",
   SCREENING:           "#3B82F6",
   DEFICIENCY_NOTICE:   "#F59E0B",
@@ -55,9 +54,9 @@ const STATUS_COLOR: Record<string, string> = {
   APPROVED:            "#22C55E",
 };
 
-// Allowed state transitions from each status
 const TRANSITIONS: Record<string, Array<{ to: string; label: string; color: string }>> = {
-  SUBMITTED:           [{ to: "SCREENING",         label: "Begin Screening",              color: "#3B82F6" }],
+  DRAFT:               [{ to: "SUBMITTED",          label: "Submit Application",           color: "#6366F1" }],
+  SUBMITTED:           [{ to: "SCREENING",           label: "Begin Screening",              color: "#3B82F6" }],
   SCREENING:           [
     { to: "DEFICIENCY_NOTICE",  label: "Issue Deficiency Notice",     color: "#F59E0B" },
     { to: "ELIGIBILITY_REVIEW", label: "Documents Complete ✓",        color: "#16A34A" },
@@ -75,13 +74,13 @@ const TRANSITIONS: Record<string, Array<{ to: string; label: string; color: stri
     { to: "AWAITING_PAYMENT",   label: "TRC Approved",                 color: "#16A34A" },
     { to: "REJECTED",           label: "TRC Rejected",                 color: "#EF4444" },
   ],
-  AWAITING_PAYMENT:    [{ to: "PENDING_AUDIT",    label: "Payment Received",             color: "#16A34A" }],
-  PENDING_AUDIT:       [{ to: "AUDITING",          label: "Audit Started",                color: "#0891B2" }],
+  AWAITING_PAYMENT:    [{ to: "PENDING_AUDIT",     label: "Payment Received ✓",           color: "#16A34A" }],
+  PENDING_AUDIT:       [{ to: "AUDITING",           label: "Audit Started",                color: "#0891B2" }],
   AUDITING:            [
     { to: "ACTION_REQUIRED_NCR", label: "Issue NCR (Non-Conformance)", color: "#F97316" },
     { to: "BOARD_REVIEW",        label: "No Issues — Send to Board",   color: "#16A34A" },
   ],
-  ACTION_REQUIRED_NCR: [{ to: "VERIFYING_NCR",    label: "Evidence Received",            color: "#3B82F6" }],
+  ACTION_REQUIRED_NCR: [{ to: "VERIFYING_NCR",     label: "Evidence Received",            color: "#3B82F6" }],
   VERIFYING_NCR:       [
     { to: "BOARD_REVIEW",        label: "NCR Passed — Send to Board",  color: "#16A34A" },
     { to: "REJECTED",            label: "NCR Failed — Reject",         color: "#EF4444" },
@@ -90,14 +89,12 @@ const TRANSITIONS: Record<string, Array<{ to: string; label: string; color: stri
     { to: "CERTIFIED",           label: "Board Approved — Certify ✓",  color: "#C9A227" },
     { to: "REJECTED",            label: "Board Rejected",               color: "#EF4444" },
   ],
-  // Terminal states
   CERTIFIED:           [],
   REJECTED:            [],
   CLOSED_INCOMPLETE:   [],
-  // Legacy transitions
-  PENDING:             [{ to: "SUBMITTED",         label: "Update to Submitted",          color: "#6366F1" }],
-  UNDER_REVIEW:        [{ to: "SCREENING",          label: "Move to Screening",            color: "#3B82F6" }],
-  APPROVED:            [{ to: "CERTIFIED",          label: "Mark as Certified",            color: "#C9A227" }],
+  PENDING:             [{ to: "SUBMITTED",          label: "Update to Submitted",          color: "#6366F1" }],
+  UNDER_REVIEW:        [{ to: "SCREENING",           label: "Move to Screening",            color: "#3B82F6" }],
+  APPROVED:            [{ to: "CERTIFIED",           label: "Mark as Certified",            color: "#C9A227" }],
 };
 
 type AppStatus = keyof typeof STATUS_DISPLAY;
@@ -112,6 +109,7 @@ type Application = {
   productList: string;
   notes: string | null;
   deficiencyNotes: string | null;
+  ncrReport: string | null;
   auditDate: string | Date | null;
   documents: string | null;
   status: AppStatus;
@@ -136,11 +134,12 @@ function isNew(createdAt: string | Date) {
   return Date.now() - new Date(createdAt).getTime() < 24 * 60 * 60 * 1000;
 }
 
-// States each role is allowed to advance (undefined = no restriction = ADMIN)
-const REVIEWER_STATES  = new Set(["SUBMITTED","SCREENING","DEFICIENCY_NOTICE","ELIGIBILITY_REVIEW","TRC_ESCALATION","AWAITING_PAYMENT","PENDING_AUDIT"]);
-const INSPECTOR_STATES = new Set(["PENDING_AUDIT","AUDITING","ACTION_REQUIRED_NCR","VERIFYING_NCR","BOARD_REVIEW"]);
-// BOARD_REVIEW → CERTIFIED is an admin-only action
-const ADMIN_ONLY_TRANSITIONS = new Set(["CERTIFIED"]);
+const REVIEWER_STATES       = new Set(["SUBMITTED", "SCREENING", "DEFICIENCY_NOTICE"]);
+const OPERATIONS_MGR_STATES = new Set(["ELIGIBILITY_REVIEW", "TRC_ESCALATION", "AWAITING_PAYMENT"]);
+const INSPECTOR_STATES      = new Set(["PENDING_AUDIT", "AUDITING", "ACTION_REQUIRED_NCR", "VERIFYING_NCR"]);
+const TECHNICAL_STATES      = new Set(["BOARD_REVIEW"]);
+const SHARIA_STATES         = new Set(["BOARD_REVIEW"]);
+const ADMIN_ONLY_TARGETS    = new Set(["CERTIFIED"]);
 
 function ApplicationRow({
   app: initialApp,
@@ -151,26 +150,33 @@ function ApplicationRow({
   defaultOpen: boolean;
   viewerRole?: string;
 }) {
-  const [app,           setApp]           = useState(initialApp);
-  const [open,         setOpen]           = useState(defaultOpen);
-  const [reviewNotes,  setReviewNotes]    = useState(app.reviewNotes || "");
-  const [defNotes,     setDefNotes]       = useState(app.deficiencyNotes || "");
-  const [feeAmount,    setFeeAmount]      = useState("");
-  const [saving,       setSaving]         = useState(false);
-  const [message,      setMessage]        = useState("");
+  const [app,          setApp]        = useState(initialApp);
+  const [open,         setOpen]       = useState(defaultOpen);
+  const [reviewNotes,  setReviewNotes]= useState(app.reviewNotes ?? "");
+  const [defNotes,     setDefNotes]   = useState(app.deficiencyNotes ?? "");
+  const [ncrReport,    setNcrReport]  = useState(app.ncrReport ?? "");
+  const [feeAmount,    setFeeAmount]  = useState("");
+  const [auditDateStr, setAuditDate]  = useState(
+    app.auditDate ? new Date(app.auditDate).toISOString().slice(0, 10) : ""
+  );
+  const [saving,  setSaving]  = useState(false);
+  const [message, setMessage] = useState("");
 
-  // Filter available transitions based on caller's role
   const allTransitions = TRANSITIONS[app.status] ?? [];
   const transitions = allTransitions.filter(t => {
-    if (!viewerRole || viewerRole === "ADMIN") return true;
-    if (ADMIN_ONLY_TRANSITIONS.has(t.to)) return false;          // only ADMIN can certify
-    if (viewerRole === "REVIEWER") return REVIEWER_STATES.has(app.status);
-    if (viewerRole === "INSPECTOR") return INSPECTOR_STATES.has(app.status);
+    if (!viewerRole || viewerRole === "ADMIN" || viewerRole === "SUPER_ADMIN") return true;
+    if (ADMIN_ONLY_TARGETS.has(t.to) && viewerRole !== "SHARIA_PANEL") return false;
+    if (viewerRole === "REVIEWER")          return REVIEWER_STATES.has(app.status);
+    if (viewerRole === "OPERATIONS_MANAGER") return OPERATIONS_MGR_STATES.has(app.status);
+    if (viewerRole === "INSPECTOR")         return INSPECTOR_STATES.has(app.status);
+    if (viewerRole === "TECHNICAL")         return false; // read-only + notes
+    if (viewerRole === "SHARIA_PANEL")      return SHARIA_STATES.has(app.status) && ["CERTIFIED", "REJECTED"].includes(t.to);
     return true;
   });
-  const color       = STATUS_COLOR[app.status] ?? "#94A3B8";
-  const display     = STATUS_DISPLAY[app.status] ?? app.status;
-  const newBadge    = isNew(app.createdAt);
+
+  const color   = STATUS_COLOR[app.status] ?? "#94A3B8";
+  const display = STATUS_DISPLAY[app.status] ?? app.status;
+  const newBadge = isNew(app.createdAt);
 
   const patch = async (body: Record<string, unknown>) => {
     setSaving(true); setMessage("");
@@ -187,7 +193,9 @@ function ApplicationRow({
         status:          data.application.status,
         reviewNotes:     data.application.reviewNotes,
         deficiencyNotes: data.application.deficiencyNotes,
+        ncrReport:       data.application.ncrReport,
         referenceNumber: data.application.referenceNumber,
+        auditDate:       data.application.auditDate,
         certificate:     data.certificate || prev.certificate,
       }));
       setFeeAmount("");
@@ -201,16 +209,17 @@ function ApplicationRow({
 
   const advanceTo = (toStatus: string) => {
     const body: Record<string, unknown> = { status: toStatus, reviewNotes };
-    if (defNotes) body.deficiencyNotes = defNotes;
-    if (feeAmount) {
-      body.feeAmountNgn    = Number(feeAmount);
-      body.feeDescription  = `Certification fee — ${app.businessName}`;
-    }
+    if (defNotes)     body.deficiencyNotes = defNotes;
+    if (ncrReport)    body.ncrReport       = ncrReport;
+    if (feeAmount)    { body.feeAmountNgn = Number(feeAmount); body.feeDescription = `Certification fee — ${app.businessName}`; }
+    if (auditDateStr) body.auditDate       = auditDateStr;
     if (toStatus === "CERTIFIED") body.issueCertificate = true;
     patch(body);
   };
 
-  const saveNotes = () => patch({ reviewNotes, deficiencyNotes: defNotes });
+  const saveNotes = () => patch({ reviewNotes, deficiencyNotes: defNotes, ncrReport: ncrReport || undefined, ...(auditDateStr ? { auditDate: auditDateStr } : {}) });
+
+  const isTechnicalReadOnly = viewerRole === "TECHNICAL";
 
   return (
     <GlowingCard style={{ padding: "18px 20px" }}>
@@ -236,11 +245,15 @@ function ApplicationRow({
           <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", margin: "4px 0 0" }}>
             {app.user.name} · {app.user.email}
             {app.schemeCode && <span style={{ marginLeft: 8, fontWeight: 600, color: "#6D28D9" }}>{app.schemeCode}</span>}
+            {app.sector && <span style={{ marginLeft: 6, color: "rgba(10,21,53,0.4)" }}>· {app.sector}</span>}
             {app.productionScale && (
               <span style={{ marginLeft: 6, padding: "1px 6px", borderRadius: 3, background: "rgba(201,162,39,0.1)", color: "#9a7810", fontWeight: 700, fontSize: 10 }}>
                 {SCALE_LABEL[app.productionScale] ?? app.productionScale}
               </span>
             )}
+            <span style={{ marginLeft: 6, color: "rgba(10,21,53,0.3)", fontSize: 11 }}>
+              · {new Date(app.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+            </span>
           </p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
@@ -254,13 +267,31 @@ function ApplicationRow({
       {open && (
         <div style={{ marginTop: 16, borderTop: "1px solid rgba(10,21,53,0.06)", paddingTop: 16 }}>
           {/* Progress bar */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 14 }}>
             <ApplicationStages status={app.status} certificateIssued={!!app.certificate} />
           </div>
 
           {/* Products + notes */}
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 10, whiteSpace: "pre-wrap" }}>{app.productList}</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 8, whiteSpace: "pre-wrap" }}>{app.productList}</p>
           {app.notes && <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", marginBottom: 10 }}>Client notes: {app.notes}</p>}
+
+          {/* Audit date display */}
+          {app.auditDate && (
+            <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 12px", borderRadius: 7, background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)", marginBottom: 10 }}>
+              <Calendar size={13} color="#0D9488" />
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "#0D9488", fontWeight: 600 }}>
+                Audit: {new Date(app.auditDate).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              </p>
+            </div>
+          )}
+
+          {/* NCR Report display (when set) */}
+          {app.ncrReport && (
+            <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.2)", marginBottom: 10 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#C2410C", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>NCR Report on file</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)", whiteSpace: "pre-wrap" }}>{app.ncrReport}</p>
+            </div>
+          )}
 
           {/* Applicant documents */}
           <div style={{ marginBottom: 14 }}>
@@ -274,60 +305,78 @@ function ApplicationRow({
 
           {/* Payments */}
           {app.payments.length > 0 && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginBottom: 12 }}>
-              Payments: {app.payments.map(p => `${p.currency} ${(p.amount / 100).toLocaleString()} (${p.status})`).join(", ")}
-            </p>
+            <div style={{ marginBottom: 12 }}>
+              {app.payments.map(p => (
+                <p key={p.id} style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
+                  {p.currency} {(p.amount / 100).toLocaleString()} — <span style={{ fontWeight: 600, color: p.status === "COMPLETED" ? "#16A34A" : "#D97706" }}>{p.status}</span>
+                </p>
+              ))}
+            </div>
           )}
 
           {/* Certificate */}
-          {app.certificate ? (
+          {app.certificate && (
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, padding: "10px 14px", borderRadius: 8, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)" }}>
               <Award size={16} color="#22C55E" />
               <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#22C55E", fontWeight: 600 }}>
                 Certificate issued — {app.certificate.serial}
               </span>
             </div>
-          ) : (
-            /* Fee invoicing — show when payment might be expected */
-            ["AWAITING_PAYMENT", "ELIGIBILITY_REVIEW", "TRC_ESCALATION", "BOARD_REVIEW"].includes(app.status) && (
-              <div style={{ marginBottom: 12 }}>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>Invoice / Fee</p>
-                <input
-                  value={feeAmount}
-                  onChange={e => setFeeAmount(e.target.value)}
-                  placeholder="Quote fee (NGN) — leave blank to skip"
-                  type="number" min="0"
-                  style={inputStyle}
-                />
-              </div>
-            )
           )}
 
-          {/* Deficiency notes field */}
-          {["SCREENING", "DEFICIENCY_NOTICE"].includes(app.status) && (
-            <div style={{ marginBottom: 10 }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Deficiency Notice Details</p>
-              <textarea
-                rows={2}
-                value={defNotes}
-                onChange={e => setDefNotes(e.target.value)}
-                placeholder="List missing or incomplete documents…"
-                style={{ ...inputStyle, resize: "vertical" }}
-              />
+          {/* ── Staff-editable fields (hidden for TECHNICAL read-only view) ── */}
+          {!isTechnicalReadOnly && (
+            <>
+              {/* Fee invoicing */}
+              {!app.certificate && ["AWAITING_PAYMENT", "ELIGIBILITY_REVIEW", "TRC_ESCALATION", "BOARD_REVIEW"].includes(app.status) && (
+                <div style={{ marginBottom: 12 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Invoice / Fee (NGN)</p>
+                  <input value={feeAmount} onChange={e => setFeeAmount(e.target.value)} placeholder="Quote fee in NGN — leave blank to skip" type="number" min="0" style={inputStyle} />
+                </div>
+              )}
+
+              {/* Audit date picker */}
+              {["PENDING_AUDIT", "AUDITING"].includes(app.status) && (
+                <div style={{ marginBottom: 12 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>
+                    <Calendar size={11} style={{ display: "inline", marginRight: 4 }} />
+                    Audit Date
+                  </p>
+                  <input type="date" value={auditDateStr} onChange={e => setAuditDate(e.target.value)} style={inputStyle} />
+                </div>
+              )}
+
+              {/* NCR Report */}
+              {["AUDITING", "ACTION_REQUIRED_NCR"].includes(app.status) && (
+                <div style={{ marginBottom: 10 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>NCR — Non-Conformance Report</p>
+                  <textarea rows={3} value={ncrReport} onChange={e => setNcrReport(e.target.value)} placeholder="Detail the non-conformances found during the audit. This will be visible to the applicant." style={{ ...inputStyle, resize: "vertical" }} />
+                </div>
+              )}
+
+              {/* Deficiency notes */}
+              {["SCREENING", "DEFICIENCY_NOTICE"].includes(app.status) && (
+                <div style={{ marginBottom: 10 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Deficiency Notice Details</p>
+                  <textarea rows={2} value={defNotes} onChange={e => setDefNotes(e.target.value)} placeholder="List missing or incomplete documents for the applicant…" style={{ ...inputStyle, resize: "vertical" }} />
+                </div>
+              )}
+
+              {/* Review notes */}
+              <div style={{ marginBottom: 12 }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Internal Review Notes</p>
+                <textarea rows={2} value={reviewNotes} onChange={e => setReviewNotes(e.target.value)} placeholder="Internal notes (not shown to applicant)" style={{ ...inputStyle, resize: "vertical" }} />
+              </div>
+            </>
+          )}
+
+          {/* Technical read-only notes */}
+          {isTechnicalReadOnly && (
+            <div style={{ marginBottom: 12 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Technical Review Notes</p>
+              <textarea rows={2} value={reviewNotes} onChange={e => setReviewNotes(e.target.value)} placeholder="Add technical review comments…" style={{ ...inputStyle, resize: "vertical" }} />
             </div>
           )}
-
-          {/* Review notes */}
-          <div style={{ marginBottom: 12 }}>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Internal Review Notes</p>
-            <textarea
-              rows={2}
-              value={reviewNotes}
-              onChange={e => setReviewNotes(e.target.value)}
-              placeholder="Internal notes (visible to admin only)"
-              style={{ ...inputStyle, resize: "vertical" }}
-            />
-          </div>
 
           {message && (
             <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: message === "Saved." ? "#22c55e" : "#ef4444", marginBottom: 10 }}>{message}</p>
@@ -335,13 +384,8 @@ function ApplicationRow({
 
           {/* Action buttons */}
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <button
-              onClick={saveNotes}
-              disabled={saving}
-              className="btn-ghost"
-              style={{ fontSize: 12.5, padding: "8px 14px", opacity: saving ? 0.6 : 1 }}
-            >
-              {saving ? "Saving…" : "Save Notes"}
+            <button onClick={saveNotes} disabled={saving} className="btn-ghost" style={{ fontSize: 12.5, padding: "8px 14px", opacity: saving ? 0.6 : 1 }}>
+              {saving ? "Saving…" : isTechnicalReadOnly ? "Save Notes" : "Save Notes"}
             </button>
 
             {transitions.map(t => (
@@ -367,32 +411,55 @@ function ApplicationRow({
   );
 }
 
-// Status filter options
-const FILTER_OPTIONS = [
-  { value: "",                  label: "All Applications" },
-  { value: "SUBMITTED",         label: "Submitted" },
-  { value: "SCREENING",         label: "Screening" },
-  { value: "DEFICIENCY_NOTICE", label: "Action Required" },
-  { value: "ELIGIBILITY_REVIEW",label: "Eligibility Review" },
-  { value: "TRC_ESCALATION",    label: "TRC Review" },
-  { value: "AWAITING_PAYMENT",  label: "Awaiting Payment" },
-  { value: "PENDING_AUDIT",     label: "Audit Scheduled" },
-  { value: "AUDITING",          label: "Auditing" },
-  { value: "BOARD_REVIEW",      label: "Board Review" },
-  { value: "CERTIFIED",         label: "Certified" },
-  { value: "REJECTED",          label: "Rejected" },
-  { value: "CLOSED_INCOMPLETE", label: "Closed" },
+// Filter options
+const STATUS_FILTER_OPTIONS = [
+  { value: "",                   label: "All Statuses" },
+  { value: "SUBMITTED",          label: "Submitted" },
+  { value: "SCREENING",          label: "Screening" },
+  { value: "DEFICIENCY_NOTICE",  label: "Action Required" },
+  { value: "ELIGIBILITY_REVIEW", label: "Eligibility Review" },
+  { value: "TRC_ESCALATION",     label: "TRC Review" },
+  { value: "AWAITING_PAYMENT",   label: "Awaiting Payment" },
+  { value: "PENDING_AUDIT",      label: "Audit Scheduled" },
+  { value: "AUDITING",           label: "Auditing" },
+  { value: "ACTION_REQUIRED_NCR","label": "NCR Issued" },
+  { value: "VERIFYING_NCR",      label: "Verifying NCR" },
+  { value: "BOARD_REVIEW",       label: "Board Review" },
+  { value: "CERTIFIED",          label: "Certified" },
+  { value: "REJECTED",           label: "Rejected" },
+  { value: "CLOSED_INCOMPLETE",  label: "Closed" },
+];
+
+const SCHEME_FILTER_OPTIONS = [
+  { value: "", label: "All Schemes" },
+  { value: "FB", label: "FB — Food & Beverages" },
+  { value: "FP", label: "FP — Food Premises" },
+  { value: "AQ", label: "AQ — Aquatic Animals" },
+  { value: "SL", label: "SL — Slaughterhouse / Meat" },
+  { value: "CS", label: "CS — Cosmetics & Personal Care" },
+  { value: "PH", label: "PH — Pharmaceuticals" },
+  { value: "CG", label: "CG — Consumer Goods" },
+  { value: "LG", label: "LG — Logistics & Supply Chain" },
+];
+
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest First" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "updated", label: "Recently Updated" },
 ];
 
 export default function AdminApplicationList({ applications, viewerRole }: { applications: Application[]; viewerRole?: string }) {
   const [search,       setSearch]       = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [schemeFilter, setSchemeFilter] = useState("");
+  const [sortBy,       setSortBy]       = useState("newest");
+  const [showFilters,  setShowFilters]  = useState(false);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
-    return applications.filter(app => {
-      const matchStatus = !statusFilter || app.status === statusFilter;
-      if (!matchStatus) return false;
+    let list = applications.filter(app => {
+      if (statusFilter && app.status !== statusFilter) return false;
+      if (schemeFilter && app.schemeCode !== schemeFilter) return false;
       if (!q) return true;
       return (
         app.businessName.toLowerCase().includes(q) ||
@@ -403,56 +470,105 @@ export default function AdminApplicationList({ applications, viewerRole }: { app
         app.sector.toLowerCase().includes(q)
       );
     });
-  }, [applications, search, statusFilter]);
 
-  const newCount = applications.filter(a => isNew(a.createdAt)).length;
+    if (sortBy === "oldest")  list = [...list].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    else if (sortBy === "updated") list = [...list]; // already sorted by updatedAt from server ideally
+    // "newest" is the default from the server
+
+    return list;
+  }, [applications, search, statusFilter, schemeFilter, sortBy]);
+
+  const newCount     = applications.filter(a => isNew(a.createdAt)).length;
+  const hasNewApps   = newCount > 0;
+  const activeCount  = applications.filter(a => !["CERTIFIED","REJECTED","CLOSED_INCOMPLETE"].includes(a.status)).length;
 
   return (
     <div>
+      {/* New applications notification banner */}
+      {hasNewApps && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderRadius: 10, background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.25)", marginBottom: 16 }}>
+          <Bell size={16} color="#9a7810" />
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#78610D", flex: 1 }}>
+            <strong>{newCount} new application{newCount !== 1 ? "s" : ""}</strong> received in the last 24 hours — review and begin screening.
+          </p>
+          <button onClick={() => setStatusFilter("SUBMITTED")} style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, color: "#9a7810", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
+            View Submitted
+          </button>
+        </div>
+      )}
+
       {/* Search + filter bar */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ flex: 1, minWidth: 220, position: "relative" }}>
-          <Search size={14} color="rgba(10,21,53,0.35)" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by company, email, ref number…"
+      <div style={{ marginBottom: 14 }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
+          {/* Search */}
+          <div style={{ flex: 1, minWidth: 220, position: "relative" }}>
+            <Search size={14} color="rgba(10,21,53,0.35)" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search by company, email, reference number, scheme…"
+              style={{
+                width: "100%", padding: "10px 12px 10px 34px",
+                background: "#fff", border: "1px solid rgba(10,21,53,0.12)",
+                borderRadius: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535",
+                outline: "none", boxSizing: "border-box",
+              }}
+            />
+            {search && (
+              <button onClick={() => setSearch("")} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 2 }}>
+                <X size={12} color="rgba(10,21,53,0.35)" />
+              </button>
+            )}
+          </div>
+
+          {/* Status filter */}
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ padding: "10px 12px", background: "#fff", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535", cursor: "pointer", outline: "none" }}>
+            {STATUS_FILTER_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+
+          {/* Toggle extra filters */}
+          <button
+            onClick={() => setShowFilters(f => !f)}
             style={{
-              width: "100%", padding: "10px 12px 10px 34px",
-              background: "#fff", border: "1px solid rgba(10,21,53,0.12)",
-              borderRadius: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535",
-              outline: "none", boxSizing: "border-box",
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "10px 14px", background: showFilters ? "rgba(109,40,217,0.08)" : "#fff",
+              border: `1px solid ${showFilters ? "rgba(109,40,217,0.25)" : "rgba(10,21,53,0.12)"}`,
+              borderRadius: 8, fontFamily: "var(--font-body)", fontSize: 13, color: showFilters ? "#6D28D9" : "rgba(10,21,53,0.55)",
+              cursor: "pointer",
             }}
-          />
-          {search && (
-            <button onClick={() => setSearch("")} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 2 }}>
-              <X size={12} color="rgba(10,21,53,0.35)" />
-            </button>
-          )}
+          >
+            <Filter size={13} /> Filters {(schemeFilter || sortBy !== "newest") && "•"}
+          </button>
+
+          {/* Result count */}
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", whiteSpace: "nowrap" }}>
+            {filtered.length} of {applications.length}
+            {activeCount > 0 && <span style={{ marginLeft: 8, color: "#6366F1" }}>· {activeCount} active</span>}
+          </span>
         </div>
 
-        <select
-          value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
-          style={{ padding: "10px 12px", background: "#fff", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535", cursor: "pointer", outline: "none" }}
-        >
-          {FILTER_OPTIONS.map(o => (
-            <option key={o.value} value={o.value}>{o.label}</option>
-          ))}
-        </select>
-
-        <span style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", whiteSpace: "nowrap" }}>
-          {filtered.length} of {applications.length}
-          {newCount > 0 && (
-            <span style={{ marginLeft: 10, fontWeight: 700, color: "#9a7810" }}>· {newCount} new today</span>
-          )}
-        </span>
+        {/* Extra filters */}
+        {showFilters && (
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", padding: "12px 14px", borderRadius: 8, background: "rgba(109,40,217,0.03)", border: "1px solid rgba(109,40,217,0.1)" }}>
+            <select value={schemeFilter} onChange={e => setSchemeFilter(e.target.value)} style={{ padding: "8px 10px", background: "#fff", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#0A1535", cursor: "pointer", outline: "none" }}>
+              {SCHEME_FILTER_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+            <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ padding: "8px 10px", background: "#fff", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#0A1535", cursor: "pointer", outline: "none" }}>
+              {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+            {(statusFilter || schemeFilter || sortBy !== "newest") && (
+              <button onClick={() => { setStatusFilter(""); setSchemeFilter(""); setSortBy("newest"); }} style={{ padding: "8px 12px", background: "none", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", cursor: "pointer" }}>
+                Clear filters
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {filtered.length === 0 ? (
         <GlowingCard style={{ padding: "32px", textAlign: "center" }}>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)" }}>
-            {applications.length === 0 ? "No applications yet." : "No applications match your search."}
+            {applications.length === 0 ? "No applications yet." : "No applications match your search or filters."}
           </p>
         </GlowingCard>
       ) : (

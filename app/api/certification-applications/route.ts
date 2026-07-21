@@ -3,9 +3,12 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 
+const STAFF_ROLES = new Set(["ADMIN", "SUPER_ADMIN", "REVIEWER", "OPERATIONS_MANAGER", "INSPECTOR", "TECHNICAL", "SHARIA_PANEL"]);
+
 export async function GET(req: Request) {
   const session = await auth();
-  if (!session?.user || (session.user as { role?: string }).role !== "ADMIN") {
+  const role = (session?.user as { role?: string })?.role ?? "";
+  if (!session?.user || !STAFF_ROLES.has(role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   const url    = new URL(req.url);
@@ -50,7 +53,7 @@ export async function POST(req: Request) {
   }
 
   const application = await prisma.certificationApplication.create({
-    data: { userId, ...parsed.data, status: "SUBMITTED" },
+    data: { userId, ...parsed.data, status: "DRAFT" },
   });
   return NextResponse.json({ application }, { status: 201 });
 }

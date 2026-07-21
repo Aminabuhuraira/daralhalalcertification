@@ -14,7 +14,7 @@ export default async function ReviewerLayout({
   const session = await auth();
   const user = session?.user as { id?: string; name?: string; role?: string } | undefined;
 
-  const allowedRoles = ["ADMIN", "REVIEWER", "INSPECTOR"];
+  const allowedRoles = ["ADMIN", "SUPER_ADMIN", "REVIEWER"];
   if (!user || !user.role || !allowedRoles.includes(user.role)) {
     redirect(`/${locale}/auth/login`);
   }

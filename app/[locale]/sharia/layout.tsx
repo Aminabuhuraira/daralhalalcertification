@@ -3,9 +3,7 @@ import { auth } from "@/auth";
 import { ensureDb } from "@/lib/db";
 import DashboardShell from "@/components/layout/DashboardShell";
 
-const ADMIN_ALLOWED = ["ADMIN", "SUPER_ADMIN"];
-
-export default async function AdminLayout({
+export default async function ShariaLayout({
   children,
   params,
 }: {
@@ -14,13 +12,16 @@ export default async function AdminLayout({
 }) {
   const { locale } = await params;
   const session = await auth();
-  if (!session?.user) redirect(`/${locale}/auth/login`);
-  const user = session.user as { name?: string | null; role?: string };
-  if (!user.role || !ADMIN_ALLOWED.includes(user.role)) redirect(`/${locale}/dashboard`);
+  const user = session?.user as { name?: string | null; role?: string } | undefined;
+
+  const allowed = ["ADMIN", "SUPER_ADMIN", "SHARIA_PANEL"];
+  if (!user?.role || !allowed.includes(user.role)) {
+    redirect(`/${locale}/auth/login`);
+  }
   await ensureDb();
 
   return (
-    <DashboardShell variant="admin" userName={user.name || "Admin"} userRole={user.role || "ADMIN"}>
+    <DashboardShell variant="sharia" userName={user.name || "Sharia Panel"} userRole={user.role}>
       {children}
     </DashboardShell>
   );

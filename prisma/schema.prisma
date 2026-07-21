@@ -9,7 +9,11 @@ datasource db {
 enum Role {
   USER
   REVIEWER
+  OPERATIONS_MANAGER
   INSPECTOR
+  TECHNICAL
+  SHARIA_PANEL
+  SUPER_ADMIN
   ADMIN
 }
 
@@ -216,7 +220,8 @@ model CertificationApplication {
   deficiencyNotes String?
   auditDate       DateTime?
   documents       String?
-  status          ApplicationStatus @default(SUBMITTED)
+  ncrReport       String?
+  status          ApplicationStatus @default(DRAFT)
   certIssueMode   CertIssueMode     @default(MANUAL)
   reviewedBy      String?
   reviewNotes     String?
