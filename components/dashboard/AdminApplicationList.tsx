@@ -136,7 +136,21 @@ function isNew(createdAt: string | Date) {
   return Date.now() - new Date(createdAt).getTime() < 24 * 60 * 60 * 1000;
 }
 
-function ApplicationRow({ app: initialApp, defaultOpen }: { app: Application; defaultOpen: boolean }) {
+// States each role is allowed to advance (undefined = no restriction = ADMIN)
+const REVIEWER_STATES  = new Set(["SUBMITTED","SCREENING","DEFICIENCY_NOTICE","ELIGIBILITY_REVIEW","TRC_ESCALATION","AWAITING_PAYMENT","PENDING_AUDIT"]);
+const INSPECTOR_STATES = new Set(["PENDING_AUDIT","AUDITING","ACTION_REQUIRED_NCR","VERIFYING_NCR","BOARD_REVIEW"]);
+// BOARD_REVIEW → CERTIFIED is an admin-only action
+const ADMIN_ONLY_TRANSITIONS = new Set(["CERTIFIED"]);
+
+function ApplicationRow({
+  app: initialApp,
+  defaultOpen,
+  viewerRole,
+}: {
+  app: Application;
+  defaultOpen: boolean;
+  viewerRole?: string;
+}) {
   const [app,           setApp]           = useState(initialApp);
   const [open,         setOpen]           = useState(defaultOpen);
   const [reviewNotes,  setReviewNotes]    = useState(app.reviewNotes || "");
@@ -145,7 +159,15 @@ function ApplicationRow({ app: initialApp, defaultOpen }: { app: Application; de
   const [saving,       setSaving]         = useState(false);
   const [message,      setMessage]        = useState("");
 
-  const transitions = TRANSITIONS[app.status] ?? [];
+  // Filter available transitions based on caller's role
+  const allTransitions = TRANSITIONS[app.status] ?? [];
+  const transitions = allTransitions.filter(t => {
+    if (!viewerRole || viewerRole === "ADMIN") return true;
+    if (ADMIN_ONLY_TRANSITIONS.has(t.to)) return false;          // only ADMIN can certify
+    if (viewerRole === "REVIEWER") return REVIEWER_STATES.has(app.status);
+    if (viewerRole === "INSPECTOR") return INSPECTOR_STATES.has(app.status);
+    return true;
+  });
   const color       = STATUS_COLOR[app.status] ?? "#94A3B8";
   const display     = STATUS_DISPLAY[app.status] ?? app.status;
   const newBadge    = isNew(app.createdAt);
@@ -362,7 +384,7 @@ const FILTER_OPTIONS = [
   { value: "CLOSED_INCOMPLETE", label: "Closed" },
 ];
 
-export default function AdminApplicationList({ applications }: { applications: Application[] }) {
+export default function AdminApplicationList({ applications, viewerRole }: { applications: Application[]; viewerRole?: string }) {
   const [search,       setSearch]       = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
@@ -436,7 +458,7 @@ export default function AdminApplicationList({ applications }: { applications: A
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {filtered.map((app, i) => (
-            <ApplicationRow key={app.id} app={app} defaultOpen={i === 0 && applications.length <= 5} />
+            <ApplicationRow key={app.id} app={app} defaultOpen={i === 0 && applications.length <= 5} viewerRole={viewerRole} />
           ))}
         </div>
       )}

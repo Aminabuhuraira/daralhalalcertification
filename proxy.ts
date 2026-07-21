@@ -14,15 +14,16 @@ const intlMiddleware = createIntlMiddleware({
   localeDetection: true,
 });
 
-const PROTECTED_PREFIXES = ["/dashboard", "/admin", "/reviewer"];
+const PROTECTED_PREFIXES = ["/dashboard", "/admin", "/reviewer", "/inspector"];
 const STAFF_ROLES = ["ADMIN", "REVIEWER", "INSPECTOR"] as const;
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const withoutLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "") || "/";
-  const isProtected = PROTECTED_PREFIXES.some((p) => withoutLocale.startsWith(p));
-  const isAdminRoute   = withoutLocale.startsWith("/admin");
+  const isProtected     = PROTECTED_PREFIXES.some((p) => withoutLocale.startsWith(p));
+  const isAdminRoute    = withoutLocale.startsWith("/admin");
   const isReviewerRoute = withoutLocale.startsWith("/reviewer");
+  const isInspectorRoute = withoutLocale.startsWith("/inspector");
   const firstSegment = pathname.split("/")[1];
   const locale = firstSegment && LOCALES.includes(firstSegment) ? firstSegment : "en";
 
@@ -37,6 +38,9 @@ export default auth((req) => {
       return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
     }
     if (isReviewerRoute && !(STAFF_ROLES as readonly string[]).includes(role)) {
+      return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
+    }
+    if (isInspectorRoute && role !== "INSPECTOR" && role !== "ADMIN") {
       return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
     }
   }

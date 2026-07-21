@@ -1,51 +1,50 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { Inbox, FileSearch, AlertCircle, CreditCard } from "lucide-react";
+import { ClipboardList, Activity, AlertTriangle, CheckCircle2 } from "lucide-react";
 import AdminApplicationList from "@/components/dashboard/AdminApplicationList";
 
 type Params = { params: Promise<{ locale: string }> };
 
-// Pre-audit states managed by the Certification Review Officer
-const REVIEW_STAGES = [
-  "SUBMITTED",
-  "SCREENING",
-  "DEFICIENCY_NOTICE",
-  "ELIGIBILITY_REVIEW",
-  "TRC_ESCALATION",
-  "AWAITING_PAYMENT",
-  "PENDING_AUDIT",   // handed off to inspector but reviewer can monitor
+// Audit-stage states this portal manages
+const AUDIT_STAGES = [
+  "PENDING_AUDIT",
+  "AUDITING",
+  "ACTION_REQUIRED_NCR",
+  "VERIFYING_NCR",
+  "BOARD_REVIEW",
 ] as const;
 
-export default async function ReviewerPage({ params }: Params) {
+export default async function InspectorPage({ params }: Params) {
   const { locale } = await params;
   const session = await auth();
   const user = session?.user as { id?: string; name?: string; role?: string } | undefined;
-  const allowedRoles = ["ADMIN", "REVIEWER", "INSPECTOR"];
-  if (!user || !user.role || !allowedRoles.includes(user.role)) {
+  if (!user || (user.role !== "INSPECTOR" && user.role !== "ADMIN")) {
     redirect(`/${locale}/auth/login`);
   }
 
   const applications = await prisma.certificationApplication.findMany({
-    where: { status: { in: [...REVIEW_STAGES] } },
+    where: { status: { in: [...AUDIT_STAGES] } },
     include: {
       user: { select: { name: true, email: true } },
       payments: true,
       certificate: true,
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { updatedAt: "desc" },
   });
 
-  const newSubmissions  = applications.filter(a => a.status === "SUBMITTED").length;
-  const inScreening     = applications.filter(a => a.status === "SCREENING" || a.status === "DEFICIENCY_NOTICE").length;
-  const underReview     = applications.filter(a => a.status === "ELIGIBILITY_REVIEW" || a.status === "TRC_ESCALATION").length;
-  const awaitingPayment = applications.filter(a => a.status === "AWAITING_PAYMENT").length;
+  const upcomingAudits = applications.filter(a => a.status === "PENDING_AUDIT").length;
+  const activeAudits   = applications.filter(a => a.status === "AUDITING").length;
+  const ncrCases       = applications.filter(a =>
+    a.status === "ACTION_REQUIRED_NCR" || a.status === "VERIFYING_NCR"
+  ).length;
+  const boardReview    = applications.filter(a => a.status === "BOARD_REVIEW").length;
 
   const STATS = [
-    { label: "New Submissions",   value: newSubmissions,  color: "#6366F1", bg: "rgba(99,102,241,0.07)",  border: "rgba(99,102,241,0.2)",  icon: Inbox },
-    { label: "In Screening",      value: inScreening,     color: "#3B82F6", bg: "rgba(59,130,246,0.07)",  border: "rgba(59,130,246,0.2)",  icon: FileSearch },
-    { label: "Eligibility Review", value: underReview,    color: "#8B5CF6", bg: "rgba(139,92,246,0.07)",  border: "rgba(139,92,246,0.2)",  icon: AlertCircle },
-    { label: "Awaiting Payment",  value: awaitingPayment, color: "#0EA5E9", bg: "rgba(14,165,233,0.07)",  border: "rgba(14,165,233,0.2)",  icon: CreditCard },
+    { label: "Upcoming Audits",  value: upcomingAudits, color: "#0891B2", bg: "rgba(8,145,178,0.07)",   border: "rgba(8,145,178,0.2)",   icon: ClipboardList },
+    { label: "Active Audits",    value: activeAudits,   color: "#7C3AED", bg: "rgba(124,58,237,0.07)", border: "rgba(124,58,237,0.2)", icon: Activity },
+    { label: "NCR Cases",        value: ncrCases,       color: "#F97316", bg: "rgba(249,115,22,0.07)", border: "rgba(249,115,22,0.2)", icon: AlertTriangle },
+    { label: "Awaiting Board",   value: boardReview,    color: "#84CC16", bg: "rgba(132,204,22,0.07)", border: "rgba(132,204,22,0.2)", icon: CheckCircle2 },
   ];
 
   return (
@@ -55,22 +54,22 @@ export default async function ReviewerPage({ params }: Params) {
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 8,
           padding: "4px 12px",
-          background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.22)",
+          background: "rgba(8,145,178,0.08)", border: "1px solid rgba(8,145,178,0.22)",
           borderRadius: 6, marginBottom: 14,
         }}>
-          <FileSearch size={13} color="#6366F1" />
+          <Activity size={13} color="#0891B2" />
           <span style={{
             fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700,
-            color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em",
+            color: "#0891B2", textTransform: "uppercase", letterSpacing: "0.06em",
           }}>
-            Certification Review Portal
+            Audit Inspector Portal
           </span>
         </div>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
-          Application Review Queue
+          Audit Management
         </h1>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)" }}>
-          Screen documents, conduct eligibility reviews, and advance applications through the pre-audit pipeline.
+          Schedule, conduct, and resolve audits for approved certification applications.
         </p>
       </div>
 
@@ -104,19 +103,19 @@ export default async function ReviewerPage({ params }: Params) {
         ))}
       </div>
 
-      {/* Application list */}
+      {/* Application list — audit stages only */}
       {applications.length === 0 ? (
         <div style={{
           background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)",
           padding: "48px 32px", textAlign: "center",
         }}>
-          <Inbox size={32} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 12px" }} />
+          <CheckCircle2 size={32} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 12px" }} />
           <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>
-            No applications awaiting review right now.
+            No applications in the audit pipeline right now.
           </p>
         </div>
       ) : (
-        <AdminApplicationList applications={applications as never} viewerRole="REVIEWER" />
+        <AdminApplicationList applications={applications as never} viewerRole="INSPECTOR" />
       )}
     </div>
   );

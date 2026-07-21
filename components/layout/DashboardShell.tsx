@@ -4,23 +4,24 @@ import { useParams, usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Award, CreditCard, Users, BookOpen,
-  ClipboardCheck, ShieldCheck, LogOut, ArrowLeftRight, FileText, Settings, Mail, Eye,
+  ClipboardCheck, ShieldCheck, LogOut, ArrowLeftRight, FileText,
+  Settings, Mail, Eye, Activity, ClipboardList,
 } from "lucide-react";
 
 type Props = {
   children: React.ReactNode;
-  variant: "user" | "admin" | "reviewer";
+  variant: "user" | "admin" | "reviewer" | "inspector";
   userName: string;
   userRole: string;
 };
 
 const USER_NAV = [
-  { label: "Overview",      href: "/dashboard",              icon: LayoutDashboard },
-  { label: "Courses",       href: "/dashboard/courses",      icon: BookOpen },
+  { label: "Overview",      href: "/dashboard",               icon: LayoutDashboard },
+  { label: "Courses",       href: "/dashboard/courses",       icon: BookOpen },
   { label: "Certification", href: "/dashboard/certification", icon: FileText },
-  { label: "Certificates",  href: "/dashboard/certificates", icon: Award },
-  { label: "Billing",       href: "/dashboard/billing",      icon: CreditCard },
-  { label: "Settings",      href: "/dashboard/settings",     icon: Settings },
+  { label: "Certificates",  href: "/dashboard/certificates",  icon: Award },
+  { label: "Billing",       href: "/dashboard/billing",       icon: CreditCard },
+  { label: "Settings",      href: "/dashboard/settings",      icon: Settings },
 ];
 
 const ADMIN_NAV = [
@@ -33,15 +34,24 @@ const ADMIN_NAV = [
 ];
 
 const REVIEWER_NAV = [
-  { label: "Applications", href: "/reviewer",           icon: ClipboardCheck },
-  { label: "My Profile",   href: "/dashboard/settings", icon: Settings },
+  { label: "Review Queue",  href: "/reviewer",           icon: ClipboardCheck },
+  { label: "My Profile",    href: "/dashboard/settings", icon: Settings },
+];
+
+const INSPECTOR_NAV = [
+  { label: "Audit Queue",   href: "/inspector",          icon: ClipboardList },
+  { label: "My Profile",    href: "/dashboard/settings", icon: Settings },
 ];
 
 export default function DashboardShell({ children, variant, userName, userRole }: Props) {
   const params  = useParams();
   const pathname = usePathname();
   const locale  = (params?.locale as string) || "en";
-  const navItems = variant === "admin" ? ADMIN_NAV : variant === "reviewer" ? REVIEWER_NAV : USER_NAV;
+  const navItems =
+    variant === "admin"     ? ADMIN_NAV     :
+    variant === "reviewer"  ? REVIEWER_NAV  :
+    variant === "inspector" ? INSPECTOR_NAV :
+    USER_NAV;
   const lh = (href: string) => `/${locale}${href}`;
 
   return (
@@ -86,34 +96,28 @@ export default function DashboardShell({ children, variant, userName, userRole }
             );
           })}
 
+          {/* Cross-portal links */}
           {variant === "user" && userRole === "ADMIN" && (
-            <Link
-              href={lh("/admin")}
-              style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "rgba(10,21,53,0.55)", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 500, marginTop: 10, border: "1px dashed rgba(201,162,39,0.4)" }}
-            >
-              <ShieldCheck size={15} />Admin Panel
-            </Link>
-          )}
-          {variant === "user" && (userRole === "REVIEWER" || userRole === "INSPECTOR") && (
-            <Link
-              href={lh("/reviewer")}
-              style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "#2563EB", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 600, marginTop: 10, border: "1px dashed rgba(37,99,235,0.35)" }}
-            >
-              <Eye size={15} />Reviewer Portal
+            <Link href={lh("/admin")} style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "#9a7810", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 600, marginTop: 10, border: "1px dashed rgba(201,162,39,0.4)" }}>
+              <ShieldCheck size={15} /> Admin Panel
             </Link>
           )}
           {variant === "admin" && (
-            <Link
-              href={lh("/dashboard")}
-              style={{
-                display: "flex", alignItems: "center", gap: 11, padding: "10px 14px",
-                borderRadius: 8, textDecoration: "none",
-                color: "rgba(10,21,53,0.55)", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 500,
-                marginTop: 10, border: "1px dashed rgba(10,21,53,0.15)",
-              }}
-            >
-              <ArrowLeftRight size={15} />User Dashboard
+            <Link href={lh("/dashboard")} style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "rgba(10,21,53,0.55)", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 500, marginTop: 10, border: "1px dashed rgba(10,21,53,0.15)" }}>
+              <ArrowLeftRight size={15} /> User Dashboard
             </Link>
+          )}
+          {variant === "reviewer" && (
+            <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 8, background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.15)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Role</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>Certification Review Officer</p>
+            </div>
+          )}
+          {variant === "inspector" && (
+            <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 8, background: "rgba(8,145,178,0.05)", border: "1px solid rgba(8,145,178,0.15)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#0891B2", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Role</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>Audit Inspector</p>
+            </div>
           )}
         </nav>
 

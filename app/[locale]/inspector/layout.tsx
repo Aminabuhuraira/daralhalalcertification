@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { ensureDb } from "@/lib/db";
 import DashboardShell from "@/components/layout/DashboardShell";
 
-export default async function DashboardLayout({
+export default async function InspectorLayout({
   children,
   params,
 }: {
@@ -13,17 +13,16 @@ export default async function DashboardLayout({
   const { locale } = await params;
   const session = await auth();
   if (!session?.user) redirect(`/${locale}/auth/login`);
-  await ensureDb();
 
   const user = session.user as { name?: string | null; role?: string };
+  if (user.role !== "INSPECTOR" && user.role !== "ADMIN") {
+    redirect(`/${locale}/dashboard`);
+  }
 
-  // Staff roles have dedicated portals — redirect them immediately so they
-  // never land on the company-applicant dashboard.
-  if (user.role === "REVIEWER") redirect(`/${locale}/reviewer`);
-  if (user.role === "INSPECTOR") redirect(`/${locale}/inspector`);
+  await ensureDb();
 
   return (
-    <DashboardShell variant="user" userName={user.name || "User"} userRole={user.role || "USER"}>
+    <DashboardShell variant="inspector" userName={user.name || "Inspector"} userRole={user.role || "INSPECTOR"}>
       {children}
     </DashboardShell>
   );
