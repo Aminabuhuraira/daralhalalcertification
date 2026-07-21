@@ -4,6 +4,7 @@ import { Award, Search, X, ChevronDown, ChevronUp, Bell, Calendar, Filter } from
 import GlowingCard from "@/components/ui/GlowingCard";
 import ApplicationStages from "@/components/dashboard/ApplicationStages";
 import DocumentUpload from "@/components/dashboard/DocumentUpload";
+import AdminScreeningChecklist from "@/components/dashboard/AdminScreeningChecklist";
 
 type Payment = { id: string; amount: number; currency: string; status: string };
 type Certificate = { id: string; serial: string; issuedAt: string | Date };
@@ -119,6 +120,21 @@ type Application = {
   user: { name: string; email: string };
   payments: Payment[];
   certificate: Certificate | null;
+  // New enhanced fields
+  businessRegNo: string | null;
+  entityType: string | null;
+  headOfficeAddress: string | null;
+  telephone: string | null;
+  picName: string | null;
+  picDesignation: string | null;
+  picPhone: string | null;
+  picEmail: string | null;
+  checklistData: string | null;
+  deficiencyItems: string | null;
+  auditTeam: string | null;
+  carResponse: string | null;
+  ncSeverity: string | null;
+  certExpiryDate: string | null;
 };
 
 const inputStyle: React.CSSProperties = {
@@ -155,6 +171,8 @@ function ApplicationRow({
   const [reviewNotes,  setReviewNotes]= useState(app.reviewNotes ?? "");
   const [defNotes,     setDefNotes]   = useState(app.deficiencyNotes ?? "");
   const [ncrReport,    setNcrReport]  = useState(app.ncrReport ?? "");
+  const [auditTeam,    setAuditTeam]  = useState(app.auditTeam ?? "");
+  const [ncSeverity,   setNcSeverity] = useState(app.ncSeverity ?? "MINOR");
   const [feeAmount,    setFeeAmount]  = useState("");
   const [auditDateStr, setAuditDate]  = useState(
     app.auditDate ? new Date(app.auditDate).toISOString().slice(0, 10) : ""
@@ -197,6 +215,11 @@ function ApplicationRow({
         referenceNumber: data.application.referenceNumber,
         auditDate:       data.application.auditDate,
         certificate:     data.certificate || prev.certificate,
+        checklistData:   data.application.checklistData ?? prev.checklistData,
+        deficiencyItems: data.application.deficiencyItems ?? prev.deficiencyItems,
+        auditTeam:       data.application.auditTeam ?? prev.auditTeam,
+        ncSeverity:      data.application.ncSeverity ?? prev.ncSeverity,
+        certExpiryDate:  data.application.certExpiryDate ?? prev.certExpiryDate,
       }));
       setFeeAmount("");
       setMessage("Saved.");
@@ -213,11 +236,19 @@ function ApplicationRow({
     if (ncrReport)    body.ncrReport       = ncrReport;
     if (feeAmount)    { body.feeAmountNgn = Number(feeAmount); body.feeDescription = `Certification fee — ${app.businessName}`; }
     if (auditDateStr) body.auditDate       = auditDateStr;
+    if (auditTeam)    body.auditTeam       = auditTeam;
+    if (ncSeverity && toStatus === "ACTION_REQUIRED_NCR") body.ncSeverity = ncSeverity;
     if (toStatus === "CERTIFIED") body.issueCertificate = true;
     patch(body);
   };
 
-  const saveNotes = () => patch({ reviewNotes, deficiencyNotes: defNotes, ncrReport: ncrReport || undefined, ...(auditDateStr ? { auditDate: auditDateStr } : {}) });
+  const saveNotes = () => patch({
+    reviewNotes,
+    deficiencyNotes: defNotes || undefined,
+    ncrReport: ncrReport || undefined,
+    auditTeam: auditTeam || undefined,
+    ...(auditDateStr ? { auditDate: auditDateStr } : {}),
+  });
 
   const isTechnicalReadOnly = viewerRole === "TECHNICAL";
 
@@ -271,8 +302,39 @@ function ApplicationRow({
             <ApplicationStages status={app.status} certificateIssued={!!app.certificate} />
           </div>
 
+          {/* Company & PIC quick info */}
+          {(app.businessRegNo || app.headOfficeAddress || app.picName) && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(10,21,53,0.02)", border: "1px solid rgba(10,21,53,0.07)" }}>
+              {app.businessRegNo && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>Reg No:</strong> {app.businessRegNo}</p>}
+              {app.entityType && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>Entity:</strong> {app.entityType}</p>}
+              {app.headOfficeAddress && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)", gridColumn: "1 / -1" }}><strong>Address:</strong> {app.headOfficeAddress}</p>}
+              {app.telephone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>Tel:</strong> {app.telephone}</p>}
+              {app.picName && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>PIC:</strong> {app.picName}{app.picDesignation ? ` (${app.picDesignation})` : ""}</p>}
+              {app.picPhone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>PIC Phone:</strong> {app.picPhone}</p>}
+              {app.picEmail && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>PIC Email:</strong> {app.picEmail}</p>}
+            </div>
+          )}
+
+          {/* Screening checklist (SCREENING status only) */}
+          {app.status === "SCREENING" && (
+            <AdminScreeningChecklist
+              appId={app.id}
+              initialChecklistData={app.checklistData}
+              onUpdate={(patch) => {
+                if (patch.status) setApp(prev => ({ ...prev, status: patch.status as AppStatus }));
+                if (patch.checklistData) setApp(prev => ({ ...prev, checklistData: patch.checklistData ?? prev.checklistData }));
+                if (patch.deficiencyItems) setApp(prev => ({ ...prev, deficiencyItems: patch.deficiencyItems ?? prev.deficiencyItems }));
+              }}
+            />
+          )}
+
           {/* Products + notes */}
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 8, whiteSpace: "pre-wrap" }}>{app.productList}</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 8, whiteSpace: "pre-wrap" }}>
+            {(() => {
+              try { const arr = JSON.parse(app.productList); if (Array.isArray(arr)) return arr.map((p: { name: string; brand: string }) => `${p.name}${p.brand ? ` (${p.brand})` : ""}`).join(", "); } catch {}
+              return app.productList;
+            })()}
+          </p>
           {app.notes && <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", marginBottom: 10 }}>Client notes: {app.notes}</p>}
 
           {/* Audit date display */}
@@ -335,22 +397,60 @@ function ApplicationRow({
                 </div>
               )}
 
-              {/* Audit date picker */}
+              {/* Audit date + team */}
               {["PENDING_AUDIT", "AUDITING"].includes(app.status) && (
-                <div style={{ marginBottom: 12 }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>
-                    <Calendar size={11} style={{ display: "inline", marginRight: 4 }} />
-                    Audit Date
-                  </p>
-                  <input type="date" value={auditDateStr} onChange={e => setAuditDate(e.target.value)} style={inputStyle} />
+                <>
+                  <div style={{ marginBottom: 12 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>
+                      <Calendar size={11} style={{ display: "inline", marginRight: 4 }} />
+                      Audit Date
+                    </p>
+                    <input type="date" value={auditDateStr} onChange={e => setAuditDate(e.target.value)} style={inputStyle} />
+                  </div>
+                  <div style={{ marginBottom: 12 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Assigned Inspection Team</p>
+                    <input value={auditTeam} onChange={e => setAuditTeam(e.target.value)} placeholder="e.g. Dr. Yusuf Aliyu, Hajiya Fatima Sule" style={inputStyle} />
+                  </div>
+                </>
+              )}
+
+              {/* NCR Report + severity */}
+              {["AUDITING", "ACTION_REQUIRED_NCR"].includes(app.status) && (
+                <>
+                  <div style={{ marginBottom: 10 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Non-Conformance Severity</p>
+                    <select value={ncSeverity} onChange={e => setNcSeverity(e.target.value)} style={{ ...inputStyle, cursor: "pointer" }}>
+                      <option value="MINOR">Minor NC (30 days to resolve)</option>
+                      <option value="MAJOR">Major NC (14 days to resolve)</option>
+                      <option value="SERIOUS">Serious NC (Immediate — may result in rejection)</option>
+                    </select>
+                  </div>
+                  <div style={{ marginBottom: 10 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>NCR — Non-Conformance Report</p>
+                    <textarea rows={3} value={ncrReport} onChange={e => setNcrReport(e.target.value)} placeholder="Detail the non-conformances found during the audit. This will be visible to the applicant." style={{ ...inputStyle, resize: "vertical" }} />
+                  </div>
+                </>
+              )}
+
+              {/* CAR response display (read-only in admin) */}
+              {app.carResponse && (
+                <div style={{ marginBottom: 10, padding: "10px 12px", borderRadius: 8, background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)" }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>CAR Submitted by Applicant</p>
+                  {(() => {
+                    try {
+                      const car = JSON.parse(app.carResponse!);
+                      return <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)" }}>Root Cause: {car.rootCause?.slice(0, 120)}{car.rootCause?.length > 120 ? "…" : ""} · {car.actions?.length ?? 0} corrective action(s)</p>;
+                    } catch { return <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>CAR data on file.</p>; }
+                  })()}
                 </div>
               )}
 
-              {/* NCR Report */}
-              {["AUDITING", "ACTION_REQUIRED_NCR"].includes(app.status) && (
-                <div style={{ marginBottom: 10 }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>NCR — Non-Conformance Report</p>
-                  <textarea rows={3} value={ncrReport} onChange={e => setNcrReport(e.target.value)} placeholder="Detail the non-conformances found during the audit. This will be visible to the applicant." style={{ ...inputStyle, resize: "vertical" }} />
+              {/* Cert expiry date display */}
+              {app.certExpiryDate && (
+                <div style={{ marginBottom: 10, padding: "8px 12px", borderRadius: 7, background: "rgba(201,162,39,0.06)", border: "1px solid rgba(201,162,39,0.2)" }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "#9a7810" }}>
+                    Certificate expires: <strong>{new Date(app.certExpiryDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</strong>
+                  </p>
                 </div>
               )}
 

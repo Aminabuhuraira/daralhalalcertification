@@ -537,21 +537,46 @@ export async function seedDemoData(prisma: PrismaClient) {
     });
   }
 
-  // ── 6. Demo user application ──
+  // ── 6. Demo user application (full QMS/AP/AF/01 data) ──
   await (prisma.certificationApplication as unknown as {
     create: (args: { data: Record<string, unknown> }) => Promise<{ id: string }>;
   }).create({
     data: {
-      userId:          "demo-user-001",
-      businessName:    "Demo Foods Nigeria",
-      sector:          "Food and Beverages",
-      schemeCode:      "FB",
-      productionScale: "SMALL",
-      productList:     "Organic Groundnut Oil, Pure Honey",
-      notes:           "We are a small startup looking to export to the GCC market.",
-      status:          "SUBMITTED",
-      createdAt:       daysAgo(5),
-      updatedAt:       daysAgo(5),
+      userId:             "demo-user-001",
+      businessName:       "Demo Foods Nigeria",
+      businessRegNo:      "RC-1234567",
+      entityType:         "Limited Liability Company",
+      headOfficeAddress:  "12 Aliyu Street, Wuse Zone 5, Abuja, FCT, Nigeria",
+      factoryAddress:     "Plot 7B, Idu Industrial Layout, Abuja, FCT, Nigeria",
+      telephone:          "+234 803 456 7890",
+      website:            "www.demofoods.ng",
+      sector:             "Food and Beverages",
+      schemeCode:         "FB",
+      productionScale:    "SMALL",
+      productList:        JSON.stringify([
+        { name: "Organic Groundnut Oil", brand: "PureNut" },
+        { name: "Pure Raw Honey",         brand: "BeeHarvest NG" },
+      ]),
+      ingredientList:     JSON.stringify([
+        { name: "Groundnuts (Arachis hypogaea)", source: "Plant", manufacturer: "Local Farm Cooperative, Kano", halalStatus: "Certified Halal", certBody: "NAFDAC", certExpiry: "2026-12-31", otherDoc: "" },
+        { name: "Hexane (food-grade extraction solvent)", source: "Synthetic", manufacturer: "Sigma Chemicals Nigeria", halalStatus: "Pending Review", certBody: "", certExpiry: "", otherDoc: "MSDS on file" },
+        { name: "Raw Wildflower Honey", source: "Animal", manufacturer: "BeeHarvest Apiaries, Jos Plateau", halalStatus: "Certified Halal", certBody: "DAHC", certExpiry: "2025-06-30", otherDoc: "" },
+      ]),
+      otherCertifications: JSON.stringify({
+        nafdac: true, nafdacRef: "A7-1234L",
+        son:    false, sonRef: "",
+        iso:    false, isoRef: "",
+        otherHalal: false, otherHalalRef: "",
+      }),
+      picName:            "Amina Demo",
+      picDesignation:     "Managing Director",
+      picPhone:           "+234 803 456 7891",
+      picEmail:           "amina@demofoods.ng",
+      notes:              "We are a small startup looking to export to the GCC market.",
+      declarationAccepted: true,
+      status:             "SUBMITTED",
+      createdAt:          daysAgo(5),
+      updatedAt:          daysAgo(5),
     },
   });
 }

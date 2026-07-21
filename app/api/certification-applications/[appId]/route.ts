@@ -6,20 +6,15 @@ import { issueApplicationCertificateIfNeeded } from "@/lib/certificates";
 
 type Params = { params: Promise<{ appId: string }> };
 
-// Roles that have any staff-level write access
 const STAFF_WRITE_ROLES = new Set(["ADMIN", "SUPER_ADMIN", "REVIEWER", "OPERATIONS_MANAGER", "INSPECTOR", "TECHNICAL", "SHARIA_PANEL"]);
 
-// Which statuses each staff role can advance FROM (undefined = no restriction for full-access roles)
 const ROLE_STAGE_GATES: Record<string, Set<string>> = {
-  REVIEWER: new Set(["SUBMITTED", "SCREENING", "DEFICIENCY_NOTICE"]),
+  REVIEWER:           new Set(["SUBMITTED", "SCREENING", "DEFICIENCY_NOTICE"]),
   OPERATIONS_MANAGER: new Set(["ELIGIBILITY_REVIEW", "TRC_ESCALATION", "AWAITING_PAYMENT"]),
-  INSPECTOR: new Set(["PENDING_AUDIT", "AUDITING", "ACTION_REQUIRED_NCR", "VERIFYING_NCR"]),
-  TECHNICAL: new Set(["BOARD_REVIEW"]),   // notes only — no status transitions
-  SHARIA_PANEL: new Set(["BOARD_REVIEW"]),
+  INSPECTOR:          new Set(["PENDING_AUDIT", "AUDITING", "ACTION_REQUIRED_NCR", "VERIFYING_NCR"]),
+  TECHNICAL:          new Set(["BOARD_REVIEW"]),
+  SHARIA_PANEL:       new Set(["BOARD_REVIEW"]),
 };
-
-// Status transitions allowed per destination status (by role)
-const TECHNICAL_READONLY_STATUSES = new Set<string>(["BOARD_REVIEW"]); // TECHNICAL can only add notes here
 
 export async function GET(_req: Request, { params }: Params) {
   const session = await auth();
@@ -36,9 +31,7 @@ export async function GET(_req: Request, { params }: Params) {
 
   const isOwner = application.userId === userId;
   const isStaff = STAFF_WRITE_ROLES.has(role ?? "");
-  if (!isOwner && !isStaff) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  if (!isOwner && !isStaff) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   return NextResponse.json({ application });
 }
 
@@ -60,25 +53,46 @@ const staffUpdateSchema = z.object({
   feeAmountNgn:     z.number().int().positive().optional(),
   feeDescription:   z.string().min(1).optional(),
   issueCertificate: z.boolean().optional(),
+  checklistData:    z.string().optional(),
+  deficiencyItems:  z.string().optional(),
+  auditTeam:        z.string().optional(),
+  ncSeverity:       z.string().optional(),
 });
 
-// User-facing: submit draft or confirm NCR evidence submitted
 const userActionSchema = z.object({
-  action: z.enum(["submit", "submitNcrEvidence"]),
+  action:      z.enum(["submit", "submitNcrEvidence", "submitCarResponse"]),
+  carResponse: z.string().optional(),
+});
+
+const draftSchema = z.object({
+  businessName:        z.string().min(1).max(160).optional(),
+  sector:              z.string().min(1).max(120).optional(),
+  schemeCode:          z.enum(["FB", "FP", "AQ", "SL", "CS", "PH", "CG", "LG"]).optional(),
+  productionScale:     z.enum(["LARGE", "MEDIUM", "SMALL"]).optional(),
+  productList:         z.string().optional(),
+  notes:               z.string().optional(),
+  businessRegNo:       z.string().optional(),
+  entityType:          z.string().optional(),
+  headOfficeAddress:   z.string().optional(),
+  factoryAddress:      z.string().optional(),
+  telephone:           z.string().optional(),
+  website:             z.string().optional(),
+  picName:             z.string().optional(),
+  picDesignation:      z.string().optional(),
+  picPhone:            z.string().optional(),
+  picEmail:            z.string().optional(),
+  ingredientList:      z.string().optional(),
+  otherCertifications: z.string().optional(),
+  declarationAccepted: z.boolean().optional(),
 });
 
 async function generateReferenceNumber(appId: string, schemeCode: string): Promise<string> {
   const year = new Date().getFullYear().toString().slice(-2);
   const prefix = `DAHC/${year}/${schemeCode}/`;
-
   const existing = await prisma.certificationApplication.findMany({
-    where: {
-      referenceNumber: { startsWith: `DAHC/${year}/` },
-      id: { not: appId },
-    },
+    where: { referenceNumber: { startsWith: `DAHC/${year}/` }, id: { not: appId } },
     select: { referenceNumber: true },
   });
-
   let maxSeq = 0;
   for (const app of existing) {
     if (!app.referenceNumber) continue;
@@ -92,8 +106,8 @@ async function generateReferenceNumber(appId: string, schemeCode: string): Promi
 export async function PATCH(req: Request, { params }: Params) {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const userId = (session.user as { id: string }).id;
-  const role   = (session.user as { role?: string }).role ?? "";
+  const userId  = (session.user as { id: string }).id;
+  const role    = (session.user as { role?: string }).role ?? "";
 
   const { appId } = await params;
   const body = await req.json().catch(() => null);
@@ -104,58 +118,67 @@ export async function PATCH(req: Request, { params }: Params) {
   });
   if (!application) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const isOwner = application.userId === userId;
+  const isOwner     = application.userId === userId;
   const isFullAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
-  const isStaff = STAFF_WRITE_ROLES.has(role);
+  const isStaff     = STAFF_WRITE_ROLES.has(role);
 
-  // ── User-facing actions ──────────────────────────────────────────────────────
+  // ── Owner section ─────────────────────────────────────────────────────────────
   if (!isStaff && isOwner) {
-    const parsed = userActionSchema.safeParse(body);
-    if (!parsed.success) return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+    if (body?.action) {
+      const parsed = userActionSchema.safeParse(body);
+      if (!parsed.success) return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 
-    if (parsed.data.action === "submit") {
-      if (application.status !== "DRAFT") {
-        return NextResponse.json({ error: "Only DRAFT applications can be submitted" }, { status: 400 });
+      if (parsed.data.action === "submit") {
+        if (application.status !== "DRAFT") {
+          return NextResponse.json({ error: "Only DRAFT applications can be submitted" }, { status: 400 });
+        }
+        const updated = await prisma.certificationApplication.update({
+          where: { id: appId }, data: { status: "SUBMITTED" },
+        });
+        return NextResponse.json({ application: updated });
       }
+
+      if (parsed.data.action === "submitNcrEvidence") {
+        if (application.status !== "ACTION_REQUIRED_NCR") {
+          return NextResponse.json({ error: "Application is not awaiting NCR evidence" }, { status: 400 });
+        }
+        const updated = await prisma.certificationApplication.update({
+          where: { id: appId }, data: { status: "VERIFYING_NCR" },
+        });
+        return NextResponse.json({ application: updated });
+      }
+
+      if (parsed.data.action === "submitCarResponse") {
+        if (application.status !== "ACTION_REQUIRED_NCR") {
+          return NextResponse.json({ error: "Application is not awaiting corrective action response" }, { status: 400 });
+        }
+        if (!parsed.data.carResponse) {
+          return NextResponse.json({ error: "carResponse is required" }, { status: 400 });
+        }
+        const updated = await prisma.certificationApplication.update({
+          where: { id: appId },
+          data: { carResponse: parsed.data.carResponse, status: "VERIFYING_NCR" },
+        });
+        return NextResponse.json({ application: updated });
+      }
+
+      return NextResponse.json({ error: "Unknown action" }, { status: 400 });
+    }
+
+    // DRAFT field update
+    if (application.status === "DRAFT") {
+      const parsed = draftSchema.safeParse(body);
+      if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
       const updated = await prisma.certificationApplication.update({
-        where: { id: appId },
-        data: { status: "SUBMITTED" },
+        where: { id: appId }, data: parsed.data,
       });
       return NextResponse.json({ application: updated });
     }
 
-    if (parsed.data.action === "submitNcrEvidence") {
-      if (application.status !== "ACTION_REQUIRED_NCR") {
-        return NextResponse.json({ error: "Application is not awaiting NCR evidence" }, { status: 400 });
-      }
-      const updated = await prisma.certificationApplication.update({
-        where: { id: appId },
-        data: { status: "VERIFYING_NCR" },
-      });
-      return NextResponse.json({ application: updated });
-    }
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // ── User updating their own DRAFT fields ────────────────────────────────────
-  if (isOwner && !isStaff && application.status === "DRAFT") {
-    const draftSchema = z.object({
-      businessName:    z.string().min(1).max(160).optional(),
-      sector:          z.string().min(1).max(120).optional(),
-      schemeCode:      z.enum(["FB", "FP", "AQ", "SL", "CS", "PH", "CG", "LG"]).optional(),
-      productionScale: z.enum(["LARGE", "MEDIUM", "SMALL"]).optional(),
-      productList:     z.string().min(1).optional(),
-      notes:           z.string().optional(),
-    });
-    const parsed = draftSchema.safeParse(body);
-    if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-    const updated = await prisma.certificationApplication.update({
-      where: { id: appId },
-      data: parsed.data,
-    });
-    return NextResponse.json({ application: updated });
-  }
-
-  // ── Staff-only actions below ─────────────────────────────────────────────────
+  // ── Staff-only ────────────────────────────────────────────────────────────────
   if (!isStaff) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const parsed = staffUpdateSchema.safeParse(body);
@@ -163,43 +186,34 @@ export async function PATCH(req: Request, { params }: Params) {
     return NextResponse.json({ error: "Invalid input", issues: parsed.error.issues }, { status: 400 });
   }
 
-  // Gate non-full-admins to their allowed stages
   if (!isFullAdmin) {
     const gate = ROLE_STAGE_GATES[role];
     if (gate && !gate.has(application.status)) {
       return NextResponse.json({ error: "This role cannot act on applications in the current stage" }, { status: 403 });
     }
-    // TECHNICAL role can only add notes — no status changes
     if (role === "TECHNICAL" && parsed.data.status) {
       return NextResponse.json({ error: "Technical role may only add notes at Board Review stage" }, { status: 403 });
     }
-    // SHARIA_PANEL can only approve or reject from BOARD_REVIEW
-    if (role === "SHARIA_PANEL" && parsed.data.status) {
-      if (!["CERTIFIED", "REJECTED"].includes(parsed.data.status)) {
-        return NextResponse.json({ error: "Sharia Panel may only Certify or Reject at Board Review stage" }, { status: 403 });
-      }
+    if (role === "SHARIA_PANEL" && parsed.data.status && !["CERTIFIED", "REJECTED"].includes(parsed.data.status)) {
+      return NextResponse.json({ error: "Sharia Panel may only Certify or Reject at Board Review stage" }, { status: 403 });
     }
-    // REVIEWER cannot certify
-    if (role === "REVIEWER" && parsed.data.status === "CERTIFIED") {
-      return NextResponse.json({ error: "Reviewer cannot certify applications" }, { status: 403 });
-    }
-    // INSPECTOR cannot certify
-    if (role === "INSPECTOR" && parsed.data.status === "CERTIFIED") {
-      return NextResponse.json({ error: "Inspector cannot certify applications" }, { status: 403 });
-    }
-    // OPERATIONS_MANAGER cannot certify
-    if (role === "OPERATIONS_MANAGER" && parsed.data.status === "CERTIFIED") {
-      return NextResponse.json({ error: "Operations Manager cannot certify applications" }, { status: 403 });
+    if (["REVIEWER", "INSPECTOR", "OPERATIONS_MANAGER"].includes(role) && parsed.data.status === "CERTIFIED") {
+      return NextResponse.json({ error: `${role} cannot certify applications` }, { status: 403 });
     }
   }
 
   const { feeAmountNgn, feeDescription, issueCertificate, auditDate, ...applicationFields } = parsed.data;
 
-  // Auto-generate reference number on ELIGIBILITY_REVIEW transition
   let referenceNumber: string | undefined;
   if (parsed.data.status === "ELIGIBILITY_REVIEW" && !application.referenceNumber) {
-    const code = application.schemeCode ?? "FB";
-    referenceNumber = await generateReferenceNumber(appId, code);
+    referenceNumber = await generateReferenceNumber(appId, application.schemeCode ?? "FB");
+  }
+
+  let certExpiryDate: string | undefined;
+  if (parsed.data.status === "CERTIFIED") {
+    const expiry = new Date();
+    expiry.setFullYear(expiry.getFullYear() + 1);
+    certExpiryDate = expiry.toISOString();
   }
 
   const updatedApp = await prisma.certificationApplication.update({
@@ -207,7 +221,8 @@ export async function PATCH(req: Request, { params }: Params) {
     data: {
       ...applicationFields,
       ...(referenceNumber ? { referenceNumber } : {}),
-      ...(auditDate ? { auditDate: new Date(auditDate) } : {}),
+      ...(auditDate       ? { auditDate: new Date(auditDate) } : {}),
+      ...(certExpiryDate  ? { certExpiryDate } : {}),
       reviewedBy: userId,
     },
   });

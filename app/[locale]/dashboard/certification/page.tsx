@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Award, Download, ShieldCheck, Info, FileWarning, ExternalLink } from "lucide-react";
+import { Award, Download, ShieldCheck, Info, FileWarning, ExternalLink, Users, CalendarCheck } from "lucide-react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import ApplicationStages from "@/components/dashboard/ApplicationStages";
@@ -9,6 +9,7 @@ import DraftApplicationEditor from "@/components/dashboard/DraftApplicationEdito
 import CertificationApplicationForm from "@/components/dashboard/CertificationApplicationForm";
 import PaymentCTA from "@/components/dashboard/PaymentCTA";
 import TrustmarkDownload from "@/components/dashboard/TrustmarkDownload";
+import CARResponseForm from "@/components/dashboard/CARResponseForm";
 
 // Spec-defined dashboard status block messages
 const STATUS_MESSAGE: Record<string, { title: string; body: string; color: string }> = {
@@ -193,19 +194,47 @@ export default async function CertificationApplicationPage({
                     productList: app.productList,
                     notes: app.notes,
                     documents: app.documents,
+                    businessRegNo:      (app as { businessRegNo?: string | null }).businessRegNo ?? null,
+                    entityType:         (app as { entityType?: string | null }).entityType ?? null,
+                    headOfficeAddress:  (app as { headOfficeAddress?: string | null }).headOfficeAddress ?? null,
+                    factoryAddress:     (app as { factoryAddress?: string | null }).factoryAddress ?? null,
+                    telephone:          (app as { telephone?: string | null }).telephone ?? null,
+                    website:            (app as { website?: string | null }).website ?? null,
+                    picName:            (app as { picName?: string | null }).picName ?? null,
+                    picDesignation:     (app as { picDesignation?: string | null }).picDesignation ?? null,
+                    picPhone:           (app as { picPhone?: string | null }).picPhone ?? null,
+                    picEmail:           (app as { picEmail?: string | null }).picEmail ?? null,
+                    ingredientList:     (app as { ingredientList?: string | null }).ingredientList ?? null,
+                    otherCertifications:(app as { otherCertifications?: string | null }).otherCertifications ?? null,
+                    declarationAccepted:(app as { declarationAccepted?: boolean }).declarationAccepted ?? false,
                   }} />
                 )}
 
-                {/* ── DEFICIENCY_NOTICE: show admin note + upload ── */}
+                {/* ── DEFICIENCY_NOTICE: show admin note + specific missing items + upload ── */}
                 {app.status === "DEFICIENCY_NOTICE" && (
                   <>
                     {app.deficiencyNotes && (
                       <div style={{ padding: "12px 14px", borderRadius: 8, background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.3)", marginBottom: 12 }}>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#D97706", marginBottom: 6 }}>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#D97706", marginBottom: 8 }}>
                           <FileWarning size={13} style={{ display: "inline", marginRight: 5 }} />
                           Documents Required by DAHC:
                         </p>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{app.deficiencyNotes}</p>
+                        {/* Show specific named missing items */}
+                        {(app as { deficiencyItems?: string | null }).deficiencyItems && (() => {
+                          try {
+                            const items = JSON.parse((app as { deficiencyItems?: string }).deficiencyItems!) as { id: string; label: string }[];
+                            return (
+                              <ul style={{ paddingLeft: 20, marginBottom: 10 }}>
+                                {items.map(item => (
+                                  <li key={item.id} style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", marginBottom: 4, lineHeight: 1.5 }}>
+                                    <strong style={{ color: "#D97706" }}>{item.id}:</strong> {item.label}
+                                  </li>
+                                ))}
+                              </ul>
+                            );
+                          } catch { return null; }
+                        })()}
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)", whiteSpace: "pre-wrap", lineHeight: 1.6, borderTop: "1px solid rgba(245,158,11,0.2)", paddingTop: 8, marginTop: 4 }}>{app.deficiencyNotes}</p>
                       </div>
                     )}
                     <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(245,158,11,0.04)", border: "1px solid rgba(245,158,11,0.2)" }}>
@@ -238,37 +267,40 @@ export default async function CertificationApplicationPage({
                   />
                 )}
 
-                {/* ── PENDING_AUDIT: audit date ── */}
+                {/* ── PENDING_AUDIT: audit date + team ── */}
                 {isPendingAudit && (
                   <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)" }}>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0D9488", marginBottom: 4 }}>Audit Schedule</p>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0D9488", marginBottom: 8 }}>
+                      <CalendarCheck size={13} style={{ display: "inline", marginRight: 5 }} />
+                      Audit Schedule
+                    </p>
                     {app.auditDate ? (
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", marginBottom: 8 }}>
                         Your on-site audit is scheduled for{" "}
                         <strong>{new Date(app.auditDate).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</strong>.
                         Please ensure your facilities are ready for the DAHC inspection team.
                       </p>
                     ) : (
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)" }}>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 8 }}>
                         Our team will contact you shortly to confirm the audit date and logistics.
                       </p>
+                    )}
+                    {(app as { auditTeam?: string | null }).auditTeam && (
+                      <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 6 }}>
+                        <Users size={13} color="#0D9488" />
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "#0D9488" }}>
+                          <strong>Assigned Inspection Team:</strong> {(app as { auditTeam?: string }).auditTeam}
+                        </p>
+                      </div>
                     )}
                   </div>
                 )}
 
-                {/* ── ACTION_REQUIRED_NCR: NCR report + evidence upload ── */}
+                {/* ── ACTION_REQUIRED_NCR: CAR form ── */}
                 {isNCR && (
                   <>
-                    {app.ncrReport && (
-                      <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.25)" }}>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#C2410C", marginBottom: 6 }}>
-                          Non-Conformance Report (NCR)
-                        </p>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{app.ncrReport}</p>
-                      </div>
-                    )}
                     {app.reviewNotes && (
-                      <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 12, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.08)" }}>
+                      <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 10, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.08)" }}>
                         <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)" }}>
                           <strong>Auditor note:</strong> {app.reviewNotes}
                         </p>
@@ -278,10 +310,15 @@ export default async function CertificationApplicationPage({
                       <DocumentUpload
                         appId={app.id}
                         initialDocs={app.documents ? JSON.parse(app.documents) : []}
-                        label="Upload Corrective Evidence (photos, procedures, documents)"
+                        label="Upload Corrective Evidence (photos, updated procedures, certificates)"
                       />
                     </div>
-                    <NCRSubmitButton appId={app.id} />
+                    <CARResponseForm
+                      appId={app.id}
+                      ncrReport={app.ncrReport}
+                      ncSeverity={(app as { ncSeverity?: string | null }).ncSeverity ?? null}
+                      existingCarResponse={(app as { carResponse?: string | null }).carResponse ?? null}
+                    />
                   </>
                 )}
 
@@ -313,6 +350,9 @@ export default async function CertificationApplicationPage({
                               Serial {app.certificate.serial} · Issued {new Date(app.certificate.issuedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                               {app.certificate.expiresAt && (
                                 <> · Expires {new Date(app.certificate.expiresAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</>
+                              )}
+                              {!(app.certificate.expiresAt) && (app as unknown as { certExpiryDate?: string | null }).certExpiryDate && (
+                                <> · Valid until {new Date((app as unknown as { certExpiryDate: string }).certExpiryDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</>
                               )}
                             </div>
                           </div>
@@ -410,5 +450,3 @@ export default async function CertificationApplicationPage({
   );
 }
 
-// Client component for NCR evidence submission button
-import NCRSubmitButton from "@/components/dashboard/NCRSubmitButton";

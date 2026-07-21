@@ -221,6 +221,25 @@ model CertificationApplication {
   auditDate       DateTime?
   documents       String?
   ncrReport       String?
+  businessRegNo       String?
+  entityType          String?
+  headOfficeAddress   String?
+  factoryAddress      String?
+  telephone           String?
+  website             String?
+  picName             String?
+  picDesignation      String?
+  picPhone            String?
+  picEmail            String?
+  ingredientList      String?
+  otherCertifications String?
+  declarationAccepted Boolean   @default(false)
+  checklistData       String?
+  deficiencyItems     String?
+  auditTeam           String?
+  carResponse         String?
+  certExpiryDate      String?
+  ncSeverity          String?
   status          ApplicationStatus @default(DRAFT)
   certIssueMode   CertIssueMode     @default(MANUAL)
   reviewedBy      String?

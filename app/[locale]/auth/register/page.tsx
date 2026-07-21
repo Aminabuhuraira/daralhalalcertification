@@ -6,9 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Check, Eye, EyeOff, Building2, BookOpen, Search, Users, Loader2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, Eye, EyeOff, Building2, BookOpen, Search, Users, Loader2, FileText, CheckSquare, Square, ExternalLink } from "lucide-react";
 
-const STEPS = ["Account Type", "Business Info", "Profile", "Confirm"];
+const STEPS = ["Client Manual", "Account Type", "Business Info", "Profile", "Confirm"];
 
 const ACCOUNT_TYPES = [
   { id: "business", icon: Building2, title: "Business", desc: "Certify my products/services", color: "var(--color-gold-400)" },
@@ -25,6 +25,7 @@ export default function RegisterPage() {
   const locale = (params?.locale as string) || "en";
   const [step, setStep] = useState(0);
   const [showPass, setShowPass] = useState(false);
+  const [manualRead, setManualRead] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -75,9 +76,10 @@ export default function RegisterPage() {
   const blur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => (e.target.style.borderColor = "var(--color-border)");
 
   const canNext = () => {
-    if (step === 0) return !!form.accountType;
-    if (step === 1) return !!(form.businessName && form.sector);
-    if (step === 2) return !!(form.fullName && form.email && form.password && form.password === form.confirmPassword);
+    if (step === 0) return manualRead;
+    if (step === 1) return !!form.accountType;
+    if (step === 2) return !!(form.businessName && form.sector);
+    if (step === 3) return !!(form.fullName && form.email && form.password && form.password === form.confirmPassword);
     return true;
   };
 
@@ -96,7 +98,7 @@ export default function RegisterPage() {
                 <div style={{ width: 32, height: 32, borderRadius: "50%", background: i <= step ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.3s" }}>
                   {i < step ? <Check size={14} color="white" /> : <span style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: i <= step ? "white" : "var(--color-text-muted)" }}>{i + 1}</span>}
                 </div>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: i === step ? "var(--color-text-gold)" : "var(--color-text-muted)", fontWeight: i === step ? 700 : 400, display: i === 3 ? "inline" : "none" }}>{s}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: i === step ? "var(--color-text-gold)" : "var(--color-text-muted)", fontWeight: i === step ? 700 : 400, display: i === 4 ? "inline" : "none" }}>{s}</span>
                 {i < STEPS.length - 1 && <div style={{ width: 40, height: 2, background: i < step ? "var(--gradient-gold)" : "var(--color-border)", borderRadius: 1 }} />}
               </div>
             ))}
@@ -112,6 +114,60 @@ export default function RegisterPage() {
             style={{ maxWidth: 560, margin: "0 auto", padding: "44px 40px" }}
           >
             {step === 0 && (
+              <>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                  <FileText size={22} color="var(--color-text-gold)" />
+                  <h2 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 400 }}>Read the Halal Certification Manual</h2>
+                </div>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 20 }}>
+                  Before registering, please read the DAHC Halal Certification Manual (Client Guideline). It explains the eligibility criteria, process, documentation requirements, and your obligations as a certified company.
+                </p>
+                <div style={{ background: "var(--color-surface)", borderRadius: 10, padding: "16px 18px", marginBottom: 20 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "var(--color-text-primary)", marginBottom: 10 }}>Key eligibility requirements:</p>
+                  {[
+                    "Your business must be legally registered with the CAC or equivalent authority",
+                    "Products/services must be capable of halal compliance (no categorically prohibited substances)",
+                    "Your premises must be accessible for on-site audit by DAHC inspectors",
+                    "You must designate a Person In Charge (PIC) responsible for the certification process",
+                    "You agree to maintain halal compliance and notify DAHC of any material changes",
+                  ].map((point, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 7 }}>
+                      <Check size={14} color="var(--color-text-gold)" style={{ marginTop: 2, flexShrink: 0 }} />
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--color-text-secondary)", lineHeight: 1.5 }}>{point}</span>
+                    </div>
+                  ))}
+                </div>
+                <a
+                  href={`/${locale}/certification-guide`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 16px", border: "1.5px solid var(--color-gold-300)", borderRadius: 10, color: "var(--color-text-gold)", textDecoration: "none", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 600, marginBottom: 20, transition: "background 0.2s" }}
+                >
+                  <FileText size={16} />
+                  View Full Halal Certification Manual (opens in new tab)
+                  <ExternalLink size={13} style={{ marginLeft: "auto" }} />
+                </a>
+                <div style={{ padding: "14px 16px", borderRadius: 10, background: "rgba(201,162,39,0.06)", border: "1.5px solid rgba(201,162,39,0.2)", marginBottom: 20 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginBottom: 10 }}>
+                    A copy of this manual will also be sent to your registered email address upon account creation.
+                  </p>
+                  <button
+                    onClick={() => setManualRead(v => !v)}
+                    style={{ display: "flex", alignItems: "flex-start", gap: 10, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}
+                  >
+                    {manualRead
+                      ? <CheckSquare size={20} color="var(--color-gold-400)" style={{ flexShrink: 0, marginTop: 1 }} />
+                      : <Square size={20} color="rgba(10,21,53,0.3)" style={{ flexShrink: 0, marginTop: 1 }} />
+                    }
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: manualRead ? 700 : 400, color: manualRead ? "var(--color-text-primary)" : "var(--color-text-secondary)", lineHeight: 1.5 }}>
+                      I have read and understood the DAHC Halal Certification Manual (Client Guideline) and confirm my business meets the eligibility criteria stated therein.
+                    </span>
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === 1 && (
               <>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Choose Account Type</h2>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Select how you plan to use the platform</p>
@@ -131,7 +187,7 @@ export default function RegisterPage() {
               </>
             )}
 
-            {step === 1 && (
+            {step === 2 && (
               <>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Business Information</h2>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Tell us about your business</p>
@@ -153,7 +209,7 @@ export default function RegisterPage() {
               </>
             )}
 
-            {step === 2 && (
+            {step === 3 && (
               <>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Personal Profile</h2>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Create your login credentials</p>
@@ -184,7 +240,7 @@ export default function RegisterPage() {
               </>
             )}
 
-            {step === 3 && (
+            {step === 4 && (
               <>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Review & Confirm</h2>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Confirm your details before creating your account</p>
@@ -215,18 +271,18 @@ export default function RegisterPage() {
               )}
               <button
                 onClick={() => {
-                  if (step === 3) { handleCreateAccount(); return; }
+                  if (step === 4) { handleCreateAccount(); return; }
                   setStep(s => s + 1);
                 }}
-                disabled={!canNext() || (step === 3 && (!agreed || submitting))}
-                style={{ flex: 2, padding: "13px", background: (canNext() && !(step === 3 && !agreed)) ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", color: "white", border: "none", borderRadius: 12, cursor: (canNext() && !(step === 3 && (!agreed || submitting))) ? "pointer" : "not-allowed", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: canNext() ? "0 4px 16px rgba(219,168,32,0.3)" : "none" }}
+                disabled={!canNext() || (step === 4 && (!agreed || submitting))}
+                style={{ flex: 2, padding: "13px", background: (canNext() && !(step === 4 && !agreed)) ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", color: "white", border: "none", borderRadius: 12, cursor: (canNext() && !(step === 4 && (!agreed || submitting))) ? "pointer" : "not-allowed", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: canNext() ? "0 4px 16px rgba(219,168,32,0.3)" : "none" }}
               >
-                {submitting ? <Loader2 size={16} style={{ animation: "rotateSeal 1s linear infinite" }} /> : step === 3 ? "Create My Account" : "Continue"}
+                {submitting ? <Loader2 size={16} style={{ animation: "rotateSeal 1s linear infinite" }} /> : step === 4 ? "Create My Account" : "Continue"}
                 {!submitting && <ArrowRight size={16} />}
               </button>
             </div>
 
-            {step === 0 && (
+            {(step === 0 || step === 1) && (
               <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--color-text-muted)", textAlign: "center", marginTop: 20 }}>
                 Already have an account? <Link href={`/${locale}/auth/login`} style={{ color: "var(--color-text-gold)", fontWeight: 600, textDecoration: "none" }}>Sign in</Link>
               </p>
