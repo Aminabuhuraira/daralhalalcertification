@@ -5,9 +5,10 @@ import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Award, CreditCard, Users, BookOpen,
   ClipboardCheck, ShieldCheck, LogOut, ArrowLeftRight, FileText,
-  Settings, Mail, Activity, ClipboardList, FileSearch,
-  Microscope, Moon, Briefcase, Archive,
+  Settings, Mail, ClipboardList, FileSearch,
+  Microscope, Moon, Briefcase, Archive, UserCircle,
 } from "lucide-react";
+import NotificationBell from "@/components/dashboard/NotificationBell";
 
 type Variant = "user" | "admin" | "reviewer" | "ops" | "inspector" | "technical" | "sharia";
 
@@ -25,6 +26,7 @@ const USER_NAV = [
   { label: "Certificates",   href: "/dashboard/certificates",  icon: Award },
   { label: "Archive",        href: "/dashboard/archive",       icon: Archive },
   { label: "Billing",        href: "/dashboard/billing",       icon: CreditCard },
+  { label: "Profile",        href: "/dashboard/profile",       icon: UserCircle },
   { label: "Settings",       href: "/dashboard/settings",      icon: Settings },
 ];
 
@@ -165,9 +167,12 @@ export default function DashboardShell({ children, variant, userName, userRole }
 
         {/* Bottom user info + sign out */}
         <div style={{ borderTop: "1px solid rgba(10,21,53,0.08)", paddingTop: 16, marginTop: 16 }}>
-          <div style={{ padding: "0 8px", marginBottom: 12 }}>
-            <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userName}</div>
-            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole.replace(/_/g, " ")}</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 8px", marginBottom: 12 }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userName}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole.replace(/_/g, " ")}</div>
+            </div>
+            <NotificationBell locale={locale} />
           </div>
           <button
             onClick={() => signOut({ callbackUrl: `/${locale}` })}

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { Moon, ShieldCheck, CheckCircle2, XCircle } from "lucide-react";
+import { Moon, ShieldCheck, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import AdminApplicationList from "@/components/dashboard/AdminApplicationList";
 
 type Params = { params: Promise<{ locale: string }> };
@@ -60,6 +60,29 @@ export default async function ShariaPage({ params }: Params) {
           Review complete audit files and the Technical Team&apos;s assessment. Issue final certification approval or rejection in accordance with Shariah standards.
         </p>
       </div>
+
+      {/* Notification banners */}
+      {applications.length > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(132,204,22,0.05)", border: "1px solid rgba(132,204,22,0.3)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertTriangle size={16} color="#65A30D" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#65A30D", margin: "0 0 2px" }}>
+              {applications.length} Application{applications.length !== 1 ? "s" : ""} Awaiting Final Shariah Validation
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Audit and technical review are complete. The Shariah Panel must issue the final certification decision — approve or reject each application in accordance with Halal standards.
+            </p>
+          </div>
+        </div>
+      )}
+      {applications.length === 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(22,163,74,0.05)", border: "1px solid rgba(22,163,74,0.2)", borderRadius: 10, padding: "12px 18px", marginBottom: 16 }}>
+          <Moon size={15} color="#16A34A" />
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#16A34A", margin: 0, fontWeight: 600 }}>
+            No pending reviews — {certified30d} certificate{certified30d !== 1 ? "s" : ""} approved in the last 30 days.
+          </p>
+        </div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 28 }}>
         {STATS.map(({ label, value, color, bg, border, icon: Icon }) => (

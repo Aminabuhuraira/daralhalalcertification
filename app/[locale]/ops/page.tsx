@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { FileSearch, CheckCircle, AlertCircle, CreditCard } from "lucide-react";
+import { FileSearch, CheckCircle, AlertCircle, CreditCard, AlertTriangle } from "lucide-react";
 import AdminApplicationList from "@/components/dashboard/AdminApplicationList";
 
 type Params = { params: Promise<{ locale: string }> };
@@ -62,6 +62,47 @@ export default async function OpsManagerPage({ params }: Params) {
           Verify the Admin's screening assessment, conduct eligibility evaluations, manage TRC escalations, and approve applications for registration.
         </p>
       </div>
+
+      {/* Notification banners */}
+      {eligibilityCount > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(220,38,38,0.05)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertTriangle size={16} color="#DC2626" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#DC2626", margin: "0 0 2px" }}>
+              {eligibilityCount} Application{eligibilityCount !== 1 ? "s" : ""} Ready for Eligibility Decision
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Administrative screening is complete. Conduct the eligibility evaluation and advance qualified applicants or escalate to TRC.
+            </p>
+          </div>
+        </div>
+      )}
+      {trcCount > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(217,119,6,0.05)", border: "1px solid rgba(217,119,6,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertCircle size={16} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#D97706", margin: "0 0 2px" }}>
+              {trcCount} Application{trcCount !== 1 ? "s" : ""} Pending TRC / Shariah Pre-Review
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              These applications have been escalated to the Technical Review Committee. Coordinate with the TRC and advance upon clearance.
+            </p>
+          </div>
+        </div>
+      )}
+      {awaitingPayment > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(14,165,233,0.05)", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertCircle size={16} color="#0EA5E9" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#0EA5E9", margin: "0 0 2px" }}>
+              {awaitingPayment} Application{awaitingPayment !== 1 ? "s" : ""} Approved — Awaiting Payment Confirmation
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Applicants have been notified to make payment. Confirm receipt and advance to the audit scheduling stage.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 28 }}>

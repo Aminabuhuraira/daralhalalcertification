@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { Inbox, FileSearch, AlertCircle, CreditCard } from "lucide-react";
+import { Inbox, FileSearch, AlertCircle, CreditCard, AlertTriangle, CheckCircle2 } from "lucide-react";
 import AdminApplicationList from "@/components/dashboard/AdminApplicationList";
 
 type Params = { params: Promise<{ locale: string }> };
@@ -73,6 +73,42 @@ export default async function ReviewerPage({ params }: Params) {
           Screen documents, conduct eligibility reviews, and advance applications through the pre-audit pipeline.
         </p>
       </div>
+
+      {/* Notification banners */}
+      {newSubmissions > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(220,38,38,0.05)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertTriangle size={16} color="#DC2626" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#DC2626", margin: "0 0 2px" }}>
+              {newSubmissions} New Application{newSubmissions !== 1 ? "s" : ""} Awaiting Screening
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              These submissions have not yet been reviewed. Conduct administrative screening to verify documents and advance or flag each application.
+            </p>
+          </div>
+        </div>
+      )}
+      {inScreening > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(217,119,6,0.05)", border: "1px solid rgba(217,119,6,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertCircle size={16} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#D97706", margin: "0 0 2px" }}>
+              {inScreening} Application{inScreening !== 1 ? "s" : ""} In Screening or Deficiency Notice
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Review screening progress and check whether applicants have responded to deficiency notices before the 14-day deadline.
+            </p>
+          </div>
+        </div>
+      )}
+      {newSubmissions === 0 && inScreening === 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(22,163,74,0.05)", border: "1px solid rgba(22,163,74,0.2)", borderRadius: 10, padding: "12px 18px", marginBottom: 16 }}>
+          <CheckCircle2 size={15} color="#16A34A" />
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#16A34A", margin: 0, fontWeight: 600 }}>
+            All clear — no immediate actions required in the review queue.
+          </p>
+        </div>
+      )}
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 28 }}>

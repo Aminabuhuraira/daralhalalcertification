@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: "About", href: "/about" },
   { label: "Certify", href: "/certification" },
   { label: "Verify", href: "/verify" },
+  { label: "Registry", href: "/registry" },
   { label: "Learn", href: "/learn" },
   { label: "Resources", href: "/resources", children: [
     { label: "Halal Market Data", href: "/resources/halal-market-data" },

@@ -73,6 +73,47 @@ export default async function InspectorPage({ params }: Params) {
         </p>
       </div>
 
+      {/* Notification banners */}
+      {upcomingAudits > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(8,145,178,0.05)", border: "1px solid rgba(8,145,178,0.25)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertTriangle size={16} color="#0891B2" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#0891B2", margin: "0 0 2px" }}>
+              {upcomingAudits} Audit{upcomingAudits !== 1 ? "s" : ""} Scheduled and Awaiting Inspection
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Payment confirmed. Assign inspection teams and conduct on-site audits for these applications.
+            </p>
+          </div>
+        </div>
+      )}
+      {ncrCases > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(249,115,22,0.05)", border: "1px solid rgba(249,115,22,0.25)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertTriangle size={16} color="#F97316" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#F97316", margin: "0 0 2px" }}>
+              {ncrCases} NCR Case{ncrCases !== 1 ? "s" : ""} Require Review
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Non-conformance reports are active. Verify corrective action responses submitted by applicants and decide on closure or further action.
+            </p>
+          </div>
+        </div>
+      )}
+      {boardReview > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(132,204,22,0.05)", border: "1px solid rgba(132,204,22,0.25)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <CheckCircle2 size={16} color="#65A30D" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#65A30D", margin: "0 0 2px" }}>
+              {boardReview} Application{boardReview !== 1 ? "s" : ""} Advanced to Board Review
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Audit complete with satisfactory results. These files have been handed off to the Technical Team and Shariah Panel for final approval.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 28 }}>
         {STATS.map(({ label, value, color, bg, border, icon: Icon }) => (

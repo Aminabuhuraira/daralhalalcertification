@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { BookOpen, Award, ClipboardCheck, ArrowRight, PlayCircle, ChevronRight } from "lucide-react";
+import { BookOpen, Award, ClipboardCheck, ArrowRight, PlayCircle, ChevronRight, AlertTriangle, AlertCircle, CheckCircle2, CreditCard } from "lucide-react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import StatTile from "@/components/dashboard/StatTile";
@@ -44,6 +44,93 @@ export default async function DashboardOverviewPage({
           Here's where your certification journey stands.
         </p>
       </div>
+
+      {/* Action banners based on application status */}
+      {application?.status === "DEFICIENCY_NOTICE" && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(220,38,38,0.05)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+          <AlertTriangle size={16} color="#DC2626" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ flex: 1 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#DC2626", margin: "0 0 3px" }}>
+              Action Required — Missing Documents
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+              Your application for <strong>{application.businessName}</strong> requires additional documents. Upload all missing items within 14 working days to continue.
+            </p>
+            <Link href={lh("/dashboard/certification")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#DC2626", textDecoration: "none" }}>
+              Upload Documents <ChevronRight size={12} />
+            </Link>
+          </div>
+        </div>
+      )}
+      {application?.status === "ACTION_REQUIRED_NCR" && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(249,115,22,0.05)", border: "1px solid rgba(249,115,22,0.25)", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+          <AlertTriangle size={16} color="#F97316" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ flex: 1 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#F97316", margin: "0 0 3px" }}>
+              Non-Conformance Report Issued
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+              The audit for <strong>{application.businessName}</strong> identified non-conformances. Submit your Corrective Action Response to resume certification.
+            </p>
+            <Link href={lh("/dashboard/certification")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#F97316", textDecoration: "none" }}>
+              Submit Response <ChevronRight size={12} />
+            </Link>
+          </div>
+        </div>
+      )}
+      {application?.status === "AWAITING_PAYMENT" && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(217,119,6,0.05)", border: "1px solid rgba(217,119,6,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+          <CreditCard size={16} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ flex: 1 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#D97706", margin: "0 0 3px" }}>
+              Payment Required to Schedule Audit
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+              Your application for <strong>{application.businessName}</strong> has been approved for audit. Complete payment to confirm your audit slot.
+            </p>
+            <Link href={lh("/dashboard/billing")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#D97706", textDecoration: "none" }}>
+              Pay Now <ChevronRight size={12} />
+            </Link>
+          </div>
+        </div>
+      )}
+      {application?.status === "CERTIFIED" && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(22,163,74,0.05)", border: "1px solid rgba(22,163,74,0.2)", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+          <CheckCircle2 size={16} color="#16A34A" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ flex: 1 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#16A34A", margin: "0 0 3px" }}>
+              Halal Certificate Issued
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+              Congratulations! <strong>{application.businessName}</strong> is now Halal certified. Download your certificate and view your listing in the public registry.
+            </p>
+            <div style={{ display: "flex", gap: 14 }}>
+              <Link href={lh("/dashboard/certificates")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#16A34A", textDecoration: "none" }}>
+                Download Certificate <ChevronRight size={12} />
+              </Link>
+              <Link href={lh("/registry")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, color: "rgba(10,21,53,0.5)", textDecoration: "none" }}>
+                View in Registry <ChevronRight size={12} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+      {!application && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.1)", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+          <AlertCircle size={16} color="rgba(10,21,53,0.4)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ flex: 1 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#0A1535", margin: "0 0 3px" }}>
+              Start Your Halal Certification
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.55)", margin: "0 0 10px" }}>
+              You haven't submitted a certification application yet. Begin the process to have your business listed in the DAHC Halal Registry.
+            </p>
+            <Link href={lh("/dashboard/certification")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#9a7810", textDecoration: "none" }}>
+              Apply for Certification <ChevronRight size={12} />
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Stat strip */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 32 }}>

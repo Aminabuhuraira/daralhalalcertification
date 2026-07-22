@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { Microscope, FileText, Clock, CheckCircle2 } from "lucide-react";
+import { Microscope, FileText, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 import AdminApplicationList from "@/components/dashboard/AdminApplicationList";
 
 type Params = { params: Promise<{ locale: string }> };
@@ -59,6 +59,29 @@ export default async function TechnicalPage({ params }: Params) {
           Review complete audit files submitted for Board approval. Prepare technical documentation and add review notes before the Shariah Panel&apos;s final validation.
         </p>
       </div>
+
+      {/* Notification banners */}
+      {applications.length > 0 && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.25)", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <AlertCircle size={16} color="#6366F1" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#6366F1", margin: "0 0 2px" }}>
+              {applications.length} Application{applications.length !== 1 ? "s" : ""} Pending Technical Assessment
+            </p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              Audit files have passed inspection. Review each application&apos;s technical compliance, add review notes, and prepare documentation for the Shariah Panel&apos;s final validation.
+            </p>
+          </div>
+        </div>
+      )}
+      {applications.length === 0 && recentlyCertified > 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "12px 18px", marginBottom: 16 }}>
+          <CheckCircle2 size={15} color="#16A34A" />
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#16A34A", margin: 0, fontWeight: 600 }}>
+            Queue is clear — {recentlyCertified} certificate{recentlyCertified !== 1 ? "s" : ""} issued in the last 30 days.
+          </p>
+        </div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 28 }}>
         {STATS.map(({ label, value, color, bg, border, icon: Icon }) => (
