@@ -19,7 +19,7 @@ export default async function InspectorPage({ params }: Params) {
   const { locale } = await params;
   const session = await auth();
   const user = session?.user as { id?: string; name?: string; role?: string } | undefined;
-  if (!user || (user.role !== "INSPECTOR" && user.role !== "ADMIN")) {
+  if (!user || (user.role !== "INSPECTOR" && user.role !== "ADMIN" && user.role !== "SUPER_ADMIN")) {
     redirect(`/${locale}/auth/login`);
   }
 

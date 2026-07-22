@@ -3,6 +3,15 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { issueApplicationCertificateIfNeeded } from "@/lib/certificates";
+import {
+  emailApplicationReceived,
+  emailDeficiencyNotice,
+  emailEligibleAwaitingPayment,
+  emailAuditScheduled,
+  emailNcrIssued,
+  emailCertified,
+  emailRejected,
+} from "@/lib/email";
 
 type Params = { params: Promise<{ appId: string }> };
 
@@ -114,7 +123,12 @@ export async function PATCH(req: Request, { params }: Params) {
 
   const application = await prisma.certificationApplication.findUnique({
     where: { id: appId },
-    select: { id: true, userId: true, status: true, schemeCode: true, referenceNumber: true },
+    select: {
+      id: true, userId: true, status: true, schemeCode: true, referenceNumber: true,
+      applicationNumber: true, businessName: true, ncrReport: true, ncSeverity: true,
+      auditDate: true, auditTeam: true, deficiencyItems: true,
+      user: { select: { name: true, email: true } },
+    },
   });
   if (!application) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -135,6 +149,15 @@ export async function PATCH(req: Request, { params }: Params) {
         const updated = await prisma.certificationApplication.update({
           where: { id: appId }, data: { status: "SUBMITTED" },
         });
+        // Fire-and-forget email to applicant
+        if (application.user?.email) {
+          emailApplicationReceived(
+            application.user.email,
+            application.user.name ?? "Applicant",
+            application.applicationNumber ?? appId.slice(0, 8),
+            application.businessName,
+          ).catch(() => {});
+        }
         return NextResponse.json({ application: updated });
       }
 
@@ -240,8 +263,42 @@ export async function PATCH(req: Request, { params }: Params) {
   }
 
   let certificate = null;
-  if (updatedApp.status === "CERTIFIED" && (issueCertificate || true)) {
+  if (updatedApp.status === "CERTIFIED") {
     certificate = await issueApplicationCertificateIfNeeded(updatedApp.id).catch(() => null);
+  }
+
+  // Fire-and-forget notification emails on status change
+  if (parsed.data.status && parsed.data.status !== application.status && application.user?.email) {
+    const { email: toEmail, name: toName } = application.user;
+    const appNum = application.applicationNumber ?? appId.slice(0, 8);
+    const bizName = application.businessName;
+    const newStatus = parsed.data.status;
+
+    (async () => {
+      try {
+        if (newStatus === "DEFICIENCY_NOTICE") {
+          let items: string[] = [];
+          try { items = (JSON.parse(parsed.data.deficiencyItems ?? application.deficiencyItems ?? "[]") as { label: string }[]).map(i => i.label); } catch {}
+          await emailDeficiencyNotice(toEmail, toName ?? "Applicant", appNum, items);
+        } else if (newStatus === "AWAITING_PAYMENT") {
+          const fee = feeAmountNgn ? feeAmountNgn : undefined;
+          await emailEligibleAwaitingPayment(toEmail, toName ?? "Applicant", appNum, bizName, fee);
+        } else if (newStatus === "PENDING_AUDIT") {
+          await emailAuditScheduled(toEmail, toName ?? "Applicant", appNum,
+            auditDate ?? (application.auditDate ? String(application.auditDate) : undefined),
+            parsed.data.auditTeam ?? application.auditTeam ?? undefined);
+        } else if (newStatus === "ACTION_REQUIRED_NCR") {
+          await emailNcrIssued(toEmail, toName ?? "Applicant", appNum,
+            parsed.data.ncSeverity ?? application.ncSeverity ?? "MINOR",
+            parsed.data.ncrReport ?? application.ncrReport ?? "");
+        } else if (newStatus === "CERTIFIED" && certificate) {
+          await emailCertified(toEmail, toName ?? "Applicant", bizName, certificate.serial,
+            certExpiryDate ?? undefined);
+        } else if (newStatus === "REJECTED") {
+          await emailRejected(toEmail, toName ?? "Applicant", bizName, parsed.data.reviewNotes ?? "");
+        }
+      } catch { /* email failure must not affect response */ }
+    })();
   }
 
   return NextResponse.json({ application: updatedApp, certificate });

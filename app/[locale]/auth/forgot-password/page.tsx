@@ -4,13 +4,24 @@ import { useState } from "react";
 import { ArrowLeft, Mail, ShieldCheck } from "lucide-react";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
+  const [email,     setEmail]     = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading,   setLoading]   = useState(false);
+  const [error,     setError]     = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
-    setSubmitted(true);
+    setLoading(true); setError("");
+    try {
+      await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setSubmitted(true);
+    } catch { setError("Network error. Please try again."); }
+    finally { setLoading(false); }
   }
 
   return (
@@ -72,8 +83,9 @@ export default function ForgotPasswordPage() {
                 />
               </div>
 
-              <button type="submit" className="btn-primary" style={{ fontSize: 14, padding: "12px", width: "100%", marginTop: 4 }}>
-                Send Reset Instructions
+              {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "#EF4444", margin: 0 }}>{error}</p>}
+              <button type="submit" disabled={loading} className="btn-primary" style={{ fontSize: 14, padding: "12px", width: "100%", marginTop: 4, opacity: loading ? 0.6 : 1 }}>
+                {loading ? "Sending…" : "Send Reset Instructions"}
               </button>
             </form>
 

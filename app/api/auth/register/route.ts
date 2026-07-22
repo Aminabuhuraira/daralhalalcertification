@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { prisma, ensureDb } from "@/lib/db";
+import { emailWelcome } from "@/lib/email";
 
 const registerSchema = z.object({
   name: z.string().min(2).max(120),
@@ -36,6 +37,8 @@ export async function POST(req: Request) {
     data: { name, email, passwordHash, businessName, sector, phone },
     select: { id: true, name: true, email: true, role: true },
   });
+
+  emailWelcome(email, name, businessName).catch(() => {});
 
   return NextResponse.json({ user }, { status: 201 });
 }
