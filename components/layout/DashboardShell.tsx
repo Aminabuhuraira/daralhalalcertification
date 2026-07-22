@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Award, CreditCard, Users, BookOpen,
   ClipboardCheck, ShieldCheck, LogOut, ArrowLeftRight, FileText,
   Settings, Mail, Activity, ClipboardList, FileSearch,
-  Microscope, Moon, Briefcase,
+  Microscope, Moon, Briefcase, Archive,
 } from "lucide-react";
 
 type Variant = "user" | "admin" | "reviewer" | "ops" | "inspector" | "technical" | "sharia";
@@ -23,6 +23,7 @@ const USER_NAV = [
   { label: "Courses",        href: "/dashboard/courses",       icon: BookOpen },
   { label: "Certification",  href: "/dashboard/certification", icon: FileText },
   { label: "Certificates",   href: "/dashboard/certificates",  icon: Award },
+  { label: "Archive",        href: "/dashboard/archive",       icon: Archive },
   { label: "Billing",        href: "/dashboard/billing",       icon: CreditCard },
   { label: "Settings",       href: "/dashboard/settings",      icon: Settings },
 ];

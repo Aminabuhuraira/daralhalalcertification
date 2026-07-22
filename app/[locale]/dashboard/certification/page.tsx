@@ -141,7 +141,25 @@ export default async function CertificationApplicationPage({
                 {/* Header */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
                   <div>
-                    <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 500, color: "#0A1535", marginBottom: 4 }}>{app.businessName}</h3>
+                    <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 500, color: "#0A1535", marginBottom: 6 }}>{app.businessName}</h3>
+                    {/* Number badges row */}
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
+                      {(app as { applicationNumber?: string | null }).applicationNumber && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#C9A227", padding: "3px 9px", borderRadius: 5, background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.25)" }}>
+                          # {(app as { applicationNumber: string }).applicationNumber}
+                        </span>
+                      )}
+                      {app.referenceNumber && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#6D28D9", padding: "3px 9px", borderRadius: 5, background: "rgba(109,40,217,0.07)", border: "1px solid rgba(109,40,217,0.2)" }}>
+                          {app.referenceNumber}
+                        </span>
+                      )}
+                      {app.certificate && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#16A34A", padding: "3px 9px", borderRadius: 5, background: "rgba(22,163,74,0.07)", border: "1px solid rgba(22,163,74,0.2)" }}>
+                          CERT: {app.certificate.serial}
+                        </span>
+                      )}
+                    </div>
                     <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
                       {app.sector}
                       {app.schemeCode && (
@@ -150,9 +168,6 @@ export default async function CertificationApplicationPage({
                       {" · "}
                       {isDraft ? "started " : "submitted "}
                       {new Date(app.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                      {app.referenceNumber && (
-                        <span style={{ marginLeft: 10, fontWeight: 700, color: "#6D28D9" }}>{app.referenceNumber}</span>
-                      )}
                     </p>
                   </div>
                   <span style={{

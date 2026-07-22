@@ -102,6 +102,7 @@ type AppStatus = keyof typeof STATUS_DISPLAY;
 
 type Application = {
   id: string;
+  applicationNumber: string | null;
   businessName: string;
   sector: string;
   schemeCode: string | null;
@@ -267,9 +268,19 @@ function ApplicationRow({
                 <Bell size={9} /> NEW
               </span>
             )}
+            {app.applicationNumber && (
+              <span style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, color: "#C9A227", background: "rgba(201,162,39,0.08)", padding: "1px 8px", borderRadius: 4, border: "1px solid rgba(201,162,39,0.2)" }}>
+                {app.applicationNumber}
+              </span>
+            )}
             {app.referenceNumber && (
               <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "#6D28D9", background: "rgba(109,40,217,0.07)", padding: "1px 8px", borderRadius: 4 }}>
                 {app.referenceNumber}
+              </span>
+            )}
+            {app.certificate && (
+              <span style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, color: "#16A34A", background: "rgba(22,163,74,0.07)", padding: "1px 8px", borderRadius: 4, border: "1px solid rgba(22,163,74,0.2)" }}>
+                {app.certificate.serial}
               </span>
             )}
           </div>
@@ -376,13 +387,37 @@ function ApplicationRow({
             </div>
           )}
 
+          {/* Reference numbers summary bar */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14, padding: "10px 14px", borderRadius: 8, background: "rgba(10,21,53,0.025)", border: "1px solid rgba(10,21,53,0.07)" }}>
+            {app.applicationNumber && (
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.55)" }}>
+                App No: <strong style={{ fontFamily: "monospace", color: "#C9A227" }}>{app.applicationNumber}</strong>
+              </span>
+            )}
+            {app.referenceNumber && (
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.55)" }}>
+                DAHC Ref: <strong style={{ fontFamily: "monospace", color: "#6D28D9" }}>{app.referenceNumber}</strong>
+              </span>
+            )}
+            {app.certificate && (
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.55)" }}>
+                Certificate No: <strong style={{ fontFamily: "monospace", color: "#16A34A" }}>{app.certificate.serial}</strong>
+              </span>
+            )}
+          </div>
+
           {/* Certificate */}
           {app.certificate && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, padding: "10px 14px", borderRadius: 8, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)" }}>
-              <Award size={16} color="#22C55E" />
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#22C55E", fontWeight: 600 }}>
-                Certificate issued — {app.certificate.serial}
-              </span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 14, padding: "10px 14px", borderRadius: 8, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <Award size={16} color="#22C55E" />
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#22C55E", fontWeight: 600 }}>
+                  Certificate Issued · <span style={{ fontFamily: "monospace" }}>{app.certificate.serial}</span>
+                </span>
+              </div>
+              <a href={`/api/certificates/${app.certificate.id}/pdf`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, padding: "5px 11px", borderRadius: 5, background: "rgba(22,163,74,0.1)", border: "1px solid rgba(22,163,74,0.25)", color: "#16A34A", textDecoration: "none", fontWeight: 600 }}>
+                ↓ Certificate PDF
+              </a>
             </div>
           )}
 

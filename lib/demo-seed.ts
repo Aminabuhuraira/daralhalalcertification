@@ -463,7 +463,8 @@ export async function seedDemoData(prisma: PrismaClient) {
   const userIds: string[] = [];
   const appIds:  string[] = [];
 
-  for (const c of COMPANIES) {
+  for (let idx = 0; idx < COMPANIES.length; idx++) {
+    const c = COMPANIES[idx];
     const user = await prisma.user.upsert({
       where: { email: c.email },
       update: {},
@@ -478,21 +479,23 @@ export async function seedDemoData(prisma: PrismaClient) {
     });
     userIds.push(user.id);
 
+    const appNum = `DAHC/APP/25/${String(idx + 1).padStart(4, "0")}`;
     const app = await (prisma.certificationApplication as unknown as {
       create: (args: { data: Record<string, unknown> }) => Promise<{ id: string }>;
     }).create({
       data: {
-        userId:          user.id,
-        businessName:    c.biz,
-        sector:          c.sector,
-        schemeCode:      c.schemeCode,
-        referenceNumber: c.refNumber,
-        productionScale: c.scale,
-        productList:     c.products,
-        status:          c.status,
-        reviewNotes:     c.reviewNotes,
-        createdAt:       daysAgo(c.created),
-        updatedAt:       daysAgo(c.created),
+        userId:            user.id,
+        applicationNumber: appNum,
+        businessName:      c.biz,
+        sector:            c.sector,
+        schemeCode:        c.schemeCode,
+        referenceNumber:   c.refNumber,
+        productionScale:   c.scale,
+        productList:       c.products,
+        status:            c.status,
+        reviewNotes:       c.reviewNotes,
+        createdAt:         daysAgo(c.created),
+        updatedAt:         daysAgo(c.created),
       },
     });
     appIds.push(app.id);
@@ -543,6 +546,7 @@ export async function seedDemoData(prisma: PrismaClient) {
   }).create({
     data: {
       userId:             "demo-user-001",
+      applicationNumber:  `DAHC/APP/26/${String(COMPANIES.length + 1).padStart(4, "0")}`,
       businessName:       "Demo Foods Nigeria",
       businessRegNo:      "RC-1234567",
       entityType:         "Limited Liability Company",

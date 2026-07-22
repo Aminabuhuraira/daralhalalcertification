@@ -207,13 +207,14 @@ model Certificate {
 }
 
 model CertificationApplication {
-  id              String            @id @default(cuid())
-  userId          String
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  businessName    String
-  sector          String
-  schemeCode      String?
-  referenceNumber String?
+  id                String            @id @default(cuid())
+  userId            String
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationNumber String?           @unique
+  businessName      String
+  sector            String
+  schemeCode        String?
+  referenceNumber   String?
   productionScale String?
   productList     String
   notes           String?

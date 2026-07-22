@@ -20,9 +20,10 @@ export async function GET(req: Request) {
       ...(status ? { status: status as never } : {}),
       ...(q ? {
         OR: [
-          { businessName:    { contains: q } },
-          { referenceNumber: { contains: q } },
-          { schemeCode:      { contains: q } },
+          { businessName:     { contains: q } },
+          { applicationNumber:{ contains: q } },
+          { referenceNumber:  { contains: q } },
+          { schemeCode:       { contains: q } },
         ],
       } : {}),
     },
@@ -41,6 +42,12 @@ const createApplicationSchema = z.object({
   notes:           z.string().optional(),
 });
 
+async function generateApplicationNumber(): Promise<string> {
+  const year = String(new Date().getFullYear()).slice(-2);
+  const count = await prisma.certificationApplication.count();
+  return `DAHC/APP/${year}/${String(count + 1).padStart(4, "0")}`;
+}
+
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -52,8 +59,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid input", issues: parsed.error.issues }, { status: 400 });
   }
 
+  const applicationNumber = await generateApplicationNumber();
   const application = await prisma.certificationApplication.create({
-    data: { userId, ...parsed.data, status: "DRAFT" },
+    data: { userId, ...parsed.data, applicationNumber, status: "DRAFT" },
   });
   return NextResponse.json({ application }, { status: 201 });
 }

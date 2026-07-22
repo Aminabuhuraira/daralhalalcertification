@@ -2,9 +2,9 @@ import { prisma } from "@/lib/db";
 import type { CertTier } from "@prisma/client";
 
 async function nextSerial() {
-  const year = new Date().getFullYear();
+  const year = String(new Date().getFullYear()).slice(-2);
   const count = await prisma.certificate.count();
-  return `DHC-${year}-${String(count + 1).padStart(6, "0")}`;
+  return `DAHC/CERT/${year}/${String(count + 1).padStart(6, "0")}`;
 }
 
 export async function issueCertificateIfNeeded(userId: string, courseId: string, tier: CertTier) {
