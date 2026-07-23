@@ -59,15 +59,64 @@ export async function emailDeficiencyNotice(to: string, name: string, appNum: st
   `));
 }
 
-export async function emailEligibleAwaitingPayment(to: string, name: string, appNum: string, bizName: string, amountNgn?: number) {
-  await send(to, "Application Approved — Payment Required", base(`
+export type InvoiceDetails = {
+  invoiceNumber?: string;
+  referenceNumber?: string;
+  scopeLabel?: string;
+  productionScale?: string;
+  billingAddress?: string;
+  billingEmail?: string;
+};
+
+function invoiceMetaRow(label: string, value: string) {
+  return `<tr>
+    <td style="padding:5px 0;font-size:12.5px;color:rgba(10,21,53,0.5);width:170px;">${label}</td>
+    <td style="padding:5px 0;font-size:12.5px;color:#0A1535;font-weight:600;">${value}</td>
+  </tr>`;
+}
+
+export async function emailEligibleAwaitingPayment(
+  to: string, name: string, appNum: string, bizName: string, amountNgn?: number, invoice?: InvoiceDetails,
+) {
+  const scaleLabel: Record<string, string> = { LARGE: "Large Scale", MEDIUM: "Medium Scale", SMALL: "Small Scale" };
+  const invoiceDate = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const lineDescription = `Halal Certification Fee — Initial Certification${invoice?.scopeLabel ? ` (${invoice.scopeLabel})` : ""}${invoice?.productionScale ? ` — ${scaleLabel[invoice.productionScale] ?? invoice.productionScale}` : ""}`;
+
+  await send(to, invoice?.invoiceNumber ? `Invoice ${invoice.invoiceNumber} — Dar Al Halal Certification` : "Application Approved — Payment Required", base(`
     ${p(`Dear ${name},`)}
-    ${p(`Congratulations! Your Halal Certification application for <strong>${bizName}</strong> has successfully passed the administrative and eligibility review stages.`)}
-    ${amountNgn ? `<div style="background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.2);border-radius:10px;padding:16px 20px;margin:20px 0;">
-      <p style="margin:0;font-size:13px;color:rgba(10,21,53,0.5);">Fee Due</p>
-      <p style="margin:6px 0 0;font-size:24px;font-weight:700;color:#0369A1;">NGN ${amountNgn.toLocaleString()}</p>
-    </div>` : ""}
-    ${p(`To proceed to the audit scheduling stage, please complete payment via your portal dashboard or contact our Finance team at <a href="mailto:finance@daralhalalcertification.com" style="color:#C9A227;">finance@daralhalalcertification.com</a>.`)}
+    ${p(`Congratulations! Your Halal Certification application for <strong>${bizName}</strong> has successfully passed the administrative and eligibility review stages. Please find your invoice below.`)}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(10,21,53,0.02);border:1px solid rgba(10,21,53,0.08);border-radius:10px;margin:20px 0;">
+      <tr><td style="padding:18px 20px;">
+        <table width="100%" cellpadding="0" cellspacing="0">
+          ${invoice?.invoiceNumber ? invoiceMetaRow("Invoice Number", invoice.invoiceNumber) : ""}
+          ${invoiceMetaRow("Invoice Date", invoiceDate)}
+          ${invoiceMetaRow("Application Number", appNum)}
+          ${invoice?.referenceNumber ? invoiceMetaRow("DAHC Reference", invoice.referenceNumber) : ""}
+          ${invoiceMetaRow("Bill To", bizName)}
+          ${invoice?.billingEmail ? invoiceMetaRow("Billing Email", invoice.billingEmail) : ""}
+          ${invoice?.billingAddress ? invoiceMetaRow("Registered Address", invoice.billingAddress) : ""}
+        </table>
+      </td></tr>
+    </table>
+
+    ${amountNgn ? `<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 20px;">
+      <tr style="background:#0A1535;">
+        <td style="padding:10px 16px;font-size:11px;font-weight:700;color:#C9A227;text-transform:uppercase;letter-spacing:0.05em;">Description</td>
+        <td style="padding:10px 16px;font-size:11px;font-weight:700;color:#C9A227;text-transform:uppercase;letter-spacing:0.05em;text-align:right;">Amount</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(10,21,53,0.08);">
+        <td style="padding:14px 16px;font-size:13.5px;color:#0A1535;">${lineDescription}</td>
+        <td style="padding:14px 16px;font-size:13.5px;color:#0A1535;text-align:right;white-space:nowrap;">NGN ${amountNgn.toLocaleString()}</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 16px;font-size:14px;font-weight:700;color:#0A1535;">Total Due</td>
+        <td style="padding:12px 16px;font-size:18px;font-weight:700;color:#0369A1;text-align:right;white-space:nowrap;">NGN ${amountNgn.toLocaleString()}</td>
+      </tr>
+    </table>` : ""}
+
+    ${p(`Payment is required to proceed to audit scheduling. Fees are non-refundable once certification services have commenced, per your signed Halal Certification Agreement.`)}
+    ${p(`To proceed, please complete payment via your portal dashboard or contact our Finance team at <a href="mailto:finance@daralhalalcertification.com" style="color:#C9A227;">finance@daralhalalcertification.com</a>.`)}
     ${btn(`${SITE}/en/dashboard/billing`, "Proceed to Payment")}
   `));
 }

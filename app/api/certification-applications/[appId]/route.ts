@@ -3,6 +3,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { issueApplicationCertificateIfNeeded } from "@/lib/certificates";
+import { SCHEME_CODES } from "@/lib/sectors";
 import {
   emailApplicationReceived,
   emailDeficiencyNotice,
@@ -115,6 +116,14 @@ async function generateReferenceNumber(appId: string, schemeCode: string): Promi
   return `${prefix}${String(maxSeq + 1).padStart(4, "0")}`;
 }
 
+async function generateInvoiceNumber(): Promise<string> {
+  const now = new Date();
+  const year = now.getFullYear().toString().slice(-2);
+  const yearStart = new Date(now.getFullYear(), 0, 1);
+  const count = await prisma.payment.count({ where: { createdAt: { gte: yearStart } } });
+  return `DAHC/INV/${year}/${String(count + 1).padStart(4, "0")}`;
+}
+
 export async function PATCH(req: Request, { params }: Params) {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -130,6 +139,7 @@ export async function PATCH(req: Request, { params }: Params) {
       id: true, userId: true, status: true, schemeCode: true, referenceNumber: true,
       applicationNumber: true, businessName: true, ncrReport: true, ncSeverity: true,
       auditDate: true, auditTeam: true, deficiencyItems: true,
+      productionScale: true, headOfficeAddress: true,
       user: { select: { name: true, email: true } },
     },
   });
@@ -290,14 +300,16 @@ export async function PATCH(req: Request, { params }: Params) {
     },
   });
 
+  let invoiceNumber: string | undefined;
   if (feeAmountNgn) {
+    invoiceNumber = await generateInvoiceNumber();
     await prisma.payment.create({
       data: {
         userId:        updatedApp.userId,
         applicationId: updatedApp.id,
         amount:        feeAmountNgn * 100,
         currency:      "NGN",
-        description:   feeDescription || `Certification fee — ${updatedApp.businessName}`,
+        description:   `${feeDescription || `Certification fee — ${updatedApp.businessName}`} (Invoice ${invoiceNumber})`,
       },
     });
   }
@@ -315,7 +327,9 @@ export async function PATCH(req: Request, { params }: Params) {
   const auditDateChanged = !!auditDate && (
     !application.auditDate || auditDate.slice(0, 10) !== new Date(application.auditDate).toISOString().slice(0, 10)
   );
-  const shouldNotify = statusChanged || (updatedApp.status === "PENDING_AUDIT" && auditDateChanged);
+  const shouldNotify = statusChanged
+    || (updatedApp.status === "PENDING_AUDIT" && auditDateChanged)
+    || (updatedApp.status === "AWAITING_PAYMENT" && !!invoiceNumber);
 
   if (shouldNotify && application.user?.email) {
     const { email: toEmail, name: toName } = application.user;
@@ -330,8 +344,15 @@ export async function PATCH(req: Request, { params }: Params) {
           try { items = (JSON.parse(parsed.data.deficiencyItems ?? application.deficiencyItems ?? "[]") as { label: string }[]).map(i => i.label); } catch {}
           await emailDeficiencyNotice(toEmail, toName ?? "Applicant", appNum, items);
         } else if (newStatus === "AWAITING_PAYMENT") {
-          const fee = feeAmountNgn ? feeAmountNgn : undefined;
-          await emailEligibleAwaitingPayment(toEmail, toName ?? "Applicant", appNum, bizName, fee);
+          const scopeLabel = SCHEME_CODES.find(s => s.code === application.schemeCode)?.label ?? application.schemeCode ?? undefined;
+          await emailEligibleAwaitingPayment(toEmail, toName ?? "Applicant", appNum, bizName, feeAmountNgn ?? undefined, {
+            invoiceNumber,
+            referenceNumber: referenceNumber ?? application.referenceNumber ?? undefined,
+            scopeLabel,
+            productionScale: application.productionScale ?? undefined,
+            billingAddress: application.headOfficeAddress ?? undefined,
+            billingEmail: toEmail,
+          });
         } else if (newStatus === "PENDING_AUDIT") {
           await emailAuditScheduled(toEmail, toName ?? "Applicant", appNum,
             auditDate ?? (application.auditDate ? String(application.auditDate) : undefined),
