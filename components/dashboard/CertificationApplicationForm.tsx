@@ -67,7 +67,7 @@ export default function CertificationApplicationForm() {
       <h2 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 500, color: "#0A1535", marginBottom: 6 }}>
         Submit New Application
       </h2>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 20 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", marginBottom: 20 }}>
         Fill in your business details. Our team will review and respond within 3 working days.
       </p>
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -76,7 +76,7 @@ export default function CertificationApplicationForm() {
 
         {/* Certification Scheme (DAHC scheme codes) */}
         <div>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, color: "rgba(10,21,53,0.5)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, color: "rgba(10,21,53,0.68)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
             Certification Scheme *
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
@@ -108,13 +108,13 @@ export default function CertificationApplicationForm() {
             })}
           </div>
           {!schemeCode && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginTop: 6 }}>Select your certification scheme above</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.64)", marginTop: 6 }}>Select your certification scheme above</p>
           )}
         </div>
 
         {/* Production Scale */}
         <div>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, color: "rgba(10,21,53,0.5)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, color: "rgba(10,21,53,0.68)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
             Production Scale *
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
@@ -138,7 +138,7 @@ export default function CertificationApplicationForm() {
                   <div style={{ fontFamily: "var(--font-display)", fontSize: 14, fontWeight: 600, color: selected ? "#C9A227" : "#0A1535", marginBottom: 4 }}>
                     {s.label}
                   </div>
-                  <div style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.45)", lineHeight: 1.4 }}>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.66)", lineHeight: 1.4 }}>
                     {s.desc}
                   </div>
                 </button>

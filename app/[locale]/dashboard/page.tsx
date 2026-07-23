@@ -40,7 +40,7 @@ export default async function DashboardOverviewPage({
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Welcome back, {firstName}
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.45)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.66)" }}>
           Here's where your certification journey stands.
         </p>
       </div>
@@ -53,7 +53,7 @@ export default async function DashboardOverviewPage({
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#DC2626", margin: "0 0 3px" }}>
               Action Required — Missing Documents
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: "0 0 10px" }}>
               Your application for <strong>{application.businessName}</strong> requires additional documents. Upload all missing items within 14 working days to continue.
             </p>
             <Link href={lh("/dashboard/certification")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#DC2626", textDecoration: "none" }}>
@@ -69,7 +69,7 @@ export default async function DashboardOverviewPage({
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#F97316", margin: "0 0 3px" }}>
               Non-Conformance Report Issued
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: "0 0 10px" }}>
               The audit for <strong>{application.businessName}</strong> identified non-conformances. Submit your Corrective Action Response to resume certification.
             </p>
             <Link href={lh("/dashboard/certification")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#F97316", textDecoration: "none" }}>
@@ -85,7 +85,7 @@ export default async function DashboardOverviewPage({
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#D97706", margin: "0 0 3px" }}>
               Payment Required to Schedule Audit
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: "0 0 10px" }}>
               Your application for <strong>{application.businessName}</strong> has been approved for audit. Complete payment to confirm your audit slot.
             </p>
             <Link href={lh("/dashboard/billing")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#D97706", textDecoration: "none" }}>
@@ -101,14 +101,14 @@ export default async function DashboardOverviewPage({
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#16A34A", margin: "0 0 3px" }}>
               Halal Certificate Issued
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: "0 0 10px" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: "0 0 10px" }}>
               Congratulations! <strong>{application.businessName}</strong> is now Halal certified. Download your certificate and view your listing in the public registry.
             </p>
             <div style={{ display: "flex", gap: 14 }}>
               <Link href={lh("/dashboard/certificates")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#16A34A", textDecoration: "none" }}>
                 Download Certificate <ChevronRight size={12} />
               </Link>
-              <Link href={lh("/registry")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, color: "rgba(10,21,53,0.5)", textDecoration: "none" }}>
+              <Link href={lh("/registry")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, color: "rgba(10,21,53,0.68)", textDecoration: "none" }}>
                 View in Registry <ChevronRight size={12} />
               </Link>
             </div>
@@ -122,7 +122,7 @@ export default async function DashboardOverviewPage({
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#0A1535", margin: "0 0 3px" }}>
               Start Your Halal Certification
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.55)", margin: "0 0 10px" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", margin: "0 0 10px" }}>
               You haven't submitted a certification application yet. Begin the process to have your business listed in the DAHC Halal Registry.
             </p>
             <Link href={lh("/dashboard/certification")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#9a7810", textDecoration: "none" }}>
@@ -153,7 +153,7 @@ export default async function DashboardOverviewPage({
             <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
               <BookOpen size={20} color="#C9A227" />
             </div>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)", marginBottom: 16 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)", marginBottom: 16 }}>
               You haven't enrolled in any courses yet.
             </p>
             <Link href={lh("/learn")} className="btn-primary" style={{ fontSize: 13, padding: "9px 22px" }}>Browse Courses</Link>
@@ -191,8 +191,8 @@ export default async function DashboardOverviewPage({
                       <div style={{ height: "100%", width: `${pct}%`, background: isComplete ? "#16A34A" : "linear-gradient(90deg, #C9A227, #D4AF37)", borderRadius: 999, transition: "width 0.6s ease" }} />
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)" }}>{done} / {totalLessons} lessons</span>
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", fontWeight: 600 }}>{pct}%</span>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.64)" }}>{done} / {totalLessons} lessons</span>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.64)", fontWeight: 600 }}>{pct}%</span>
                     </div>
                   </div>
 
@@ -220,14 +220,14 @@ export default async function DashboardOverviewPage({
           <div>
             <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 600, color: "#0A1535", marginBottom: 6 }}>Certification Application</h3>
             {application ? (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.25)", borderRadius: 6, padding: "2px 10px", fontSize: 12, fontWeight: 700, color: "#9a7810", marginRight: 8 }}>
                   {application.status.replace(/_/g, " ")}
                 </span>
                 {application.businessName}
               </p>
             ) : (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
                 You haven't submitted a certification application yet.
               </p>
             )}

@@ -86,7 +86,7 @@ export default function TrustmarkDownload({ businessName, referenceNumber, schem
         <Shield size={18} color="#B8962A" />
         <div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#92650A" }}>DAHC Trustmark</div>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)" }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)" }}>
             Download the authorised halal trustmark for your packaging and marketing materials.
           </div>
         </div>

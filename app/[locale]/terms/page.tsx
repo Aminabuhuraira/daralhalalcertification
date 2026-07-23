@@ -6,11 +6,11 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
   const sections = [
     {
       title: "1. Acceptance of Terms",
-      body: "By accessing or using the Dar Al-Halal Certification platform (the \"Platform\"), you agree to be bound by these Terms of Service. If you do not agree, you may not use the Platform.",
+      body: "By accessing or using the Dar Al Halal Certification platform (the \"Platform\"), you agree to be bound by these Terms of Service. If you do not agree, you may not use the Platform.",
     },
     {
       title: "2. Services",
-      body: "Dar Al-Halal Certification provides online halal compliance training, certification applications, and certificate issuance services. We reserve the right to modify or discontinue any service at any time.",
+      body: "Dar Al Halal Certification provides online halal compliance training, certification applications, and certificate issuance services. We reserve the right to modify or discontinue any service at any time.",
     },
     {
       title: "3. User Accounts",
@@ -22,11 +22,11 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
     },
     {
       title: "5. Intellectual Property",
-      body: "All course content, materials, certificates, and platform design are the intellectual property of Dar Al-Halal Certification. You may not reproduce, distribute, or create derivative works without prior written consent.",
+      body: "All course content, materials, certificates, and platform design are the intellectual property of Dar Al Halal Certification. You may not reproduce, distribute, or create derivative works without prior written consent.",
     },
     {
       title: "6. Limitation of Liability",
-      body: "The Platform is provided \"as is\" without warranties of any kind. Dar Al-Halal Certification shall not be liable for indirect, incidental, or consequential damages arising from your use of the Platform.",
+      body: "The Platform is provided \"as is\" without warranties of any kind. Dar Al Halal Certification shall not be liable for indirect, incidental, or consequential damages arising from your use of the Platform.",
     },
     {
       title: "7. Governing Law",
@@ -59,7 +59,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
             {sections.map((s) => (
               <div key={s.title} style={{ marginBottom: 36 }}>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 600, color: "#0A1535", marginBottom: 10 }}>{s.title}</h2>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.65)", lineHeight: 1.75 }}>{s.body}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.75)", lineHeight: 1.75 }}>{s.body}</p>
               </div>
             ))}
           </div>

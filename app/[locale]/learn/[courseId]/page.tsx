@@ -93,7 +93,7 @@ export default async function PublicCoursePage({ params }: Params) {
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 600, color: "#0A1535", marginBottom: 8 }}>
                 Course Curriculum
               </h2>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 28 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 28 }}>
                 {course.modules.length} module{course.modules.length !== 1 ? "s" : ""} · {totalLessons} lesson{totalLessons !== 1 ? "s" : ""}
               </p>
 
@@ -107,7 +107,7 @@ export default async function PublicCoursePage({ params }: Params) {
                         </div>
                         <span style={{ fontFamily: "var(--font-display)", fontSize: 14.5, fontWeight: 600, color: "#0A1535" }}>{mod.title}</span>
                       </div>
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)" }}>{mod.lessons.length} lessons</span>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)" }}>{mod.lessons.length} lessons</span>
                     </div>
                     {mod.lessons.map((lesson, li) => (
                       <div key={lesson.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 20px", borderBottom: li < mod.lessons.length - 1 ? "1px solid rgba(10,21,53,0.04)" : "none", background: li % 2 === 0 ? "transparent" : "rgba(10,21,53,0.01)" }}>
@@ -116,9 +116,9 @@ export default async function PublicCoursePage({ params }: Params) {
                         ) : (
                           <FileText size={14} color="rgba(10,21,53,0.3)" style={{ flexShrink: 0 }} />
                         )}
-                        <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, color: "rgba(10,21,53,0.7)", flex: 1 }}>{lesson.title}</span>
+                        <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, color: "rgba(10,21,53,0.78)", flex: 1 }}>{lesson.title}</span>
                         {lesson.durationMin > 0 && (
-                          <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.35)" }}>{lesson.durationMin} min</span>
+                          <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.62)" }}>{lesson.durationMin} min</span>
                         )}
                       </div>
                     ))}
@@ -131,7 +131,7 @@ export default async function PublicCoursePage({ params }: Params) {
             <div style={{ position: "sticky", top: 24 }}>
               <div style={{ background: "#ffffff", borderRadius: 16, border: "1px solid rgba(10,21,53,0.08)", padding: "28px 24px", boxShadow: "0 4px 24px rgba(10,21,53,0.08)" }}>
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>Start Learning</h3>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 24 }}>Free access to all modules and lessons.</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", marginBottom: 24 }}>Free access to all modules and lessons.</p>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
                   {[
@@ -143,7 +143,7 @@ export default async function PublicCoursePage({ params }: Params) {
                   ].map((feat) => (
                     <div key={feat} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <CheckCircle2 size={14} color="#16a34a" style={{ flexShrink: 0 }} />
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, color: "rgba(10,21,53,0.7)" }}>{feat}</span>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, color: "rgba(10,21,53,0.78)" }}>{feat}</span>
                     </div>
                   ))}
                 </div>
@@ -155,12 +155,12 @@ export default async function PublicCoursePage({ params }: Params) {
                 >
                   Enroll for Free <ArrowRight size={15} />
                 </Link>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.35)", textAlign: "center", marginTop: 10 }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.62)", textAlign: "center", marginTop: 10 }}>
                   Account required — takes 30 seconds to register.
                 </p>
 
                 <div style={{ borderTop: "1px solid rgba(10,21,53,0.06)", marginTop: 20, paddingTop: 16, display: "flex", justifyContent: "center" }}>
-                  <Link href={lh("/learn")} style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.4)", textDecoration: "none" }}>
+                  <Link href={lh("/learn")} style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.64)", textDecoration: "none" }}>
                     ← Browse all courses
                   </Link>
                 </div>
@@ -175,8 +175,8 @@ export default async function PublicCoursePage({ params }: Params) {
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 600, color: "#0A1535", marginBottom: 12 }}>
               Ready to get certified?
             </h2>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.55)", maxWidth: 480, margin: "0 auto 28px" }}>
-              Join professionals who trust Dar Al-Halal Certification to validate their halal compliance knowledge.
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.7)", maxWidth: 480, margin: "0 auto 28px" }}>
+              Join professionals who trust Dar Al Halal Certification to validate their halal compliance knowledge.
             </p>
             <Link href={lh("/auth/register")} className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, padding: "12px 28px" }}>
               Create Free Account <ArrowRight size={15} />

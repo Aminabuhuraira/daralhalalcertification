@@ -58,7 +58,7 @@ export default async function OpsManagerPage({ params }: Params) {
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Eligibility Review Queue
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)" }}>
           Verify the Admin's screening assessment, conduct eligibility evaluations, manage TRC escalations, and approve applications for registration.
         </p>
       </div>
@@ -71,7 +71,7 @@ export default async function OpsManagerPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#DC2626", margin: "0 0 2px" }}>
               {eligibilityCount} Application{eligibilityCount !== 1 ? "s" : ""} Ready for Eligibility Decision
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Administrative screening is complete. Conduct the eligibility evaluation and advance qualified applicants or escalate to TRC.
             </p>
           </div>
@@ -84,7 +84,7 @@ export default async function OpsManagerPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#D97706", margin: "0 0 2px" }}>
               {trcCount} Application{trcCount !== 1 ? "s" : ""} Pending TRC / Shariah Pre-Review
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               These applications have been escalated to the Technical Review Committee. Coordinate with the TRC and advance upon clearance.
             </p>
           </div>
@@ -97,7 +97,7 @@ export default async function OpsManagerPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#0EA5E9", margin: "0 0 2px" }}>
               {awaitingPayment} Application{awaitingPayment !== 1 ? "s" : ""} Approved — Awaiting Payment Confirmation
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Applicants have been notified to make payment. Confirm receipt and advance to the audit scheduling stage.
             </p>
           </div>
@@ -123,7 +123,7 @@ export default async function OpsManagerPage({ params }: Params) {
       {applications.length === 0 ? (
         <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)", padding: "48px 32px", textAlign: "center" }}>
           <CheckCircle size={32} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 12px" }} />
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>No applications in the eligibility review pipeline right now.</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>No applications in the eligibility review pipeline right now.</p>
         </div>
       ) : (
         <AdminApplicationList applications={applications as never} viewerRole="OPERATIONS_MANAGER" />

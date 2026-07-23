@@ -16,7 +16,7 @@ type AdminUser = {
 };
 
 const ROLE_META: Record<Role, { label: string; color: string; bg: string; border: string }> = {
-  USER:               { label: "User",              color: "rgba(10,21,53,0.5)",  bg: "rgba(10,21,53,0.05)",    border: "rgba(10,21,53,0.1)" },
+  USER:               { label: "User",              color: "rgba(10,21,53,0.68)",  bg: "rgba(10,21,53,0.05)",    border: "rgba(10,21,53,0.1)" },
   REVIEWER:           { label: "Reviewer",          color: "#2563EB",             bg: "rgba(37,99,235,0.08)",   border: "rgba(37,99,235,0.25)" },
   OPERATIONS_MANAGER: { label: "Ops Manager",       color: "#8B5CF6",             bg: "rgba(139,92,246,0.08)",  border: "rgba(139,92,246,0.25)" },
   INSPECTOR:          { label: "Inspector",         color: "#0891B2",             bg: "rgba(8,145,178,0.08)",   border: "rgba(8,145,178,0.25)" },
@@ -89,7 +89,7 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
         {(Object.entries(ROLE_META) as [Role, typeof ROLE_META[Role]][]).map(([role, m]) => (
           <div key={role} style={{ display: "flex", alignItems: "center", gap: 7, padding: "6px 12px", background: m.bg, border: `1px solid ${m.border}`, borderRadius: 8 }}>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: m.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</span>
-            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.5)" }}>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.68)" }}>
               {role === "USER" && "— standard account, course access"}
               {role === "REVIEWER" && "— initial screening (submitted → deficiency)"}
               {role === "OPERATIONS_MANAGER" && "— eligibility review & TRC escalation"}
@@ -126,7 +126,7 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
         </select>
       </div>
 
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", marginBottom: 12 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.66)", marginBottom: 12 }}>
         Showing {filtered.length} of {users.length} users
       </p>
 
@@ -135,7 +135,7 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
           <thead>
             <tr style={{ borderBottom: "1px solid rgba(10,21,53,0.08)", background: "#fafafa" }}>
               {["Name", "Email", "Business", "Sector", "Role", "Joined", "Actions"].map((h) => (
-                <th key={h} style={{ textAlign: "left", padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 10.5, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
+                <th key={h} style={{ textAlign: "left", padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 10.5, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -145,15 +145,15 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
               return (
                 <tr key={u.id} style={{ borderBottom: "1px solid rgba(10,21,53,0.05)" }}>
                   <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535", fontWeight: 600 }}>{u.name}</td>
-                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.6)" }}>{u.email}</td>
-                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.6)" }}>{u.businessName || "—"}</td>
-                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.6)" }}>{u.sector || "—"}</td>
+                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.72)" }}>{u.email}</td>
+                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.72)" }}>{u.businessName || "—"}</td>
+                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.72)" }}>{u.sector || "—"}</td>
                   <td style={{ padding: "12px 16px" }}>
                     <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: m.color, background: m.bg, border: `1px solid ${m.border}`, padding: "2px 8px", borderRadius: 5, textTransform: "uppercase", letterSpacing: "0.04em" }}>
                       {m.label}
                     </span>
                   </td>
-                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
+                  <td style={{ padding: "12px 16px", fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)" }}>
                     {new Date(u.createdAt).toLocaleDateString()}
                   </td>
                   <td style={{ padding: "12px 16px" }}>
@@ -190,7 +190,7 @@ export default function AdminUserList({ users: initialUsers }: { users: AdminUse
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} style={{ padding: "24px 16px", textAlign: "center", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.45)" }}>
+                <td colSpan={7} style={{ padding: "24px 16px", textAlign: "center", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.66)" }}>
                   No users match these filters.
                 </td>
               </tr>

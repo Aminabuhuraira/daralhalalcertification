@@ -69,7 +69,7 @@ export default async function ReviewerPage({ params }: Params) {
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Application Review Queue
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)" }}>
           Screen documents, conduct eligibility reviews, and advance applications through the pre-audit pipeline.
         </p>
       </div>
@@ -82,7 +82,7 @@ export default async function ReviewerPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#DC2626", margin: "0 0 2px" }}>
               {newSubmissions} New Application{newSubmissions !== 1 ? "s" : ""} Awaiting Screening
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               These submissions have not yet been reviewed. Conduct administrative screening to verify documents and advance or flag each application.
             </p>
           </div>
@@ -95,7 +95,7 @@ export default async function ReviewerPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#D97706", margin: "0 0 2px" }}>
               {inScreening} Application{inScreening !== 1 ? "s" : ""} In Screening or Deficiency Notice
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Review screening progress and check whether applicants have responded to deficiency notices before the 14-day deadline.
             </p>
           </div>
@@ -147,7 +147,7 @@ export default async function ReviewerPage({ params }: Params) {
           padding: "48px 32px", textAlign: "center",
         }}>
           <Inbox size={32} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 12px" }} />
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>
             No applications awaiting review right now.
           </p>
         </div>

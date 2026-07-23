@@ -40,7 +40,7 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700,
-  color: "rgba(10,21,53,0.45)", textTransform: "uppercase", letterSpacing: "0.06em",
+  color: "rgba(10,21,53,0.66)", textTransform: "uppercase", letterSpacing: "0.06em",
   display: "block", marginBottom: 5,
 };
 
@@ -113,7 +113,7 @@ export default function CARResponseForm({ appId, ncrReport, ncSeverity, existing
           <div style={{ marginBottom: 20 }}>
             <p style={labelStyle}>Section A — Non-Conformance Report (Issued by DAHC Inspector)</p>
             <div style={{ padding: "12px 14px", borderRadius: 8, background: "rgba(249,115,22,0.04)", border: "1px solid rgba(249,115,22,0.15)" }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{ncrReport}</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.78)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{ncrReport}</p>
             </div>
           </div>
         )}
@@ -131,7 +131,7 @@ export default function CARResponseForm({ appId, ncrReport, ncSeverity, existing
             <div style={{ marginBottom: 16 }}>
               <p style={labelStyle}>Section B — Root Cause Analysis</p>
               <div style={{ padding: "12px 14px", borderRadius: 8, background: "rgba(10,21,53,0.02)", border: "1px solid rgba(10,21,53,0.07)" }}>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{existing!.rootCause}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.78)", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{existing!.rootCause}</p>
               </div>
             </div>
 
@@ -141,19 +141,19 @@ export default function CARResponseForm({ appId, ncrReport, ncSeverity, existing
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, fontFamily: "var(--font-body)" }}>
                   <thead>
                     <tr style={{ background: "#f0f4f8" }}>
-                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.5)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Corrective Action</th>
-                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.5)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Responsible Person</th>
-                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.5)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Target Date</th>
-                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.5)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Evidence of Completion</th>
+                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.68)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Corrective Action</th>
+                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.68)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Responsible Person</th>
+                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.68)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Target Date</th>
+                      <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "rgba(10,21,53,0.68)", textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>Evidence of Completion</th>
                     </tr>
                   </thead>
                   <tbody>
                     {existing!.actions.map((row, i) => (
                       <tr key={i} style={{ borderBottom: "1px solid rgba(10,21,53,0.06)", verticalAlign: "top" }}>
-                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.7)" }}>{row.action}</td>
-                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.7)" }}>{row.responsible}</td>
-                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.7)", whiteSpace: "nowrap" }}>{row.targetDate}</td>
-                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.7)" }}>{row.evidence || "—"}</td>
+                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.78)" }}>{row.action}</td>
+                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.78)" }}>{row.responsible}</td>
+                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.78)", whiteSpace: "nowrap" }}>{row.targetDate}</td>
+                        <td style={{ padding: "8px 10px", color: "rgba(10,21,53,0.78)" }}>{row.evidence || "—"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -167,7 +167,7 @@ export default function CARResponseForm({ appId, ncrReport, ncSeverity, existing
             {/* Section B: Root Cause */}
             <div style={{ marginBottom: 20 }}>
               <label style={labelStyle}>Section B — Root Cause Analysis *</label>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", marginBottom: 8 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", marginBottom: 8 }}>
                 Describe the root cause(s) of the non-conformance(s) identified in the NCR. Be specific and comprehensive.
               </p>
               <textarea
@@ -182,7 +182,7 @@ export default function CARResponseForm({ appId, ncrReport, ncSeverity, existing
             {/* Section C: Corrective Actions */}
             <div>
               <label style={labelStyle}>Section C — Corrective Action Plan *</label>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", marginBottom: 12 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", marginBottom: 12 }}>
                 List each corrective action, the person responsible, the target completion date, and the type of evidence you will provide.
               </p>
 
@@ -198,7 +198,7 @@ export default function CARResponseForm({ appId, ncrReport, ncSeverity, existing
                   <tbody>
                     {actions.map((row, i) => (
                       <tr key={i} style={{ borderBottom: "1px solid rgba(10,21,53,0.07)", background: i % 2 === 0 ? "white" : "#fafafa" }}>
-                        <td style={{ padding: "8px 10px", fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", textAlign: "center", width: 36 }}>{i + 1}</td>
+                        <td style={{ padding: "8px 10px", fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)", textAlign: "center", width: 36 }}>{i + 1}</td>
                         <td style={{ padding: "6px 8px", minWidth: 200 }}>
                           <textarea rows={2} value={row.action} onChange={e => updateRow(i, "action", e.target.value)} style={{ ...inputStyle, resize: "none", fontSize: 12.5 }} placeholder="Describe the corrective action…" />
                         </td>
@@ -249,7 +249,7 @@ export default function CARResponseForm({ appId, ncrReport, ncSeverity, existing
                 {submitting ? <Loader2 size={14} style={{ animation: "rotateSeal 1s linear infinite" }} /> : <Send size={13} />}
                 {submitting ? "Submitting CAR…" : "Submit Corrective Action Response"}
               </button>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)" }}>
                 Submitting will notify DAHC and advance your application to verification.
               </p>
             </div>

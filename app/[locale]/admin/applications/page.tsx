@@ -19,7 +19,7 @@ export default async function AdminApplicationsPage() {
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 400, color: "#0A1535", marginBottom: 6 }}>
         Certification Applications
       </h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 32 }}>
         Manage applications through the 15-state certification workflow. Search, filter, and advance each application.
       </p>
       <ApplicationCharts {...chartData} />

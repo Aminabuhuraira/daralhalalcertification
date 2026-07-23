@@ -40,23 +40,23 @@ export default function ForgotPasswordPage() {
               <Mail size={22} color="#C9A227" />
             </div>
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 600, color: "#0A1535", marginBottom: 10 }}>Check your inbox</h1>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)", lineHeight: 1.7, marginBottom: 28 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)", lineHeight: 1.7, marginBottom: 28 }}>
               If an account exists for <strong>{email}</strong>, our support team will send password reset instructions within 24 hours.
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.45)", marginBottom: 24 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.66)", marginBottom: 24 }}>
               Alternatively, email us directly at{" "}
               <a href="mailto:support@daralhalalcertification.com" style={{ color: "#C9A227" }}>
                 support@daralhalalcertification.com
               </a>
             </p>
-            <Link href="/en/auth/login" style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", textDecoration: "none" }}>
+            <Link href="/en/auth/login" style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", textDecoration: "none" }}>
               <ArrowLeft size={14} /> Back to sign in
             </Link>
           </div>
         ) : (
           <div>
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 600, color: "#0A1535", marginBottom: 8 }}>Reset password</h1>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", lineHeight: 1.65, marginBottom: 28 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", lineHeight: 1.65, marginBottom: 28 }}>
               Enter your account email and we'll send you reset instructions.
             </p>
 
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
             </form>
 
             <div style={{ marginTop: 24, textAlign: "center" }}>
-              <Link href="/en/auth/login" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.45)", textDecoration: "none" }}>
+              <Link href="/en/auth/login" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.66)", textDecoration: "none" }}>
                 <ArrowLeft size={13} /> Back to sign in
               </Link>
             </div>

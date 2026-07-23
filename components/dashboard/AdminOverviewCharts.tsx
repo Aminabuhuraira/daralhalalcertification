@@ -58,7 +58,7 @@ function PieWithLegend({
   const total = data.reduce((s, d) => s + d.value, 0);
   if (total === 0) {
     return (
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.4)", padding: "24px 0", textAlign: "center" }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.64)", padding: "24px 0", textAlign: "center" }}>
         No data yet.
       </p>
     );
@@ -90,7 +90,7 @@ function PieWithLegend({
             <div key={entry.name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ width: 10, height: 10, borderRadius: 3, background: color, flexShrink: 0 }} />
               <span style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#0A1535" }}>{entry.name}</span>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", minWidth: 48, textAlign: "right" }}>{pct}%</span>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", minWidth: 48, textAlign: "right" }}>{pct}%</span>
               <div style={{ width: 60, height: 5, background: "rgba(10,21,53,0.06)", borderRadius: 3, overflow: "hidden" }}>
                 <div style={{ height: "100%", width: `${pct}%`, background: color, borderRadius: 3 }} />
               </div>

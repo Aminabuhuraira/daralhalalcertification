@@ -260,7 +260,7 @@ export default function AfricaMap() {
         <span style={{
           fontFamily: "var(--font-body, system-ui)",
           fontSize: 11,
-          color: "rgba(10,21,53,0.42)",
+          color: "rgba(10,21,53,0.64)",
           letterSpacing: "0.06em",
           textTransform: "uppercase" as const,
         }}>

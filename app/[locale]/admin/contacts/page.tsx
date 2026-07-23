@@ -21,7 +21,7 @@ export default async function AdminContactsPage({ params }: Params) {
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Contact Inbox
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)" }}>
           {messages.length} message{messages.length !== 1 ? "s" : ""} received from the public contact form.
         </p>
       </div>
@@ -31,7 +31,7 @@ export default async function AdminContactsPage({ params }: Params) {
           <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
             <Mail size={20} color="#C9A227" />
           </div>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.45)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.66)" }}>
             No contact messages yet.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default async function AdminContactsPage({ params }: Params) {
                   </a>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.64)" }}>
                     <Clock size={11} />
                     {new Date(msg.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </div>
@@ -66,12 +66,12 @@ export default async function AdminContactsPage({ params }: Params) {
                   )}
                 </div>
               </div>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)", lineHeight: 1.65, background: "rgba(10,21,53,0.02)", padding: "12px 14px", borderRadius: 8, border: "1px solid rgba(10,21,53,0.05)", margin: 0 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.78)", lineHeight: 1.65, background: "rgba(10,21,53,0.02)", padding: "12px 14px", borderRadius: 8, border: "1px solid rgba(10,21,53,0.05)", margin: 0 }}>
                 {msg.message}
               </p>
               <div style={{ marginTop: 14 }}>
                 <a
-                  href={`mailto:${msg.email}?subject=Re: Your enquiry to Dar Al-Halal Certification`}
+                  href={`mailto:${msg.email}?subject=Re: Your enquiry to Dar Al Halal Certification`}
                   style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.25)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, color: "#9a7810", textDecoration: "none" }}
                 >
                   <Mail size={12} /> Reply via Email

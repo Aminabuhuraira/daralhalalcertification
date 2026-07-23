@@ -23,7 +23,7 @@ const inputStyle: React.CSSProperties = {
 };
 
 const labelStyle: React.CSSProperties = {
-  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)",
+  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)",
   marginBottom: 6, display: "block",
 };
 
@@ -308,7 +308,7 @@ export default function AdminQuizBuilder({ courseId, initialQuiz }: { courseId: 
                   ))}
                 </div>
                 {q.explanation && (
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginTop: 10 }}>{q.explanation}</p>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginTop: 10 }}>{q.explanation}</p>
                 )}
               </>
             )}

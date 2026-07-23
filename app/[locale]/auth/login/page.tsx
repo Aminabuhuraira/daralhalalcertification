@@ -65,7 +65,7 @@ function LoginForm() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 56 }}>
             <Shield size={20} color="#C9A227" />
             <span style={{ fontFamily: "var(--font-display)", fontSize: 13, fontWeight: 600, letterSpacing: "0.08em", color: "#1a1a1a" }}>
-              DAR AL-HALAL
+              DAR AL HALAL
             </span>
           </div>
 

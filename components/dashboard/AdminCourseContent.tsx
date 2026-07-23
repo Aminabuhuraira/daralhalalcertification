@@ -149,7 +149,7 @@ function AddLessonForm({ courseId, moduleId, onAdded }: { courseId: string; modu
     return (
       <button
         onClick={() => setOpen(true)}
-        style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "1.5px dashed rgba(201,162,39,0.4)", borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, color: "rgba(10,21,53,0.45)", fontFamily: "var(--font-body)", width: "100%", transition: "border-color 0.2s, color 0.2s" }}
+        style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "1.5px dashed rgba(201,162,39,0.4)", borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, color: "rgba(10,21,53,0.66)", fontFamily: "var(--font-body)", width: "100%", transition: "border-color 0.2s, color 0.2s" }}
         onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#C9A227"; (e.currentTarget as HTMLButtonElement).style.color = "#9a7a10"; }}
         onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.4)"; (e.currentTarget as HTMLButtonElement).style.color = "rgba(10,21,53,0.45)"; }}
       >
@@ -260,7 +260,7 @@ function LessonRow({ lesson, courseId, moduleId, onUpdate, onDelete }: {
       </div>
       {expanded && (
         <div style={{ padding: "0 14px 12px", borderTop: "1px solid #f0f0f0" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", margin: "8px 0 6px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Lesson Content (Markdown)</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.64)", margin: "8px 0 6px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Lesson Content (Markdown)</p>
           <InlineEditor
             lessonId={lesson.id} field="contentMd" current={lesson.contentMd || ""}
             placeholder="Write lesson content in Markdown..."
@@ -268,7 +268,7 @@ function LessonRow({ lesson, courseId, moduleId, onUpdate, onDelete }: {
             onSaved={(md) => onUpdate({ ...lesson, contentMd: md ?? "" })}
           />
           {lesson.contentMd && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginTop: 6 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.64)", marginTop: 6 }}>
               {lesson.contentMd.length} characters saved.
             </p>
           )}
@@ -340,17 +340,17 @@ function ModuleAccordion({ mod, courseId, onUpdate, onDelete }: {
           <span style={{ flex: 1, fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 600, color: "#0A1535" }}>{mod.title}</span>
         )}
 
-        <span style={{ fontSize: 12, color: "rgba(10,21,53,0.4)", fontFamily: "var(--font-body)", whiteSpace: "nowrap" }}>
+        <span style={{ fontSize: 12, color: "rgba(10,21,53,0.64)", fontFamily: "var(--font-body)", whiteSpace: "nowrap" }}>
           {mod.lessons.length} lessons · {videoCount} videos
         </span>
 
         {!renaming && (
           <>
-            <button onClick={() => setRenaming(true)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(10,21,53,0.3)", padding: 4, borderRadius: 4, display: "flex" }} title="Rename module"
+            <button onClick={() => setRenaming(true)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(10,21,53,0.6)", padding: 4, borderRadius: 4, display: "flex" }} title="Rename module"
               onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.color = "#0A1535")}
               onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(10,21,53,0.3)")}
             ><Pencil size={13} /></button>
-            <button onClick={deleteMod} disabled={deleting} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(10,21,53,0.25)", padding: 4, borderRadius: 4, display: "flex" }} title="Delete module"
+            <button onClick={deleteMod} disabled={deleting} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(10,21,53,0.6)", padding: 4, borderRadius: 4, display: "flex" }} title="Delete module"
               onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.color = "#ef4444")}
               onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(10,21,53,0.25)")}
             >
@@ -363,7 +363,7 @@ function ModuleAccordion({ mod, courseId, onUpdate, onDelete }: {
       {open && (
         <div style={{ padding: "0 18px 18px", display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>
           {mod.lessons.length === 0 && (
-            <p style={{ fontSize: 13, color: "rgba(10,21,53,0.35)", fontFamily: "var(--font-body)", padding: "4px 0" }}>No lessons yet.</p>
+            <p style={{ fontSize: 13, color: "rgba(10,21,53,0.62)", fontFamily: "var(--font-body)", padding: "4px 0" }}>No lessons yet.</p>
           )}
           {mod.lessons.map(lesson => (
             <LessonRow
@@ -396,7 +396,7 @@ export default function AdminCourseContent({ course: initial }: { course: Course
         {[{ label: "Modules", value: modules.length }, { label: "Lessons", value: totalLessons }, { label: "Videos", value: totalVideos }].map(s => (
           <div key={s.label} style={{ background: "#ffffff", border: "1px solid rgba(10,21,53,0.08)", borderRadius: 10, padding: "12px 20px", minWidth: 100, boxShadow: "0 1px 4px rgba(10,21,53,0.04)" }}>
             <p style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 600, color: "#0A1535", margin: 0 }}>{s.value}</p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", margin: 0 }}>{s.label}</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)", margin: 0 }}>{s.label}</p>
           </div>
         ))}
       </div>
@@ -411,7 +411,7 @@ export default function AdminCourseContent({ course: initial }: { course: Course
       <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 20 }}>
         {modules.length === 0 && (
           <div style={{ background: "#ffffff", borderRadius: 12, border: "1px solid rgba(10,21,53,0.08)", padding: "32px", textAlign: "center" }}>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.45)" }}>No modules yet. Add your first module to get started.</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.66)" }}>No modules yet. Add your first module to get started.</p>
           </div>
         )}
         {modules.map(mod => (

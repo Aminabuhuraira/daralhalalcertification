@@ -90,7 +90,7 @@ export default function NotificationBell({ locale }: { locale: string }) {
             {notifications.length === 0 ? (
               <div style={{ padding: "28px 16px", textAlign: "center" }}>
                 <CheckCircle2 size={28} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 10px", display: "block" }} />
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.4)" }}>All clear — no pending actions</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.64)" }}>All clear — no pending actions</p>
               </div>
             ) : (
               notifications.map(n => {
@@ -110,7 +110,7 @@ export default function NotificationBell({ locale }: { locale: string }) {
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#0A1535", margin: "0 0 2px" }}>{n.title}</p>
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.5)", margin: 0, lineHeight: 1.4 }}>{n.message}</p>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.68)", margin: 0, lineHeight: 1.4 }}>{n.message}</p>
                     </div>
                   </Link>
                 );

@@ -122,7 +122,7 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.0, duration: 0.7 }}
             style={{ fontFamily: "var(--font-body)", fontSize: 16.5, lineHeight: 1.85,
-              color: "rgba(10,21,53,0.6)", maxWidth: 500, marginBottom: 36, textAlign: "justify" as const }}
+              color: "rgba(10,21,53,0.72)", maxWidth: 500, marginBottom: 36, textAlign: "justify" as const }}
           >
             Halal certification is a globally recognized standard of{" "}
             <strong style={{ color: "#0A1535", fontWeight: 500 }}>
@@ -147,7 +147,7 @@ export default function Hero() {
               display: "inline-flex", alignItems: "center", gap: 10,
               padding: "13px 30px",
               background: "transparent", border: "1px solid rgba(10,21,53,0.2)",
-              color: "rgba(10,21,53,0.65)", borderRadius: 8,
+              color: "rgba(10,21,53,0.75)", borderRadius: 8,
               fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 500,
               cursor: "pointer", textDecoration: "none", transition: "all 0.3s",
             }}
@@ -180,7 +180,7 @@ export default function Hero() {
               >
                 <s.icon size={16} color="rgba(201,162,39,0.7)" />
                 <div style={{ fontFamily: "var(--font-accent)", fontSize: 17, fontWeight: 700, color: "#0A1535" }}>{s.value}</div>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 9.5, color: "rgba(10,21,53,0.45)", letterSpacing: "0.06em", textTransform: "uppercase", textAlign: "center" }}>{s.label}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 9.5, color: "rgba(10,21,53,0.66)", letterSpacing: "0.06em", textTransform: "uppercase", textAlign: "center" }}>{s.label}</div>
               </motion.div>
             ))}
           </motion.div>

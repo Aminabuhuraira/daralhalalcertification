@@ -78,7 +78,7 @@ export default function CertificationPage() {
             <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, maxWidth: 680, lineHeight: 1.1 }}>
               Certification Built for<br /><span className="text-gold-shimmer">Global Markets</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(10,21,53,0.6)", maxWidth: 560, lineHeight: 1.75, marginBottom: 36 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(10,21,53,0.72)", maxWidth: 560, lineHeight: 1.75, marginBottom: 36 }}>
               Our copyright-protected certification mark is recognized in 57+ countries. Get certified and access Africa, the Middle East, Southeast Asia, and beyond.
             </motion.p>
             <motion.div {...fin(0.45)} style={{ display: "flex", gap: 12 }}>

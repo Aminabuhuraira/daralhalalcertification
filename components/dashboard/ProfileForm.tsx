@@ -13,7 +13,7 @@ const inputStyle: React.CSSProperties = {
 };
 
 const labelStyle: React.CSSProperties = {
-  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)",
+  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)",
   marginBottom: 6, display: "block", fontWeight: 500,
 };
 

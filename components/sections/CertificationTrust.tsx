@@ -7,7 +7,7 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Shield, Globe, BookOpen, CheckCircle, ArrowRight } from "lucide-react";
 import GlowingCard from "@/components/ui/GlowingCard";
 import LampHeader from "@/components/ui/LampHeader";
@@ -40,6 +40,19 @@ export default function CertificationTrust() {
   const params     = useParams();
   const locale     = (params?.locale as string) || "en";
 
+  /* Below 769px the scroll-driven sticky timeline (absolutely-positioned steps
+     inside a 400vh wrapper) has no room to lay itself out, so it renders a
+     simple stacked list instead. */
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  const { ref: mobileStepsRef, inView: mobileStepsInView } = useInView({ threshold: 0.15, triggerOnce: true });
+
   /* scroll progress for the timeline wrapper */
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
@@ -70,6 +83,9 @@ export default function CertificationTrust() {
   const stepVisible = Array.from({ length: N }, (_, i) => i <= activeStep);
   /* vertical position of step i within the sticky 100vh container (5%–95% of height) */
   const stepPos = PROCESS_STEPS.map((_, i) => `${(i / N) * 90 + 5}%`);
+
+  /* on mobile there's no scroll-driven timeline to derive this from — reveal once the step list scrolls into view */
+  const showCallout = isMobile ? mobileStepsInView : calloutVisible;
 
   return (
     <section ref={sectionRef} style={{ background: "var(--bg-surface)", position: "relative" }}>
@@ -114,9 +130,10 @@ export default function CertificationTrust() {
       </div>
 
       {/* ══════════════════════════════════════════════════
-           HOLOGRAPHIC VERTICAL TIMELINE  (400 vh)
+           HOLOGRAPHIC VERTICAL TIMELINE  (400 vh) — desktop only.
            Gold spine fills on scroll. Cards float in.
          ══════════════════════════════════════════════════ */}
+      {!isMobile && (
       <div ref={wrapperRef} className="cert-timeline-wrapper" style={{ height: "400vh", position: "relative" }}>
         <div className="cert-timeline-sticky" style={{
           position: "sticky", top: 72,
@@ -258,13 +275,64 @@ export default function CertificationTrust() {
           </div>
         </div>
       </div>
+      )}
       {/* END TIMELINE SECTION */}
+
+      {/* ══════════════════════════════════════════════════
+           MOBILE STEP LIST — simple stacked cards, no scroll-driven
+           absolute positioning (the sticky timeline above has no room
+           to lay itself out on small screens).
+         ══════════════════════════════════════════════════ */}
+      {isMobile && (
+        <div ref={mobileStepsRef} className="section-container" style={{ position: "relative", zIndex: 1, paddingBottom: 40 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {PROCESS_STEPS.map((step, i) => (
+              <motion.div
+                key={step.num}
+                initial={{ opacity: 0, y: 16 }}
+                animate={mobileStepsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: i * 0.06, duration: 0.5 }}
+                style={{
+                  display: "flex", alignItems: "flex-start", gap: 14,
+                  padding: "16px 18px",
+                  background: "white",
+                  borderRadius: 12,
+                  border: "1px solid rgba(13,27,71,0.07)",
+                  borderLeft: "3px solid #F5C842",
+                  boxShadow: "0 2px 8px rgba(13,27,71,0.04)",
+                }}
+              >
+                <div style={{
+                  flexShrink: 0, width: 34, height: 34, borderRadius: "50%",
+                  background: "var(--navy-700)", border: "1.5px solid var(--gold-500)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "#F5C842",
+                }}>{step.num}</div>
+                <div>
+                  <div style={{
+                    fontSize: 15, fontWeight: 700,
+                    color: "var(--text-primary)",
+                    fontFamily: "var(--font-display)",
+                    marginBottom: 4, lineHeight: 1.25,
+                  }}>{step.title}</div>
+                  <div style={{
+                    fontSize: 13,
+                    color: "var(--text-muted)",
+                    lineHeight: 1.6,
+                    fontFamily: "var(--font-body)",
+                  }}>{step.desc}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Copyright callout — revealed when ball merges ── */}
       <div className="section-container" style={{ position: "relative", zIndex: 1, paddingBottom: 100 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={calloutVisible ? { opacity: 1, y: 0 } : {}}
+          animate={showCallout ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, ease: "easeOut" }}
           style={{
             borderRadius: 20, padding: "48px 56px", marginBottom: 64,
@@ -277,7 +345,7 @@ export default function CertificationTrust() {
           <div style={{
             position: "absolute", top: 0, left: 0,
             width: 5, borderRadius: "20px 0 0 20px",
-            height: calloutVisible ? "100%" : "0%",
+            height: showCallout ? "100%" : "0%",
             background: "linear-gradient(to bottom, #F5C842, rgba(201,162,39,0.35))",
             transition: "height 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s",
           }} />
@@ -302,7 +370,7 @@ export default function CertificationTrust() {
         {/* ── CTA ── */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
-          animate={calloutVisible ? { opacity: 1, y: 0 } : {}}
+          animate={showCallout ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.3, duration: 0.5 }}
           style={{ textAlign: "center" }}
         >
@@ -313,14 +381,6 @@ export default function CertificationTrust() {
           </Link>
         </motion.div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          /* On mobile, collapse the timeline into a simple list */
-          [data-timeline-wrapper] { height: auto !important; }
-          [data-timeline-sticky]  { position: relative !important; height: auto !important; padding: 40px 0; }
-        }
-      `}</style>
     </section>
   );
 }

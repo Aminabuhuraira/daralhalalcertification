@@ -20,7 +20,7 @@ const inputStyle: React.CSSProperties = {
 };
 
 const label: React.CSSProperties = {
-  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginBottom: 6, display: "block", fontWeight: 500,
+  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)", marginBottom: 6, display: "block", fontWeight: 500,
 };
 
 const TABS = [
@@ -139,7 +139,7 @@ export default function UserSettings({ user, locale }: { user: UserData; locale:
             <div>
               <label style={label}>Email address</label>
               <input value={user.email} disabled style={{ ...inputStyle, opacity: 0.5, cursor: "not-allowed" }} />
-              <p style={{ fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginTop: 5, fontFamily: "var(--font-body)" }}>Email cannot be changed. Contact support if needed.</p>
+              <p style={{ fontSize: 11.5, color: "rgba(10,21,53,0.64)", marginTop: 5, fontFamily: "var(--font-body)" }}>Email cannot be changed. Contact support if needed.</p>
             </div>
             <div>
               <label style={label}>Full Name *</label>
@@ -177,7 +177,7 @@ export default function UserSettings({ user, locale }: { user: UserData; locale:
       {tab === "security" && (
         <GlowingCard style={{ padding: "28px 30px", maxWidth: 520 }}>
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 500, color: "#0A1535", marginBottom: 6 }}>Change Password</h2>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 24 }}>Use a strong password you don't use elsewhere.</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", marginBottom: 24 }}>Use a strong password you don't use elsewhere.</p>
           <form onSubmit={savePassword} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div>
               <label style={label}>Current Password *</label>
@@ -211,7 +211,7 @@ export default function UserSettings({ user, locale }: { user: UserData; locale:
             <AlertTriangle size={20} color="#ef4444" style={{ flexShrink: 0, marginTop: 2 }} />
             <div>
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 500, color: "#ef4444", marginBottom: 4 }}>Delete Account</h2>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)", lineHeight: 1.6 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", lineHeight: 1.6 }}>
                 Deleting your account will permanently remove all your data, enrollments, certificates, and applications. This action cannot be undone.
               </p>
             </div>

@@ -48,20 +48,58 @@ const STATUS_BUCKET: Record<string, string> = {
   CLOSED_INCOMPLETE:    "Closed",
 };
 
+// Human-readable label for each exact pipeline stage (mirrors AdminApplicationList's STATUS_DISPLAY)
+export const STAGE_LABEL: Record<string, string> = {
+  DRAFT:               "Draft",
+  SUBMITTED:           "Submitted",
+  SCREENING:           "Administrative Screening",
+  DEFICIENCY_NOTICE:   "Action Required (Client)",
+  ELIGIBILITY_REVIEW:  "Eligibility Review",
+  TRC_ESCALATION:      "TRC / Shariah Review",
+  AWAITING_PAYMENT:    "Awaiting Payment",
+  PENDING_AUDIT:       "Audit Scheduled",
+  AUDITING:            "Audit in Progress",
+  ACTION_REQUIRED_NCR: "NCR Issued",
+  VERIFYING_NCR:       "Verifying NCR",
+  BOARD_REVIEW:        "Board Review",
+};
+
+// Stages where DAHC staff (not the applicant) hold the ball right now
+const STAFF_ACTION_STATUSES = [
+  "SUBMITTED", "SCREENING", "ELIGIBILITY_REVIEW", "TRC_ESCALATION",
+  "VERIFYING_NCR", "BOARD_REVIEW",
+];
+
+export type StageCount = { status: string; label: string; count: number };
+export type ActionItem = {
+  id: string;
+  businessName: string;
+  status: string;
+  statusLabel: string;
+  updatedAt: Date;
+};
+
 function countProducts(productList: string): number {
   return productList.split(/[,\n]/).map(s => s.trim()).filter(Boolean).length;
 }
 
 export async function getAdminDashboardStats() {
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
   const [
     applications,
     certifiedCount,
     renewalAlerts,
     recentCerts,
     recentPayments,
+    totalUsers,
+    newApplicationsThisWeek,
+    newEnquiriesThisWeek,
+    totalEnrollments,
+    completedEnrollments,
   ] = await Promise.all([
     prisma.certificationApplication.findMany({
-      select: { id: true, status: true, productionScale: true, productList: true, businessName: true, createdAt: true },
+      select: { id: true, status: true, productionScale: true, productList: true, businessName: true, createdAt: true, updatedAt: true },
     }),
     prisma.certificationApplication.count({ where: { status: "CERTIFIED" } }),
     prisma.certificate.count({
@@ -81,6 +119,11 @@ export async function getAdminDashboardStats() {
       orderBy: { createdAt: "desc" },
       take: 10,
     }),
+    prisma.user.count({ where: { role: "USER" } }),
+    prisma.certificationApplication.count({ where: { createdAt: { gte: weekAgo } } }),
+    prisma.contactMessage.count({ where: { createdAt: { gte: weekAgo } } }),
+    prisma.enrollment.count(),
+    prisma.enrollment.count({ where: { completedAt: { not: null } } }),
   ]);
 
   const totalCompanies = applications.length;
@@ -108,6 +151,31 @@ export async function getAdminDashboardStats() {
     count,
     label: status,
   }));
+
+  // Pipeline by exact stage (unbucketed) — so admins can see precisely where
+  // applications sit, not just a generic "Pending" blob.
+  const stageMap = new Map<string, number>();
+  for (const a of applications) {
+    if (a.status === "CERTIFIED" || a.status === "REJECTED" || a.status === "CLOSED_INCOMPLETE") continue;
+    stageMap.set(a.status, (stageMap.get(a.status) ?? 0) + 1);
+  }
+  const pipelineCounts: StageCount[] = Object.keys(STAGE_LABEL)
+    .filter(status => stageMap.has(status))
+    .map(status => ({ status, label: STAGE_LABEL[status], count: stageMap.get(status)! }));
+
+  // Applications where DAHC staff currently hold the ball
+  const actionRequired: ActionItem[] = applications
+    .filter(a => STAFF_ACTION_STATUSES.includes(a.status))
+    .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
+    .slice(0, 8)
+    .map(a => ({
+      id: a.id,
+      businessName: a.businessName,
+      status: a.status,
+      statusLabel: STAGE_LABEL[a.status] ?? a.status,
+      updatedAt: a.updatedAt,
+    }));
+  const actionRequiredCount = applications.filter(a => STAFF_ACTION_STATUSES.includes(a.status)).length;
 
   // Upcoming renewals
   const upcomingRenewals: RenewalRow[] = recentCerts
@@ -141,8 +209,16 @@ export async function getAdminDashboardStats() {
     allProductsCount,
     scaleCounts,
     statusCounts,
+    pipelineCounts,
+    actionRequired,
+    actionRequiredCount,
     upcomingRenewals,
     recentPayments: recentPaymentRows,
+    totalUsers,
+    newApplicationsThisWeek,
+    newEnquiriesThisWeek,
+    totalEnrollments,
+    completedEnrollments,
   };
 }
 

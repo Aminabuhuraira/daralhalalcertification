@@ -76,7 +76,7 @@ function VerifyPageInner() {
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20 }}>
               Verify <span className="text-gold-shimmer">Halal Certification</span>
             </motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.6)", marginBottom: 40, lineHeight: 1.7 }}>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.72)", marginBottom: 40, lineHeight: 1.7 }}>
               Enter the certificate serial number printed on the certificate to verify its authenticity.
             </motion.p>
 
@@ -93,7 +93,7 @@ function VerifyPageInner() {
                 {status === "loading" ? "Checking..." : "Verify"}
               </button>
             </motion.div>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", marginTop: 12 }}>Certificate serials start with "DHC" — e.g. DHC-2026-000001</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)", marginTop: 12 }}>Certificate serials start with "DHC" — e.g. DHC-2026-000001</p>
           </div>
         </section>
 

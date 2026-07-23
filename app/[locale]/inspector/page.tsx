@@ -68,7 +68,7 @@ export default async function InspectorPage({ params }: Params) {
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Audit Management
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)" }}>
           Schedule, conduct, and resolve audits for approved certification applications.
         </p>
       </div>
@@ -81,7 +81,7 @@ export default async function InspectorPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#0891B2", margin: "0 0 2px" }}>
               {upcomingAudits} Audit{upcomingAudits !== 1 ? "s" : ""} Scheduled and Awaiting Inspection
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Payment confirmed. Assign inspection teams and conduct on-site audits for these applications.
             </p>
           </div>
@@ -94,7 +94,7 @@ export default async function InspectorPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#F97316", margin: "0 0 2px" }}>
               {ncrCases} NCR Case{ncrCases !== 1 ? "s" : ""} Require Review
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Non-conformance reports are active. Verify corrective action responses submitted by applicants and decide on closure or further action.
             </p>
           </div>
@@ -107,7 +107,7 @@ export default async function InspectorPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#65A30D", margin: "0 0 2px" }}>
               {boardReview} Application{boardReview !== 1 ? "s" : ""} Advanced to Board Review
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Audit complete with satisfactory results. These files have been handed off to the Technical Team and Shariah Panel for final approval.
             </p>
           </div>
@@ -151,7 +151,7 @@ export default async function InspectorPage({ params }: Params) {
           padding: "48px 32px", textAlign: "center",
         }}>
           <CheckCircle2 size={32} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 12px" }} />
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>
             No applications in the audit pipeline right now.
           </p>
         </div>

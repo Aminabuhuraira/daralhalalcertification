@@ -55,7 +55,7 @@ export default async function TechnicalPage({ params }: Params) {
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Certification Preparation
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)" }}>
           Review complete audit files submitted for Board approval. Prepare technical documentation and add review notes before the Shariah Panel&apos;s final validation.
         </p>
       </div>
@@ -68,7 +68,7 @@ export default async function TechnicalPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#6366F1", margin: "0 0 2px" }}>
               {applications.length} Application{applications.length !== 1 ? "s" : ""} Pending Technical Assessment
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Audit files have passed inspection. Review each application&apos;s technical compliance, add review notes, and prepare documentation for the Shariah Panel&apos;s final validation.
             </p>
           </div>
@@ -102,7 +102,7 @@ export default async function TechnicalPage({ params }: Params) {
       {applications.length === 0 ? (
         <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)", padding: "48px 32px", textAlign: "center" }}>
           <CheckCircle2 size={32} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 12px" }} />
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>No applications awaiting technical review.</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>No applications awaiting technical review.</p>
         </div>
       ) : (
         <AdminApplicationList applications={applications as never} viewerRole="TECHNICAL" />

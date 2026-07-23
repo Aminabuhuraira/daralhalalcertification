@@ -31,7 +31,7 @@ export default async function CertificationGuidePage({ params }: Params) {
               <span style={{ color: "#C9A227" }}>Client Guideline</span>
             </h1>
             <p style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(255,255,255,0.72)", maxWidth: 640, lineHeight: 1.7 }}>
-              This manual provides a comprehensive guide to the Dar Al-Halal Certification (DAHC) halal certification process, requirements, and obligations for applicant organisations. Read this document before submitting your application.
+              This manual provides a comprehensive guide to the Dar Al Halal Certification (DAHC) halal certification process, requirements, and obligations for applicant organisations. Read this document before submitting your application.
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
               <Link href={`/${locale}/auth/register`} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", background: "#C9A227", borderRadius: 8, color: "white", textDecoration: "none", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, boxShadow: "0 4px 16px rgba(201,162,39,0.35)" }}>
@@ -47,7 +47,7 @@ export default async function CertificationGuidePage({ params }: Params) {
         {/* Table of Contents */}
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 24px 0" }}>
           <div style={{ background: "white", borderRadius: 12, border: "1px solid rgba(10,21,53,0.08)", padding: "24px 28px", boxShadow: "0 1px 4px rgba(10,21,53,0.05)" }}>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>Table of Contents</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>Table of Contents</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "6px 20px" }}>
               {[
                 "1. Introduction & About DAHC",
@@ -76,7 +76,7 @@ export default async function CertificationGuidePage({ params }: Params) {
           {/* Section 1: Introduction */}
           <Section id="section-1" number="1" title="Introduction & About DAHC">
             <p>
-              Dar Al-Halal Certification (DAHC) is an independent, accredited halal conformity assessment body established to provide credible and internationally recognised halal certification services in Nigeria and across West Africa. DAHC operates under a rigorous quality management system aligned with international halal standards, ensuring transparency, impartiality, and integrity throughout the certification process.
+              Dar Al Halal Certification (DAHC) is an independent, accredited halal conformity assessment body established to provide credible and internationally recognised halal certification services in Nigeria and across West Africa. DAHC operates under a rigorous quality management system aligned with international halal standards, ensuring transparency, impartiality, and integrity throughout the certification process.
             </p>
             <p>
               Halal certification by DAHC attests that a product or service complies with the principles of Islamic law (Shariah) as they relate to permissible (halal) consumption, production, and handling. A DAHC certificate provides assurance to Muslim consumers, retailers, importers, and regulatory authorities that certified products meet the highest standards of halal compliance.
@@ -121,7 +121,7 @@ export default async function CertificationGuidePage({ params }: Params) {
                   ].map(([std, desc], i) => (
                     <tr key={i} style={{ borderBottom: "1px solid rgba(10,21,53,0.07)", background: i % 2 === 0 ? "white" : "#f9f9fb" }}>
                       <td style={{ padding: "10px 14px", fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap" }}>{std}</td>
-                      <td style={{ padding: "10px 14px", color: "rgba(10,21,53,0.7)" }}>{desc}</td>
+                      <td style={{ padding: "10px 14px", color: "rgba(10,21,53,0.78)" }}>{desc}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -145,7 +145,7 @@ export default async function CertificationGuidePage({ params }: Params) {
                   <CheckCircle size={18} color="#16A34A" style={{ flexShrink: 0, marginTop: 2 }} />
                   <div>
                     <p style={{ fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, color: "#0A1535", marginBottom: 3 }}>{title}</p>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", lineHeight: 1.6 }}>{desc}</p>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", lineHeight: 1.6 }}>{desc}</p>
                   </div>
                 </div>
               ))}
@@ -181,7 +181,7 @@ export default async function CertificationGuidePage({ params }: Params) {
                     <tr key={stage} style={{ borderBottom: "1px solid rgba(10,21,53,0.07)", verticalAlign: "top", background: parseInt(stage) % 2 === 0 ? "#f9f9fb" : "white" }}>
                       <td style={{ padding: "12px 14px", textAlign: "center", fontWeight: 700, color: "#C9A227", fontSize: 18 }}>{stage}</td>
                       <td style={{ padding: "12px 14px", fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap" }}>{name}</td>
-                      <td style={{ padding: "12px 14px", color: "rgba(10,21,53,0.7)", lineHeight: 1.6 }}>{desc}</td>
+                      <td style={{ padding: "12px 14px", color: "rgba(10,21,53,0.78)", lineHeight: 1.6 }}>{desc}</td>
                       <td style={{ padding: "12px 14px", textAlign: "center", color: resp === "Applicant" ? "#6D28D9" : resp === "Both" ? "#D97706" : "#0891B2", fontWeight: 600, whiteSpace: "nowrap" }}>{resp}</td>
                     </tr>
                   ))}
@@ -209,7 +209,7 @@ export default async function CertificationGuidePage({ params }: Params) {
                   <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "#C9A227", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>{section}</p>
                   <ul style={{ margin: 0, paddingLeft: 16 }}>
                     {items.map((item, j) => (
-                      <li key={j} style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", marginBottom: 4, lineHeight: 1.5 }}>{item}</li>
+                      <li key={j} style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.78)", marginBottom: 4, lineHeight: 1.5 }}>{item}</li>
                     ))}
                   </ul>
                 </div>
@@ -256,25 +256,25 @@ export default async function CertificationGuidePage({ params }: Params) {
                     <td style={{ padding: "12px 16px" }}>
                       <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", fontWeight: 700, color: "#D97706", fontSize: 12 }}>MINOR</span>
                     </td>
-                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.7)", lineHeight: 1.6 }}>A minor shortcoming in documentation, procedure, or process control that does not immediately compromise halal integrity. Easily correctable.</td>
+                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.78)", lineHeight: 1.6 }}>A minor shortcoming in documentation, procedure, or process control that does not immediately compromise halal integrity. Easily correctable.</td>
                     <td style={{ padding: "12px 16px", fontWeight: 600, color: "#D97706" }}>30 calendar days</td>
-                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.6)" }}>Escalated to Major NC</td>
+                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.72)" }}>Escalated to Major NC</td>
                   </tr>
                   <tr style={{ borderBottom: "1px solid rgba(10,21,53,0.07)", verticalAlign: "top", background: "#fff7f0" }}>
                     <td style={{ padding: "12px 16px" }}>
                       <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, background: "rgba(249,115,22,0.1)", border: "1px solid rgba(249,115,22,0.3)", fontWeight: 700, color: "#EA580C", fontSize: 12 }}>MAJOR</span>
                     </td>
-                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.7)", lineHeight: 1.6 }}>A significant deviation from halal requirements that has the potential to affect halal status if not addressed. Corrective action and evidence required.</td>
+                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.78)", lineHeight: 1.6 }}>A significant deviation from halal requirements that has the potential to affect halal status if not addressed. Corrective action and evidence required.</td>
                     <td style={{ padding: "12px 16px", fontWeight: 600, color: "#EA580C" }}>14 calendar days</td>
-                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.6)" }}>Application suspended pending re-audit</td>
+                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.72)" }}>Application suspended pending re-audit</td>
                   </tr>
                   <tr style={{ verticalAlign: "top", background: "#fff0f0" }}>
                     <td style={{ padding: "12px 16px" }}>
                       <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", fontWeight: 700, color: "#DC2626", fontSize: 12 }}>SERIOUS</span>
                     </td>
-                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.7)", lineHeight: 1.6 }}>A critical failure that renders the product or service haram, or indicates deliberate misrepresentation. Includes detection of prohibited ingredients or processes.</td>
+                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.78)", lineHeight: 1.6 }}>A critical failure that renders the product or service haram, or indicates deliberate misrepresentation. Includes detection of prohibited ingredients or processes.</td>
                     <td style={{ padding: "12px 16px", fontWeight: 600, color: "#DC2626" }}>Immediate</td>
-                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.6)" }}>Application rejected; 12-month re-application ban</td>
+                    <td style={{ padding: "12px 16px", color: "rgba(10,21,53,0.72)" }}>Application rejected; 12-month re-application ban</td>
                   </tr>
                 </tbody>
               </table>
@@ -297,7 +297,7 @@ export default async function CertificationGuidePage({ params }: Params) {
                   <Shield size={18} color="#0A1535" style={{ flexShrink: 0, marginTop: 2 }} />
                   <div>
                     <p style={{ fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, color: "#0A1535", marginBottom: 3 }}>{title}</p>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", lineHeight: 1.6 }}>{desc}</p>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", lineHeight: 1.6 }}>{desc}</p>
                   </div>
                 </div>
               ))}
@@ -314,9 +314,9 @@ export default async function CertificationGuidePage({ params }: Params) {
               ].map(({ icon, label, value, sub }) => (
                 <div key={label} style={{ textAlign: "center", background: "white", borderRadius: 10, border: "1px solid rgba(10,21,53,0.08)", padding: "20px 16px" }}>
                   <div style={{ fontSize: 28, marginBottom: 10 }}>{icon}</div>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>{label}</p>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>{label}</p>
                   <p style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 600, color: "#C9A227", marginBottom: 4 }}>{value}</p>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>{sub}</p>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)" }}>{sub}</p>
                 </div>
               ))}
             </div>
@@ -342,10 +342,10 @@ export default async function CertificationGuidePage({ params }: Params) {
               <ContactCard icon={<Phone size={20} color="#C9A227" />} label="Phone / WhatsApp" value="+234 XXX XXX XXXX" href="tel:+234000000000" />
             </div>
             <div style={{ marginTop: 24, padding: "16px 20px", borderRadius: 10, background: "rgba(201,162,39,0.06)", border: "1px solid rgba(201,162,39,0.2)" }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", marginBottom: 8 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.78)", marginBottom: 8 }}>
                 <strong style={{ color: "#9a7810" }}>Office Hours:</strong> Monday – Friday, 8:00 AM – 5:00 PM (WAT)
               </p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.78)" }}>
                 <strong style={{ color: "#9a7810" }}>Portal Support:</strong> Technical issues with the online portal may be reported via the Contact Us page on our website.
               </p>
             </div>
@@ -361,9 +361,9 @@ export default async function CertificationGuidePage({ params }: Params) {
 
           {/* Footer note */}
           <div style={{ marginTop: 24, padding: "14px 20px", borderRadius: 8, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.07)" }}>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", lineHeight: 1.6 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", lineHeight: 1.6 }}>
               <strong>Document Reference:</strong> QMS/AP/HM/01 | <strong>Revision:</strong> 01 | <strong>Effective Date:</strong> January 2025 | <strong>Next Review:</strong> January 2026<br />
-              This document is the property of Dar Al-Halal Certification. © {new Date().getFullYear()} DAHC. All rights reserved.
+              This document is the property of Dar Al Halal Certification. © {new Date().getFullYear()} DAHC. All rights reserved.
             </p>
           </div>
         </div>
@@ -385,7 +385,7 @@ function Section({ id, number, title, children }: { id: string; number: string; 
       <div style={{
         background: "white", borderRadius: 12, border: "1px solid rgba(10,21,53,0.08)",
         padding: "24px 28px", boxShadow: "0 1px 4px rgba(10,21,53,0.04)",
-        fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.72)", lineHeight: 1.75,
+        fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.8)", lineHeight: 1.75,
       }}>
         {children}
       </div>
@@ -400,7 +400,7 @@ function ContactCard({ icon, label, value, href }: { icon: React.ReactNode; labe
         {icon}
       </div>
       <div>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>{label}</p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>{label}</p>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 600, color: "#0A1535" }}>{value}</p>
       </div>
     </a>

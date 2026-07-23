@@ -63,7 +63,7 @@ const inputStyle: React.CSSProperties = {
 };
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700,
-  color: "rgba(10,21,53,0.45)", textTransform: "uppercase", letterSpacing: "0.06em",
+  color: "rgba(10,21,53,0.66)", textTransform: "uppercase", letterSpacing: "0.06em",
   display: "block", marginBottom: 5,
 };
 const sectionHeadStyle: React.CSSProperties = {
@@ -226,7 +226,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderRadius: 8, background: "rgba(107,114,128,0.06)", border: "1px solid rgba(107,114,128,0.2)", marginBottom: 20 }}>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.6)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.72)" }}>
           Complete all sections of this form. Fields marked <strong>*</strong> are required before submission. You may save a draft at any time.
         </p>
       </div>
@@ -265,7 +265,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
 
       {/* Section B: Person in Charge */}
       <SectionBox label="Section B — Person In Charge (PIC)">
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginTop: -4 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginTop: -4 }}>
           The designated contact person responsible for this certification application.
         </p>
         <Row2>
@@ -288,7 +288,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
 
       {/* Section C: Certification Scheme */}
       <SectionBox label="Section C — Certification Scheme *">
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginTop: -4 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginTop: -4 }}>
           Select the DAHC halal certification scheme that best describes your products or services.
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
@@ -320,7 +320,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
                 background: selected ? "rgba(201,162,39,0.06)" : "white",
               }}>
                 <div style={{ fontFamily: "var(--font-display)", fontSize: 14, fontWeight: 600, color: selected ? "#C9A227" : "#0A1535", marginBottom: 4 }}>{s.label}</div>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.45)", lineHeight: 1.4 }}>{s.desc}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.66)", lineHeight: 1.4 }}>{s.desc}</div>
               </button>
             );
           })}
@@ -332,7 +332,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
         {/* Product table */}
         <div>
           <label style={labelStyle}>Products / Services to be Certified *</label>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", marginBottom: 10 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", marginBottom: 10 }}>
             List each product or service category you wish to certify.
           </p>
           <div style={{ overflowX: "auto" }}>
@@ -348,7 +348,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
               <tbody>
                 {products.map((p, i) => (
                   <tr key={i} style={{ borderBottom: "1px solid rgba(10,21,53,0.07)", background: i % 2 === 0 ? "white" : "#fafafa" }}>
-                    <td style={{ ...tblCell, textAlign: "center", width: 36, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)" }}>{i + 1}</td>
+                    <td style={{ ...tblCell, textAlign: "center", width: 36, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)" }}>{i + 1}</td>
                     <td style={{ ...tblCell, minWidth: 220 }}>
                       <input value={p.name} onChange={e => updateProduct(i, "name", e.target.value)} style={{ ...inputStyle, fontSize: 13 }} placeholder="e.g. Jollof Spice Blend" />
                     </td>
@@ -383,7 +383,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
           </button>
           {showIngr && (
             <div style={{ marginTop: 10 }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", marginBottom: 10 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", marginBottom: 10 }}>
                 List all key raw materials and ingredients used in production. Include halal status documentation details.
               </p>
               <div style={{ overflowX: "auto" }}>
@@ -398,7 +398,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
                   <tbody>
                     {ingredients.map((r, i) => (
                       <tr key={i} style={{ borderBottom: "1px solid rgba(10,21,53,0.07)", background: i % 2 === 0 ? "white" : "#fafafa" }}>
-                        <td style={{ ...tblCell, textAlign: "center", width: 30, fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.35)" }}>{i + 1}</td>
+                        <td style={{ ...tblCell, textAlign: "center", width: 30, fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.62)" }}>{i + 1}</td>
                         <td style={{ ...tblCell, minWidth: 140 }}><input value={r.name} onChange={e => updateIngredient(i, "name", e.target.value)} style={{ ...inputStyle, fontSize: 12 }} placeholder="e.g. Palm Oil" /></td>
                         <td style={{ ...tblCell, minWidth: 120 }}>
                           <select value={r.source} onChange={e => updateIngredient(i, "source", e.target.value)} style={{ ...inputStyle, fontSize: 12, cursor: "pointer" }}>
@@ -436,7 +436,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
 
       {/* Section F: Other Certifications */}
       <SectionBox label="Section F — Other Quality Certifications">
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginTop: -4 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginTop: -4 }}>
           List any existing quality or food safety certifications held by your company.
         </p>
         {[
@@ -474,7 +474,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
 
       {/* Section H: Documents */}
       <SectionBox label="Section H — Supporting Documents">
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginTop: -4 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginTop: -4 }}>
           Upload all required documentation. Refer to the DAHC Halal Certification Manual for the full document checklist (Sections A–I).
         </p>
         <DocumentUpload
@@ -487,10 +487,10 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
       {/* Section I: Declaration */}
       <SectionBox label="Section I — Applicant Declaration">
         <div style={{ padding: "14px 16px", borderRadius: 8, background: "rgba(10,21,53,0.02)", border: "1px solid rgba(10,21,53,0.08)" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", lineHeight: 1.7, marginBottom: 14 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.78)", lineHeight: 1.7, marginBottom: 14 }}>
             I, the undersigned, hereby declare on behalf of the above-mentioned company that:
           </p>
-          <ul style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", lineHeight: 1.75, paddingLeft: 20, marginBottom: 16 }}>
+          <ul style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", lineHeight: 1.75, paddingLeft: 20, marginBottom: 16 }}>
             <li>All information provided in this application and supporting documents is accurate, complete, and truthful to the best of my knowledge;</li>
             <li>The company agrees to comply fully with all DAHC halal certification requirements and standards;</li>
             <li>The company consents to DAHC conducting on-site audits and inspections as required;</li>
@@ -506,7 +506,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
               : <Square size={20} color="rgba(10,21,53,0.3)" style={{ flexShrink: 0, marginTop: 1 }} />
             }
             <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: declarationAccepted ? 700 : 400, color: declarationAccepted ? "#0A1535" : "rgba(10,21,53,0.6)", lineHeight: 1.5 }}>
-              I confirm the above declaration and authorise this application to be submitted to Dar Al-Halal Certification for processing. *
+              I confirm the above declaration and authorise this application to be submitted to Dar Al Halal Certification for processing. *
             </span>
           </button>
         </div>
@@ -520,7 +520,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
       {/* Validation hint */}
       {!isValid && (
         <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.08)", marginBottom: 14 }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.55)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)" }}>
             To submit: complete all <strong>*</strong> fields in Sections A–E, at least one product, and tick the declaration.
           </p>
         </div>
@@ -536,7 +536,7 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
             fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 600,
             padding: "11px 18px", borderRadius: 8, cursor: "pointer",
             background: "transparent", border: "1.5px solid rgba(10,21,53,0.2)",
-            color: "rgba(10,21,53,0.65)", opacity: saving ? 0.6 : 1, transition: "all 0.15s",
+            color: "rgba(10,21,53,0.75)", opacity: saving ? 0.6 : 1, transition: "all 0.15s",
           }}
         >
           <Save size={13} /> {saving ? "Saving…" : "Save Draft"}

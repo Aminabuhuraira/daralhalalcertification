@@ -43,7 +43,7 @@ export default function PaymentCTA({ payments, locale }: Props) {
           </p>
 
           {invoice ? (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", lineHeight: 1.5 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", lineHeight: 1.5 }}>
               {invoice.description}<br />
               <strong style={{ color: isPaid ? "#16A34A" : "#0369A1", fontSize: 15 }}>
                 {invoice.currency} {(invoice.amount / 100).toLocaleString()}
@@ -59,7 +59,7 @@ export default function PaymentCTA({ payments, locale }: Props) {
               </span>
             </p>
           ) : (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)" }}>
               An invoice will be sent to your registered email address. You can also view it in Billing.
             </p>
           )}
@@ -67,7 +67,7 @@ export default function PaymentCTA({ payments, locale }: Props) {
           {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "#EF4444", marginTop: 6 }}>{error}</p>}
 
           {!isPaid && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", marginTop: 6 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", marginTop: 6 }}>
               Pay securely via card or bank transfer. You will receive an email receipt upon completion.
             </p>
           )}
@@ -110,7 +110,7 @@ export default function PaymentCTA({ payments, locale }: Props) {
                 fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600,
                 padding: "9px 16px", borderRadius: 8, textDecoration: "none",
                 background: "transparent", border: "1px solid rgba(10,21,53,0.15)",
-                color: "rgba(10,21,53,0.55)",
+                color: "rgba(10,21,53,0.7)",
               }}
             >
               <CreditCard size={12} /> Contact Finance Team

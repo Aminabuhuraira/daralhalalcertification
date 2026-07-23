@@ -37,7 +37,7 @@ export default async function LearnPage({
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, lineHeight: 1.1 }}>
               Master <span className="text-gold-shimmer">Halal Compliance</span>
             </h1>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.6)", maxWidth: 520, lineHeight: 1.75 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.72)", maxWidth: 520, lineHeight: 1.75 }}>
               Professional courses for business owners, compliance officers, and quality managers. Learn at your own pace.
             </p>
           </div>

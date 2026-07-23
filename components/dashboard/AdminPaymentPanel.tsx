@@ -59,11 +59,11 @@ export default function AdminPaymentPanel({
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "flex-end", marginBottom: 20 }}>
           <div>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Start Date</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Start Date</p>
             <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>End Date</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>End Date</p>
             <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} style={inputStyle} />
           </div>
           <button
@@ -82,7 +82,7 @@ export default function AdminPaymentPanel({
             { label: "Overall Total",    value: totals?.overall    ?? 0, color: "#C9A227" },
           ].map(t => (
             <div key={t.label} style={{ padding: "16px 18px", borderRadius: 10, background: "#F9FAFB", border: "1px solid rgba(10,21,53,0.07)" }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>{t.label}</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>{t.label}</p>
               <p style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 600, color: t.color, margin: 0 }}>
                 {fmt(t.value)}
               </p>
@@ -102,23 +102,23 @@ export default function AdminPaymentPanel({
             <thead>
               <tr>
                 {["Company", "Product", "Type", "Subscribed On", "Expires On"].map(h => (
-                  <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", borderBottom: "1px solid rgba(10,21,53,0.07)", whiteSpace: "nowrap" }}>{h}</th>
+                  <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", borderBottom: "1px solid rgba(10,21,53,0.07)", whiteSpace: "nowrap" }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {upcomingRenewals.length === 0 ? (
                 <tr>
-                  <td colSpan={5} style={{ padding: "24px 12px", textAlign: "center", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.35)" }}>No upcoming renewals.</td>
+                  <td colSpan={5} style={{ padding: "24px 12px", textAlign: "center", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.62)" }}>No upcoming renewals.</td>
                 </tr>
               ) : upcomingRenewals.map(r => (
                 <tr key={r.id} style={{ borderBottom: "1px solid rgba(10,21,53,0.05)" }}>
                   <td style={{ padding: "10px 12px", fontSize: 13, color: "#0A1535", fontWeight: 500 }}>{r.businessName}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12.5, color: "rgba(10,21,53,0.6)", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <td style={{ padding: "10px 12px", fontSize: 12.5, color: "rgba(10,21,53,0.72)", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {r.productList.split(/[,\n]/)[0]?.trim() || "—"}
                   </td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>{r.type}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, color: "rgba(10,21,53,0.5)", whiteSpace: "nowrap" }}>{new Date(r.issuedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12, color: "rgba(10,21,53,0.68)" }}>{r.type}</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12, color: "rgba(10,21,53,0.68)", whiteSpace: "nowrap" }}>{new Date(r.issuedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
                   <td style={{ padding: "10px 12px", fontSize: 12, whiteSpace: "nowrap" }}>
                     <span style={{ color: r.expiresAt && new Date(r.expiresAt) < new Date(Date.now() + 14 * 86400000) ? "#DC2626" : "#D97706", fontWeight: 600 }}>
                       {r.expiresAt ? new Date(r.expiresAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
@@ -139,19 +139,19 @@ export default function AdminPaymentPanel({
             <thead>
               <tr>
                 {["Company", "Description", "Type", "Amount", "Status", "Date"].map(h => (
-                  <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", borderBottom: "1px solid rgba(10,21,53,0.07)", whiteSpace: "nowrap" }}>{h}</th>
+                  <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", borderBottom: "1px solid rgba(10,21,53,0.07)", whiteSpace: "nowrap" }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {recentPayments.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ padding: "24px 12px", textAlign: "center", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.35)" }}>No payments yet.</td>
+                  <td colSpan={6} style={{ padding: "24px 12px", textAlign: "center", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.62)" }}>No payments yet.</td>
                 </tr>
               ) : recentPayments.map(p => (
                 <tr key={p.id} style={{ borderBottom: "1px solid rgba(10,21,53,0.05)" }}>
                   <td style={{ padding: "10px 12px", fontSize: 13, color: "#0A1535", fontWeight: 500 }}>{p.businessName ?? "—"}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 12.5, color: "rgba(10,21,53,0.6)" }}>{p.description}</td>
+                  <td style={{ padding: "10px 12px", fontSize: 12.5, color: "rgba(10,21,53,0.72)" }}>{p.description}</td>
                   <td style={{ padding: "10px 12px" }}>
                     <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 4, background: p.paymentType === "PRODUCT" ? "rgba(109,40,217,0.08)" : "rgba(10,21,53,0.06)", color: p.paymentType === "PRODUCT" ? "#6D28D9" : "#0A1535" }}>
                       {p.paymentType}
@@ -163,7 +163,7 @@ export default function AdminPaymentPanel({
                       {p.status}
                     </span>
                   </td>
-                  <td style={{ padding: "10px 12px", fontSize: 12, color: "rgba(10,21,53,0.45)", whiteSpace: "nowrap" }}>
+                  <td style={{ padding: "10px 12px", fontSize: 12, color: "rgba(10,21,53,0.66)", whiteSpace: "nowrap" }}>
                     {new Date(p.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                   </td>
                 </tr>

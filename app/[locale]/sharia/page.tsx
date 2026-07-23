@@ -56,7 +56,7 @@ export default async function ShariaPage({ params }: Params) {
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
           Final Shariah Validation
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)" }}>
           Review complete audit files and the Technical Team&apos;s assessment. Issue final certification approval or rejection in accordance with Shariah standards.
         </p>
       </div>
@@ -69,7 +69,7 @@ export default async function ShariaPage({ params }: Params) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#65A30D", margin: "0 0 2px" }}>
               {applications.length} Application{applications.length !== 1 ? "s" : ""} Awaiting Final Shariah Validation
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)", margin: 0 }}>
               Audit and technical review are complete. The Shariah Panel must issue the final certification decision — approve or reject each application in accordance with Halal standards.
             </p>
           </div>
@@ -105,7 +105,7 @@ export default async function ShariaPage({ params }: Params) {
       {applications.length === 0 ? (
         <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)", padding: "48px 32px", textAlign: "center" }}>
           <Moon size={32} color="rgba(10,21,53,0.15)" style={{ margin: "0 auto 12px" }} />
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>No applications awaiting Shariah Panel review.</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>No applications awaiting Shariah Panel review.</p>
         </div>
       ) : (
         <AdminApplicationList applications={applications as never} viewerRole="SHARIA_PANEL" />

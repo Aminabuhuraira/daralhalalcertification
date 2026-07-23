@@ -80,7 +80,7 @@ export default function DocumentUpload({ appId, initialDocs, readOnly = false, l
       {label && (
         <p style={{
           fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700,
-          color: "rgba(10,21,53,0.4)", textTransform: "uppercase",
+          color: "rgba(10,21,53,0.64)", textTransform: "uppercase",
           letterSpacing: "0.06em", marginBottom: 8,
         }}>
           {label}
@@ -116,17 +116,17 @@ export default function DocumentUpload({ appId, initialDocs, readOnly = false, l
           {uploading ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               <Loader2 size={15} color="#C9A227" style={{ animation: "spin 1s linear infinite" }} />
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)" }}>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
                 Uploading…
               </span>
             </div>
           ) : (
             <>
               <Upload size={18} color="#C9A227" style={{ margin: "0 auto 8px" }} />
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.6)", margin: 0 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.72)", margin: 0 }}>
                 Drag files here or <span style={{ color: "#C9A227", fontWeight: 600 }}>click to browse</span>
               </p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.35)", marginTop: 4 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.62)", marginTop: 4 }}>
                 PDF, Word, JPG, PNG — max 10 MB each
               </p>
             </>
@@ -160,7 +160,7 @@ export default function DocumentUpload({ appId, initialDocs, readOnly = false, l
       {docs.length === 0 ? (
         <p style={{
           fontFamily: "var(--font-body)", fontSize: 12.5,
-          color: "rgba(10,21,53,0.35)", fontStyle: "italic",
+          color: "rgba(10,21,53,0.62)", fontStyle: "italic",
         }}>
           No documents uploaded yet.
         </p>
@@ -186,7 +186,7 @@ export default function DocumentUpload({ appId, initialDocs, readOnly = false, l
                 </p>
                 <p style={{
                   fontFamily: "var(--font-body)", fontSize: 11,
-                  color: "rgba(10,21,53,0.4)", margin: 0,
+                  color: "rgba(10,21,53,0.64)", margin: 0,
                 }}>
                   {fmtSize(doc.size)} · {new Date(doc.uploadedAt).toLocaleDateString()}
                 </p>

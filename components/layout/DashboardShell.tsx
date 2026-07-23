@@ -141,7 +141,7 @@ export default function DashboardShell({ children, variant, userName, userRole }
             </Link>
           )}
           {variant === "admin" && (
-            <Link href={lh("/dashboard")} style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "rgba(10,21,53,0.55)", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 500, marginTop: 10, border: "1px dashed rgba(10,21,53,0.15)" }}>
+            <Link href={lh("/dashboard")} style={{ display: "flex", alignItems: "center", gap: 11, padding: "10px 14px", borderRadius: 8, textDecoration: "none", color: "rgba(10,21,53,0.7)", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 500, marginTop: 10, border: "1px dashed rgba(10,21,53,0.15)" }}>
               <ArrowLeftRight size={15} /> User Dashboard
             </Link>
           )}
@@ -152,7 +152,7 @@ export default function DashboardShell({ children, variant, userName, userRole }
             return (
               <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 8, background: badge.bg, border: `1px solid ${badge.border}` }}>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: badge.color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{badge.label}</p>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>{badge.sublabel}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.7)" }}>{badge.sublabel}</p>
               </div>
             );
           })()}
@@ -170,7 +170,7 @@ export default function DashboardShell({ children, variant, userName, userRole }
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 8px", marginBottom: 12 }}>
             <div style={{ minWidth: 0 }}>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userName}</div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole.replace(/_/g, " ")}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole.replace(/_/g, " ")}</div>
             </div>
             <NotificationBell locale={locale} />
           </div>
@@ -179,7 +179,7 @@ export default function DashboardShell({ children, variant, userName, userRole }
             style={{
               display: "flex", alignItems: "center", gap: 10, width: "100%",
               padding: "10px 14px", borderRadius: 8, background: "transparent",
-              border: "1px solid rgba(10,21,53,0.15)", color: "rgba(10,21,53,0.55)",
+              border: "1px solid rgba(10,21,53,0.15)", color: "rgba(10,21,53,0.7)",
               fontFamily: "var(--font-body)", fontSize: 13, cursor: "pointer",
               transition: "all 0.15s",
             }}

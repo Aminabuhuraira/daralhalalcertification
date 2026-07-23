@@ -19,7 +19,7 @@ const inputStyle: React.CSSProperties = {
   borderRadius: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "#0A1535", outline: "none",
 };
 const label: React.CSSProperties = {
-  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginBottom: 6, display: "block", fontWeight: 500,
+  fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)", marginBottom: 6, display: "block", fontWeight: 500,
 };
 
 const LEVELS   = ["Beginner", "Intermediate", "Advanced"] as const;
@@ -68,7 +68,7 @@ function CreateCourseForm() {
   return (
     <GlowingCard style={{ padding: "28px 30px", maxWidth: 580 }}>
       <h2 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 500, color: "#0A1535", marginBottom: 6 }}>New Course</h2>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 24 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", marginBottom: 24 }}>
         Create a course shell. After saving, add modules, lessons and videos via Manage Content.
       </p>
 
@@ -78,7 +78,7 @@ function CreateCourseForm() {
           <input required value={title} onChange={e => { setTitle(e.target.value); if (!slug || slug === autoSlug(title)) setSlug(autoSlug(e.target.value)); }} style={inputStyle} placeholder="e.g. Halal Fundamentals" onFocus={focusBorder} onBlur={blurBorder} />
         </div>
         <div>
-          <label style={label}>URL Slug * <span style={{ fontWeight: 400, color: "rgba(10,21,53,0.35)" }}>(used in the URL — lowercase, hyphens only)</span></label>
+          <label style={label}>URL Slug * <span style={{ fontWeight: 400, color: "rgba(10,21,53,0.62)" }}>(used in the URL — lowercase, hyphens only)</span></label>
           <input required value={slug} onChange={e => setSlug(autoSlug(e.target.value))} style={inputStyle} placeholder="halal-fundamentals" onFocus={focusBorder} onBlur={blurBorder} />
         </div>
         <div>
@@ -150,12 +150,12 @@ function PriceInput({ label, desc, value, onChange, accent = "rgba(10,21,53,0.12
 }) {
   return (
     <div>
-      <label style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginBottom: 4, display: "block", fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.05em" }}>
+      <label style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)", marginBottom: 4, display: "block", fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.05em" }}>
         {label}
       </label>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.4)", marginBottom: 7, margin: "0 0 7px" }}>{desc}</p>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.64)", marginBottom: 7, margin: "0 0 7px" }}>{desc}</p>
       <div style={{ display: "flex", alignItems: "center", border: `1.5px solid ${accent}`, borderRadius: 8, overflow: "hidden", background: "#fafafa" }}>
-        <span style={{ padding: "11px 14px", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, color: "rgba(10,21,53,0.4)", borderRight: "1px solid rgba(10,21,53,0.08)", background: "#f0f0f0", flexShrink: 0 }}>₦</span>
+        <span style={{ padding: "11px 14px", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, color: "rgba(10,21,53,0.64)", borderRight: "1px solid rgba(10,21,53,0.08)", background: "#f0f0f0", flexShrink: 0 }}>₦</span>
         <input
           type="number" min="0" step="500"
           value={value}
@@ -211,7 +211,7 @@ function PricingPanel() {
         {/* Certification fee by scale */}
         <GlowingCard style={{ padding: "24px 28px" }}>
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 600, color: "#0A1535", marginBottom: 6 }}>Certification Fee — By Production Scale</h2>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.45)", marginBottom: 20 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.66)", marginBottom: 20 }}>
             The annual certification fee varies by company size. Applicants select their production scale when applying.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
@@ -264,7 +264,7 @@ function PlatformPanel({ stats }: { stats: Stats }) {
               <s.icon size={16} color="#C9A227" />
               <div>
                 <p style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 600, color: "#0A1535", margin: 0 }}>{s.value}</p>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", margin: 0 }}>{s.label}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", margin: 0 }}>{s.label}</p>
               </div>
             </div>
           ))}
@@ -276,13 +276,13 @@ function PlatformPanel({ stats }: { stats: Stats }) {
         <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, color: "#0A1535", marginBottom: 10 }}>Platform Information</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {[
-            { k: "Platform", v: "Dar Al-Halal Certification Portal" },
-            { k: "Certificate Authority", v: "Dar Al-Halal International" },
+            { k: "Platform", v: "Dar Al Halal Certification Portal" },
+            { k: "Certificate Authority", v: "Dar Al Halal International" },
             { k: "Payment Gateway", v: "Paystack (NGN)" },
             { k: "Support", v: "aminabuhuraira@gmail.com" },
           ].map(row => (
             <div key={row.k} style={{ display: "flex", gap: 16, borderBottom: "1px solid rgba(10,21,53,0.06)", paddingBottom: 10 }}>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.45)", minWidth: 160 }}>{row.k}</span>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.66)", minWidth: 160 }}>{row.k}</span>
               <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535", fontWeight: 500 }}>{row.v}</span>
             </div>
           ))}

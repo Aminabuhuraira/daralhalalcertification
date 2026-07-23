@@ -43,7 +43,7 @@ export default function AdminCourseList({ courses: initialCourses }: { courses: 
         <GlowingCard key={course.id} style={{ padding: "18px 22px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 500, color: "#0A1535", marginBottom: 4 }}>{course.title}</h3>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)" }}>
               {course.category} · {course.level} · {course._count.enrollments} enrolled · {course._count.certificates} certified
             </p>
           </div>

@@ -31,13 +31,13 @@ export default async function CertificatesPage({
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 400, color: "#0A1535", marginBottom: 6 }}>
         My Certificates
       </h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 32 }}>
         Download your certificates or share their serial number for public verification.
       </p>
 
       {certificates.length === 0 ? (
         <GlowingCard style={{ padding: "32px", textAlign: "center" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)" }}>
             You haven't earned any certificates yet. Complete a course or pass its quiz to earn one.
           </p>
         </GlowingCard>
@@ -54,7 +54,7 @@ export default async function CertificatesPage({
                   <h3 style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 500, color: "#0A1535" }}>{cert.course?.title || cert.application?.businessName}</h3>
                 </div>
               </div>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginBottom: 16 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginBottom: 16 }}>
                 Serial {cert.serial} · Issued {new Date(cert.issuedAt).toLocaleDateString()}
               </p>
               <div style={{ display: "flex", gap: 10 }}>

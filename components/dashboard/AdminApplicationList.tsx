@@ -284,16 +284,16 @@ function ApplicationRow({
               </span>
             )}
           </div>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", margin: "4px 0 0" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", margin: "4px 0 0" }}>
             {app.user.name} · {app.user.email}
             {app.schemeCode && <span style={{ marginLeft: 8, fontWeight: 600, color: "#6D28D9" }}>{app.schemeCode}</span>}
-            {app.sector && <span style={{ marginLeft: 6, color: "rgba(10,21,53,0.4)" }}>· {app.sector}</span>}
+            {app.sector && <span style={{ marginLeft: 6, color: "rgba(10,21,53,0.64)" }}>· {app.sector}</span>}
             {app.productionScale && (
               <span style={{ marginLeft: 6, padding: "1px 6px", borderRadius: 3, background: "rgba(201,162,39,0.1)", color: "#9a7810", fontWeight: 700, fontSize: 10 }}>
                 {SCALE_LABEL[app.productionScale] ?? app.productionScale}
               </span>
             )}
-            <span style={{ marginLeft: 6, color: "rgba(10,21,53,0.3)", fontSize: 11 }}>
+            <span style={{ marginLeft: 6, color: "rgba(10,21,53,0.6)", fontSize: 11 }}>
               · {new Date(app.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
             </span>
           </p>
@@ -316,13 +316,13 @@ function ApplicationRow({
           {/* Company & PIC quick info */}
           {(app.businessRegNo || app.headOfficeAddress || app.picName) && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(10,21,53,0.02)", border: "1px solid rgba(10,21,53,0.07)" }}>
-              {app.businessRegNo && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>Reg No:</strong> {app.businessRegNo}</p>}
-              {app.entityType && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>Entity:</strong> {app.entityType}</p>}
-              {app.headOfficeAddress && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)", gridColumn: "1 / -1" }}><strong>Address:</strong> {app.headOfficeAddress}</p>}
-              {app.telephone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>Tel:</strong> {app.telephone}</p>}
-              {app.picName && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>PIC:</strong> {app.picName}{app.picDesignation ? ` (${app.picDesignation})` : ""}</p>}
-              {app.picPhone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>PIC Phone:</strong> {app.picPhone}</p>}
-              {app.picEmail && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}><strong>PIC Email:</strong> {app.picEmail}</p>}
+              {app.businessRegNo && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Reg No:</strong> {app.businessRegNo}</p>}
+              {app.entityType && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Entity:</strong> {app.entityType}</p>}
+              {app.headOfficeAddress && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)", gridColumn: "1 / -1" }}><strong>Address:</strong> {app.headOfficeAddress}</p>}
+              {app.telephone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Tel:</strong> {app.telephone}</p>}
+              {app.picName && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>PIC:</strong> {app.picName}{app.picDesignation ? ` (${app.picDesignation})` : ""}</p>}
+              {app.picPhone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>PIC Phone:</strong> {app.picPhone}</p>}
+              {app.picEmail && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>PIC Email:</strong> {app.picEmail}</p>}
             </div>
           )}
 
@@ -340,13 +340,13 @@ function ApplicationRow({
           )}
 
           {/* Products + notes */}
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 8, whiteSpace: "pre-wrap" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", marginBottom: 8, whiteSpace: "pre-wrap" }}>
             {(() => {
               try { const arr = JSON.parse(app.productList); if (Array.isArray(arr)) return arr.map((p: { name: string; brand: string }) => `${p.name}${p.brand ? ` (${p.brand})` : ""}`).join(", "); } catch {}
               return app.productList;
             })()}
           </p>
-          {app.notes && <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", marginBottom: 10 }}>Client notes: {app.notes}</p>}
+          {app.notes && <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.66)", marginBottom: 10 }}>Client notes: {app.notes}</p>}
 
           {/* Audit date display */}
           {app.auditDate && (
@@ -362,7 +362,7 @@ function ApplicationRow({
           {app.ncrReport && (
             <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.2)", marginBottom: 10 }}>
               <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#C2410C", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>NCR Report on file</p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)", whiteSpace: "pre-wrap" }}>{app.ncrReport}</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.75)", whiteSpace: "pre-wrap" }}>{app.ncrReport}</p>
             </div>
           )}
 
@@ -380,7 +380,7 @@ function ApplicationRow({
           {app.payments.length > 0 && (
             <div style={{ marginBottom: 12 }}>
               {app.payments.map(p => (
-                <p key={p.id} style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
+                <p key={p.id} style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)" }}>
                   {p.currency} {(p.amount / 100).toLocaleString()} — <span style={{ fontWeight: 600, color: p.status === "COMPLETED" ? "#16A34A" : "#D97706" }}>{p.status}</span>
                 </p>
               ))}
@@ -390,17 +390,17 @@ function ApplicationRow({
           {/* Reference numbers summary bar */}
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14, padding: "10px 14px", borderRadius: 8, background: "rgba(10,21,53,0.025)", border: "1px solid rgba(10,21,53,0.07)" }}>
             {app.applicationNumber && (
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.55)" }}>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.7)" }}>
                 App No: <strong style={{ fontFamily: "monospace", color: "#C9A227" }}>{app.applicationNumber}</strong>
               </span>
             )}
             {app.referenceNumber && (
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.55)" }}>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.7)" }}>
                 DAHC Ref: <strong style={{ fontFamily: "monospace", color: "#6D28D9" }}>{app.referenceNumber}</strong>
               </span>
             )}
             {app.certificate && (
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.55)" }}>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.7)" }}>
                 Certificate No: <strong style={{ fontFamily: "monospace", color: "#16A34A" }}>{app.certificate.serial}</strong>
               </span>
             )}
@@ -427,7 +427,7 @@ function ApplicationRow({
               {/* Fee invoicing */}
               {!app.certificate && ["AWAITING_PAYMENT", "ELIGIBILITY_REVIEW", "TRC_ESCALATION", "BOARD_REVIEW"].includes(app.status) && (
                 <div style={{ marginBottom: 12 }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Invoice / Fee (NGN)</p>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Invoice / Fee (NGN)</p>
                   <input value={feeAmount} onChange={e => setFeeAmount(e.target.value)} placeholder="Quote fee in NGN — leave blank to skip" type="number" min="0" style={inputStyle} />
                 </div>
               )}
@@ -436,14 +436,14 @@ function ApplicationRow({
               {["PENDING_AUDIT", "AUDITING"].includes(app.status) && (
                 <>
                   <div style={{ marginBottom: 12 }}>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>
                       <Calendar size={11} style={{ display: "inline", marginRight: 4 }} />
                       Audit Date
                     </p>
                     <input type="date" value={auditDateStr} onChange={e => setAuditDate(e.target.value)} style={inputStyle} />
                   </div>
                   <div style={{ marginBottom: 12 }}>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Assigned Inspection Team</p>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Assigned Inspection Team</p>
                     <input value={auditTeam} onChange={e => setAuditTeam(e.target.value)} placeholder="e.g. Dr. Yusuf Aliyu, Hajiya Fatima Sule" style={inputStyle} />
                   </div>
                 </>
@@ -453,7 +453,7 @@ function ApplicationRow({
               {["AUDITING", "ACTION_REQUIRED_NCR"].includes(app.status) && (
                 <>
                   <div style={{ marginBottom: 10 }}>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Non-Conformance Severity</p>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Non-Conformance Severity</p>
                     <select value={ncSeverity} onChange={e => setNcSeverity(e.target.value)} style={{ ...inputStyle, cursor: "pointer" }}>
                       <option value="MINOR">Minor NC (30 days to resolve)</option>
                       <option value="MAJOR">Major NC (14 days to resolve)</option>
@@ -461,7 +461,7 @@ function ApplicationRow({
                     </select>
                   </div>
                   <div style={{ marginBottom: 10 }}>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>NCR — Non-Conformance Report</p>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>NCR — Non-Conformance Report</p>
                     <textarea rows={3} value={ncrReport} onChange={e => setNcrReport(e.target.value)} placeholder="Detail the non-conformances found during the audit. This will be visible to the applicant." style={{ ...inputStyle, resize: "vertical" }} />
                   </div>
                 </>
@@ -474,8 +474,8 @@ function ApplicationRow({
                   {(() => {
                     try {
                       const car = JSON.parse(app.carResponse!);
-                      return <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)" }}>Root Cause: {car.rootCause?.slice(0, 120)}{car.rootCause?.length > 120 ? "…" : ""} · {car.actions?.length ?? 0} corrective action(s)</p>;
-                    } catch { return <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>CAR data on file.</p>; }
+                      return <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.78)" }}>Root Cause: {car.rootCause?.slice(0, 120)}{car.rootCause?.length > 120 ? "…" : ""} · {car.actions?.length ?? 0} corrective action(s)</p>;
+                    } catch { return <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)" }}>CAR data on file.</p>; }
                   })()}
                 </div>
               )}
@@ -492,14 +492,14 @@ function ApplicationRow({
               {/* Deficiency notes */}
               {["SCREENING", "DEFICIENCY_NOTICE"].includes(app.status) && (
                 <div style={{ marginBottom: 10 }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Deficiency Notice Details</p>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Deficiency Notice Details</p>
                   <textarea rows={2} value={defNotes} onChange={e => setDefNotes(e.target.value)} placeholder="List missing or incomplete documents for the applicant…" style={{ ...inputStyle, resize: "vertical" }} />
                 </div>
               )}
 
               {/* Review notes */}
               <div style={{ marginBottom: 12 }}>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Internal Review Notes</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Internal Review Notes</p>
                 <textarea rows={2} value={reviewNotes} onChange={e => setReviewNotes(e.target.value)} placeholder="Internal notes (not shown to applicant)" style={{ ...inputStyle, resize: "vertical" }} />
               </div>
             </>
@@ -508,7 +508,7 @@ function ApplicationRow({
           {/* Technical read-only notes */}
           {isTechnicalReadOnly && (
             <div style={{ marginBottom: 12 }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Technical Review Notes</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>Technical Review Notes</p>
               <textarea rows={2} value={reviewNotes} onChange={e => setReviewNotes(e.target.value)} placeholder="Add technical review comments…" style={{ ...inputStyle, resize: "vertical" }} />
             </div>
           )}
@@ -676,7 +676,7 @@ export default function AdminApplicationList({ applications, viewerRole }: { app
           </button>
 
           {/* Result count */}
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.45)", whiteSpace: "nowrap" }}>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.66)", whiteSpace: "nowrap" }}>
             {filtered.length} of {applications.length}
             {activeCount > 0 && <span style={{ marginLeft: 8, color: "#6366F1" }}>· {activeCount} active</span>}
           </span>
@@ -692,7 +692,7 @@ export default function AdminApplicationList({ applications, viewerRole }: { app
               {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
             {(statusFilter || schemeFilter || sortBy !== "newest") && (
-              <button onClick={() => { setStatusFilter(""); setSchemeFilter(""); setSortBy("newest"); }} style={{ padding: "8px 12px", background: "none", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", cursor: "pointer" }}>
+              <button onClick={() => { setStatusFilter(""); setSchemeFilter(""); setSortBy("newest"); }} style={{ padding: "8px 12px", background: "none", border: "1px solid rgba(10,21,53,0.12)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", cursor: "pointer" }}>
                 Clear filters
               </button>
             )}
@@ -702,7 +702,7 @@ export default function AdminApplicationList({ applications, viewerRole }: { app
 
       {filtered.length === 0 ? (
         <GlowingCard style={{ padding: "32px", textAlign: "center" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)" }}>
             {applications.length === 0 ? "No applications yet." : "No applications match your search or filters."}
           </p>
         </GlowingCard>

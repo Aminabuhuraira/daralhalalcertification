@@ -35,13 +35,13 @@ export default async function DashboardCoursesPage({
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 400, color: "#0A1535", marginBottom: 6 }}>
         Courses
       </h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 32 }}>
         Browse all available courses and pick up where you left off.
       </p>
 
       {courses.length === 0 ? (
         <GlowingCard style={{ padding: "32px", textAlign: "center" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)" }}>
             No courses are published yet. Check back soon.
           </p>
         </GlowingCard>
@@ -62,13 +62,13 @@ export default async function DashboardCoursesPage({
                   {isComplete && <CheckCircle2 size={16} color="#22C55E" />}
                 </div>
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 500, color: "#0A1535", marginBottom: 8 }}>{course.title}</h3>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)", lineHeight: 1.6, marginBottom: 14 }}>{course.description}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", lineHeight: 1.6, marginBottom: 14 }}>{course.description}</p>
 
                 <div style={{ display: "flex", gap: 16, marginBottom: 14 }}>
-                  <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)" }}>
                     <BookOpen size={13} /> {course.level}
                   </span>
-                  <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)" }}>
                     <Clock size={13} /> {course.durationLabel}
                   </span>
                 </div>
@@ -78,7 +78,7 @@ export default async function DashboardCoursesPage({
                     <div style={{ height: 6, background: "rgba(109,40,217,0.1)", borderRadius: 3, overflow: "hidden", marginBottom: 6 }}>
                       <div style={{ height: "100%", width: `${pct}%`, background: "linear-gradient(135deg, #7C3AED, #5B21B6)" }} />
                     </div>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>{completed}/{totalLessons} lessons · {pct}%</span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)" }}>{completed}/{totalLessons} lessons · {pct}%</span>
                   </div>
                 )}
 

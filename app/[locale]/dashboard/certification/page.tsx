@@ -118,7 +118,7 @@ export default async function CertificationApplicationPage({
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 400, color: "#0A1535", marginBottom: 6 }}>
         Certification Application
       </h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 32 }}>
         Apply for halal certification of your products or services.
       </p>
 
@@ -160,7 +160,7 @@ export default async function CertificationApplicationPage({
                         </span>
                       )}
                     </div>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)" }}>
                       {app.sector}
                       {app.schemeCode && (
                         <span style={{ marginLeft: 8, fontWeight: 700, color: "#6D28D9" }}>{app.schemeCode}</span>
@@ -193,7 +193,7 @@ export default async function CertificationApplicationPage({
                     <Info size={15} color={msgColor} style={{ flexShrink: 0, marginTop: 1 }} />
                     <div>
                       <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: msgColor, marginBottom: 2 }}>{msg.title}</p>
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)", lineHeight: 1.5 }}>{msg.body}</p>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.75)", lineHeight: 1.5 }}>{msg.body}</p>
                     </div>
                   </div>
                 )}
@@ -241,7 +241,7 @@ export default async function CertificationApplicationPage({
                             return (
                               <ul style={{ paddingLeft: 20, marginBottom: 10 }}>
                                 {items.map(item => (
-                                  <li key={item.id} style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", marginBottom: 4, lineHeight: 1.5 }}>
+                                  <li key={item.id} style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.82)", marginBottom: 4, lineHeight: 1.5 }}>
                                     <strong style={{ color: "#D97706" }}>{item.id}:</strong> {item.label}
                                   </li>
                                 ))}
@@ -249,7 +249,7 @@ export default async function CertificationApplicationPage({
                             );
                           } catch { return null; }
                         })()}
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)", whiteSpace: "pre-wrap", lineHeight: 1.6, borderTop: "1px solid rgba(245,158,11,0.2)", paddingTop: 8, marginTop: 4 }}>{app.deficiencyNotes}</p>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.75)", whiteSpace: "pre-wrap", lineHeight: 1.6, borderTop: "1px solid rgba(245,158,11,0.2)", paddingTop: 8, marginTop: 4 }}>{app.deficiencyNotes}</p>
                       </div>
                     )}
                     <div style={{ padding: "14px 16px", borderRadius: 10, marginBottom: 12, background: "rgba(245,158,11,0.04)", border: "1px solid rgba(245,158,11,0.2)" }}>
@@ -290,13 +290,13 @@ export default async function CertificationApplicationPage({
                       Audit Schedule
                     </p>
                     {app.auditDate ? (
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", marginBottom: 8 }}>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.78)", marginBottom: 8 }}>
                         Your on-site audit is scheduled for{" "}
                         <strong>{new Date(app.auditDate).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</strong>.
                         Please ensure your facilities are ready for the DAHC inspection team.
                       </p>
                     ) : (
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 8 }}>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", marginBottom: 8 }}>
                         Our team will contact you shortly to confirm the audit date and logistics.
                       </p>
                     )}
@@ -316,7 +316,7 @@ export default async function CertificationApplicationPage({
                   <>
                     {app.reviewNotes && (
                       <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 10, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.08)" }}>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)" }}>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.75)" }}>
                           <strong>Auditor note:</strong> {app.reviewNotes}
                         </p>
                       </div>
@@ -339,7 +339,7 @@ export default async function CertificationApplicationPage({
 
                 {/* ── General reviewer note ── */}
                 {app.reviewNotes && !isNCR && !isRejected && !isCertified && (
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.65)", marginBottom: 12 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.75)", marginBottom: 12 }}>
                     <strong style={{ color: "#6D28D9" }}>Reviewer note:</strong> {app.reviewNotes}
                   </p>
                 )}
@@ -351,7 +351,7 @@ export default async function CertificationApplicationPage({
                       <Info size={15} color="#22C55E" style={{ flexShrink: 0, marginTop: 1 }} />
                       <div>
                         <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#22C55E", marginBottom: 2 }}>{msg?.title}</p>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.65)", lineHeight: 1.5 }}>{msg?.body}</p>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.75)", lineHeight: 1.5 }}>{msg?.body}</p>
                       </div>
                     </div>
 
@@ -361,7 +361,7 @@ export default async function CertificationApplicationPage({
                           <Award size={20} color="#22C55E" />
                           <div>
                             <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#22C55E" }}>Halal Certificate</div>
-                            <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>
+                            <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)" }}>
                               Serial {app.certificate.serial} · Issued {new Date(app.certificate.issuedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                               {app.certificate.expiresAt && (
                                 <> · Expires {new Date(app.certificate.expiresAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</>
@@ -393,7 +393,7 @@ export default async function CertificationApplicationPage({
                     {/* Public registry link */}
                     <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderRadius: 8, background: "rgba(109,40,217,0.04)", border: "1px solid rgba(109,40,217,0.12)", marginTop: 8 }}>
                       <ExternalLink size={13} color="#6D28D9" />
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.6)" }}>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.72)" }}>
                         Your business is listed in the{" "}
                         <a href={`/${locale}/registry`} style={{ color: "#6D28D9", textDecoration: "underline" }}>DAHC Public Halal Registry</a>.
                       </p>
@@ -407,10 +407,10 @@ export default async function CertificationApplicationPage({
                     {app.reviewNotes && (
                       <div style={{ padding: "12px 14px", borderRadius: 8, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", marginBottom: 12 }}>
                         <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#DC2626", marginBottom: 4 }}>Formal Decision:</p>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", lineHeight: 1.6 }}>{app.reviewNotes}</p>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.78)", lineHeight: 1.6 }}>{app.reviewNotes}</p>
                       </div>
                     )}
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)", lineHeight: 1.5 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", lineHeight: 1.5 }}>
                       Once you have addressed the issues above, you may{" "}
                       <a href={`/${locale}/dashboard/certification`} onClick={() => undefined} style={{ color: "#6D28D9", fontWeight: 600 }}>
                         submit a new application
@@ -422,7 +422,7 @@ export default async function CertificationApplicationPage({
 
                 {/* ── CLOSED_INCOMPLETE ── */}
                 {isClosed && (
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.55)", lineHeight: 1.5 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)", lineHeight: 1.5 }}>
                     You may start a{" "}
                     <a href={`/${locale}/dashboard/certification`} style={{ color: "#6D28D9", fontWeight: 600 }}>
                       new application
@@ -433,7 +433,7 @@ export default async function CertificationApplicationPage({
 
                 {/* ── Payment info line (all states except terminal + AWAITING_PAYMENT) ── */}
                 {app.payments.length > 0 && !isAwaitingPayment && !isCertified && (
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", marginTop: 10 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)", marginTop: 10 }}>
                     Fee: {app.payments[0].currency} {(app.payments[0].amount / 100).toLocaleString()} — {app.payments[0].status}.{" "}
                     <a href={`/${locale}/dashboard/billing`} style={{ color: "#6D28D9" }}>View in billing</a>
                   </p>
@@ -449,7 +449,7 @@ export default async function CertificationApplicationPage({
         <CertificationApplicationForm />
       ) : !hasDraft && !canApplyAgain ? (
         <GlowingCard style={{ padding: "24px" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.6)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.72)" }}>
             Your application is being processed. Our team will contact you via email at each stage.
           </p>
         </GlowingCard>

@@ -33,10 +33,10 @@ export default function StatTile({
       <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: accent, borderRadius: "12px 0 0 12px" }} />
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }}>
           {label}
         </p>
-        <div style={{ color: "rgba(10,21,53,0.25)", lineHeight: 0 }}>{icon}</div>
+        <div style={{ color: "rgba(10,21,53,0.6)", lineHeight: 0 }}>{icon}</div>
       </div>
 
       <p style={{ fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 600, color: "#0A1535", margin: 0, lineHeight: 1 }}>

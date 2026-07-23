@@ -148,7 +148,7 @@ export default function RegisterPage() {
                   <ExternalLink size={13} style={{ marginLeft: "auto" }} />
                 </a>
                 <div style={{ padding: "14px 16px", borderRadius: 10, background: "rgba(201,162,39,0.06)", border: "1.5px solid rgba(201,162,39,0.2)", marginBottom: 20 }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginBottom: 10 }}>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)", marginBottom: 10 }}>
                     A copy of this manual will also be sent to your registered email address upon account creation.
                   </p>
                   <button

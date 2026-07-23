@@ -162,7 +162,7 @@ export default function AdminScreeningChecklist({ appId, initialChecklistData, o
           <span style={{ padding: "3px 10px", borderRadius: 20, background: missingCount > 0 ? "rgba(239,68,68,0.08)" : "rgba(107,114,128,0.08)", border: `1px solid ${missingCount > 0 ? "rgba(239,68,68,0.3)" : "rgba(107,114,128,0.2)"}`, fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: missingCount > 0 ? "#DC2626" : "#6B7280" }}>
             {missingCount} Missing (Required)
           </span>
-          <span style={{ padding: "3px 10px", borderRadius: 20, background: "rgba(10,21,53,0.05)", border: "1px solid rgba(10,21,53,0.12)", fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.5)" }}>
+          <span style={{ padding: "3px 10px", borderRadius: 20, background: "rgba(10,21,53,0.05)", border: "1px solid rgba(10,21,53,0.12)", fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.68)" }}>
             {totalRequired} Required Items
           </span>
         </div>
@@ -200,7 +200,7 @@ export default function AdminScreeningChecklist({ appId, initialChecklistData, o
 
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                        <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.4)", letterSpacing: "0.04em" }}>{item.id}</span>
+                        <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.64)", letterSpacing: "0.04em" }}>{item.id}</span>
                         <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: isPresent ? "#0A1535" : "rgba(10,21,53,0.7)", fontWeight: isPresent ? 500 : 400, flex: 1 }}>
                           {item.label}
                         </p>
@@ -229,7 +229,7 @@ export default function AdminScreeningChecklist({ appId, initialChecklistData, o
         )}
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", paddingTop: 12, borderTop: "1px solid rgba(10,21,53,0.07)" }}>
-          <button onClick={saveChecklist} disabled={saving} style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, padding: "8px 16px", borderRadius: 6, border: "1px solid rgba(10,21,53,0.2)", background: "white", color: "rgba(10,21,53,0.7)", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.6 : 1 }}>
+          <button onClick={saveChecklist} disabled={saving} style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, padding: "8px 16px", borderRadius: 6, border: "1px solid rgba(10,21,53,0.2)", background: "white", color: "rgba(10,21,53,0.78)", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.6 : 1 }}>
             {saving ? <Loader2 size={12} style={{ animation: "rotateSeal 1s linear infinite" }} /> : <Save size={12} />}
             Save Checklist
           </button>
@@ -257,7 +257,7 @@ export default function AdminScreeningChecklist({ appId, initialChecklistData, o
           )}
         </div>
 
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.35)", marginTop: 10 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.62)", marginTop: 10 }}>
           Click an item icon to toggle: ✓ Present → ✗ Missing → N/A → ✓. Click &quot;Save Checklist&quot; to persist progress without advancing status.
         </p>
       </div>

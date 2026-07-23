@@ -48,7 +48,7 @@ export default function RegistrySearch({ initialQ, initialScheme, schemeLabels }
           ))}
         </select>
         {(q || scheme) && (
-          <button onClick={clear} style={{ display: "flex", alignItems: "center", gap: 5, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(10,21,53,0.15)", background: "white", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", cursor: "pointer" }}>
+          <button onClick={clear} style={{ display: "flex", alignItems: "center", gap: 5, padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(10,21,53,0.15)", background: "white", fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", cursor: "pointer" }}>
             <X size={13} /> Clear
           </button>
         )}

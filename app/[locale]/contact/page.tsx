@@ -59,7 +59,7 @@ export default function ContactPage() {
             <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: "#4C1D95", marginBottom: 16, lineHeight: 1.1 }}>
               Start Your <span className="text-gold-shimmer">Certification Journey</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.6)", maxWidth: 520, lineHeight: 1.75 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.72)", maxWidth: 520, lineHeight: 1.75 }}>
               Our certification team is ready to assess your business and guide you through the process.
             </motion.p>
           </div>

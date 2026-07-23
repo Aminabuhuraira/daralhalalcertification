@@ -76,7 +76,7 @@ export default async function ArchivePage({
             Document Archive
           </h1>
         </div>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, color: "rgba(10,21,53,0.5)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, color: "rgba(10,21,53,0.68)" }}>
           Complete record of all your certification applications, uploaded documents, and issued certificates.
         </p>
 
@@ -89,7 +89,7 @@ export default async function ArchivePage({
           ].map(s => (
             <div key={s.label} style={{ padding: "12px 20px", borderRadius: 10, background: "white", border: "1px solid rgba(10,21,53,0.08)", boxShadow: "0 1px 4px rgba(10,21,53,0.06)", minWidth: 130 }}>
               <p style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 400, color: s.color, lineHeight: 1 }}>{s.value}</p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.45)", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.66)", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</p>
             </div>
           ))}
         </div>
@@ -98,7 +98,7 @@ export default async function ArchivePage({
       {applications.length === 0 && (
         <div style={{ textAlign: "center", padding: "60px 20px", borderRadius: 12, background: "white", border: "1px solid rgba(10,21,53,0.08)" }}>
           <FolderOpen size={40} color="rgba(10,21,53,0.2)" style={{ margin: "0 auto 14px" }} />
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>No applications found. Start your certification application to build your archive.</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>No applications found. Start your certification application to build your archive.</p>
         </div>
       )}
 
@@ -127,24 +127,24 @@ export default async function ArchivePage({
                   <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                     {/* Application Number */}
                     {appNum && (
-                      <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.7)" }}>
                         <Hash size={11} color="#C9A227" />
                         <strong style={{ color: "#0A1535" }}>{appNum}</strong>
                       </span>
                     )}
                     {/* DAHC Reference */}
                     {app.referenceNumber && (
-                      <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.55)" }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.7)" }}>
                         <ShieldCheck size={11} color="#6D28D9" />
                         <strong style={{ color: "#6D28D9" }}>{app.referenceNumber}</strong>
                       </span>
                     )}
                     {/* Scheme + sector */}
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)" }}>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)" }}>
                       {app.sector}{app.schemeCode ? ` · ${app.schemeCode}` : ""}
                     </span>
                     {/* Date */}
-                    <span style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)" }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)" }}>
                       <Calendar size={11} />
                       {new Date(app.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                     </span>
@@ -161,7 +161,7 @@ export default async function ArchivePage({
                       <Award size={18} color="#22C55E" />
                       <div>
                         <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#16A34A" }}>Halal Certificate Issued</p>
-                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)", marginTop: 2 }}>
+                        <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)", marginTop: 2 }}>
                           Certificate No: <strong style={{ color: "#0A1535", fontFamily: "monospace", fontSize: 12.5 }}>{app.certificate.serial}</strong>
                           {" · "}
                           Issued {new Date(app.certificate.issuedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
@@ -186,13 +186,13 @@ export default async function ArchivePage({
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                     <FileText size={14} color="rgba(10,21,53,0.4)" />
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "rgba(10,21,53,0.45)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "rgba(10,21,53,0.66)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       Submitted Documents ({docs.length})
                     </p>
                   </div>
 
                   {docs.length === 0 ? (
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.35)", padding: "12px 14px", borderRadius: 8, background: "rgba(10,21,53,0.025)", border: "1px dashed rgba(10,21,53,0.1)" }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.62)", padding: "12px 14px", borderRadius: 8, background: "rgba(10,21,53,0.025)", border: "1px dashed rgba(10,21,53,0.1)" }}>
                       No documents uploaded for this application.
                     </p>
                   ) : (
@@ -202,7 +202,7 @@ export default async function ArchivePage({
                           <div style={{ flexShrink: 0 }}>{fileIcon(doc.name)}</div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{doc.name}</p>
-                            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)", marginTop: 1 }}>
+                            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)", marginTop: 1 }}>
                               {formatBytes(doc.size)} · Uploaded {new Date(doc.uploadedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                             </p>
                           </div>
@@ -210,7 +210,7 @@ export default async function ArchivePage({
                             href={`/api/uploads/${encodeURIComponent(doc.fileName)}`}
                             target="_blank"
                             rel="noreferrer"
-                            style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, padding: "5px 11px", borderRadius: 5, background: "rgba(10,21,53,0.04)", border: "1px solid rgba(10,21,53,0.12)", color: "rgba(10,21,53,0.6)", textDecoration: "none", flexShrink: 0 }}
+                            style={{ display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, padding: "5px 11px", borderRadius: 5, background: "rgba(10,21,53,0.04)", border: "1px solid rgba(10,21,53,0.12)", color: "rgba(10,21,53,0.72)", textDecoration: "none", flexShrink: 0 }}
                           >
                             <Download size={12} /> View
                           </a>
@@ -231,7 +231,7 @@ export default async function ArchivePage({
                     { label: "Cert. Expiry", value: app.certificate?.expiresAt ? new Date(app.certificate.expiresAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : (app as { certExpiryDate?: string | null }).certExpiryDate ? new Date((app as { certExpiryDate: string }).certExpiryDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "—" },
                   ].map(({ label, value }) => (
                     <div key={label} style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(10,21,53,0.025)", border: "1px solid rgba(10,21,53,0.07)" }}>
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 10.5, fontWeight: 700, color: "rgba(10,21,53,0.35)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>{label}</p>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: 10.5, fontWeight: 700, color: "rgba(10,21,53,0.62)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>{label}</p>
                       <p style={{ fontFamily: "monospace", fontSize: 12.5, fontWeight: value === "Pending" || value === "—" || value === "Not yet issued" ? 400 : 600, color: value === "Not yet issued" || value === "Pending" || value === "—" ? "rgba(10,21,53,0.35)" : "#0A1535" }}>{value}</p>
                     </div>
                   ))}

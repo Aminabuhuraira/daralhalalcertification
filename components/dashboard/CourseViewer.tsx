@@ -60,7 +60,7 @@ export default function CourseViewer({
           <div style={{ height: 6, background: "rgba(109,40,217,0.1)", borderRadius: 3, overflow: "hidden", marginBottom: 8 }}>
             <div style={{ height: "100%", width: `${pct}%`, background: "linear-gradient(135deg, #7C3AED, #5B21B6)" }} />
           </div>
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.5)" }}>{pct}% complete</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.68)" }}>{pct}% complete</span>
         </div>
         {course.modules.map((m) => (
           <div key={m.id} style={{ marginBottom: 18 }}>
@@ -104,7 +104,7 @@ export default function CourseViewer({
               </div>
             )}
 
-            <div className="lesson-markdown" style={{ fontFamily: "var(--font-body)", fontSize: 14.5, color: "rgba(10,21,53,0.75)", lineHeight: 1.8 }}>
+            <div className="lesson-markdown" style={{ fontFamily: "var(--font-body)", fontSize: 14.5, color: "rgba(10,21,53,0.82)", lineHeight: 1.8 }}>
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{activeLesson.contentMd}</ReactMarkdown>
             </div>
 
@@ -128,7 +128,7 @@ export default function CourseViewer({
                 <ClipboardList size={18} color="#6D28D9" />
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, color: "#0A1535" }}>Optional Quiz</h3>
               </div>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginBottom: 14 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginBottom: 14 }}>
                 Pass with 70%+ to earn a Certificate of Distinction. Quizzes are entirely optional.
               </p>
               <button onClick={() => router.push(`/${locale}/dashboard/courses/${course.id}/quiz`)} className="btn-ghost" style={{ fontSize: 13 }}>
@@ -142,7 +142,7 @@ export default function CourseViewer({
                 <Award size={18} color="#F5C842" />
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, color: "#0A1535" }}>Completion Certificate Earned</h3>
               </div>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginBottom: 14 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginBottom: 14 }}>
                 You've completed every lesson in this course.
               </p>
               <Link href={`/${locale}/dashboard/certificates`} className="btn-ghost" style={{ fontSize: 13 }}>

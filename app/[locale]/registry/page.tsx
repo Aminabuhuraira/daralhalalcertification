@@ -73,7 +73,7 @@ export default async function RegistryPage({
             {companies.length === 0 ? (
               <div style={{ textAlign: "center", padding: "60px 20px" }}>
                 <Search size={36} color="rgba(10,21,53,0.2)" style={{ margin: "0 auto 14px", display: "block" }} />
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>
                   {q || scheme ? "No certified companies match your search." : "No certified companies found."}
                 </p>
               </div>
@@ -97,13 +97,13 @@ export default async function RegistryPage({
                           {app.schemeCode}
                         </span>
                       )}
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.5)" }}>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 11.5, color: "rgba(10,21,53,0.68)" }}>
                         {SCHEME_LABELS[app.schemeCode ?? ""] ?? app.sector}
                       </span>
                     </div>
 
                     {app.referenceNumber && (
-                      <p style={{ fontFamily: "monospace", fontSize: 12, color: "rgba(10,21,53,0.55)", margin: 0 }}>
+                      <p style={{ fontFamily: "monospace", fontSize: 12, color: "rgba(10,21,53,0.7)", margin: 0 }}>
                         Ref: <strong style={{ color: "#0A1535" }}>{app.referenceNumber}</strong>
                       </p>
                     )}
@@ -117,7 +117,7 @@ export default async function RegistryPage({
                         {app.certificate.expiresAt && (
                           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                             <Calendar size={11} color="rgba(10,21,53,0.35)" />
-                            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.4)" }}>
+                            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)" }}>
                               Exp. {new Date(app.certificate.expiresAt).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
                             </span>
                           </div>

@@ -25,7 +25,7 @@ export default async function AdminCourseContentPage({ params }: Params) {
     <div>
       <Link
         href={`/${locale}/admin/courses`}
-        style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "rgba(10,21,53,0.5)", textDecoration: "none", marginBottom: 20, fontFamily: "var(--font-body)" }}
+        style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "rgba(10,21,53,0.68)", textDecoration: "none", marginBottom: 20, fontFamily: "var(--font-body)" }}
       >
         <ArrowLeft size={14} /> Back to Courses
       </Link>
@@ -33,7 +33,7 @@ export default async function AdminCourseContentPage({ params }: Params) {
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 400, color: "#0A1535", marginBottom: 4 }}>
         {course.title}
       </h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 32 }}>
         Manage modules, lessons, and video content for this course.
       </p>
 

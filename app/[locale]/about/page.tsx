@@ -34,7 +34,7 @@ export default function AboutPage() {
             <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, maxWidth: 700, lineHeight: 1.1 }}>
               Global Halal Certification<br /><span className="text-gold-shimmer">Made Accessible</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(10,21,53,0.6)", maxWidth: 580, lineHeight: 1.75 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 17, color: "rgba(10,21,53,0.72)", maxWidth: 580, lineHeight: 1.75 }}>
               From Abuja, Nigeria, to the world — one halal certification at a time. We verify quality standards that connect Nigerian businesses to global markets.
             </motion.p>
           </div>

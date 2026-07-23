@@ -41,7 +41,7 @@ export default function MarketOpportunity() {
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 0.3, duration: 0.7 }}
-              style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.65)", lineHeight: 1.85, marginBottom: 24, textAlign: "justify" as const }}
+              style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.75)", lineHeight: 1.85, marginBottom: 24, textAlign: "justify" as const }}
             >
               {"Nigeria commands "}<strong style={{ color: "#0A1535" }}>Africa's largest halal market</strong>{" \u2014 95 million halal consumers and the continent's most connected trade economy. Nigerian certification is the recognised gateway for halal products reaching 400+ million consumers across Africa."}
             </motion.p>
@@ -49,7 +49,7 @@ export default function MarketOpportunity() {
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 0.45, duration: 0.7 }}
-              style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.65)", lineHeight: 1.85, marginBottom: 32, textAlign: "justify" as const }}
+              style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.75)", lineHeight: 1.85, marginBottom: 32, textAlign: "justify" as const }}
             >
               {"Businesses certified by Dar Al Halal don't just sell locally \u2014 they gain access to a "}<strong style={{ color: "#0A1535" }}>$7.7 trillion global halal economy</strong>{" spanning food, cosmetics, pharmaceuticals, finance, and logistics."}
             </motion.p>
@@ -67,7 +67,7 @@ export default function MarketOpportunity() {
                 borderLeftWidth: 3,
               }}
             >
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 14.5, color: "rgba(10,21,53,0.55)", lineHeight: 1.75, fontStyle: "italic", textAlign: "justify" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 14.5, color: "rgba(10,21,53,0.7)", lineHeight: 1.75, fontStyle: "italic", textAlign: "justify" }}>
                 "Certified businesses in Nigeria report 30-45% increase in export revenue within 12 months of halal certification."
               </p>
             </motion.div>
@@ -109,7 +109,7 @@ export default function MarketOpportunity() {
                   <>{stat.prefix}0{stat.suffix}</>
                 )}
               </div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.45)", marginTop: 8, letterSpacing: "0.04em" }}>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.66)", marginTop: 8, letterSpacing: "0.04em" }}>
                 {stat.label}
               </div>
             </motion.div>

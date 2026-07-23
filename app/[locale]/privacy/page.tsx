@@ -63,7 +63,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
             {sections.map((s) => (
               <div key={s.title} style={{ marginBottom: 36 }}>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 600, color: "#0A1535", marginBottom: 10 }}>{s.title}</h2>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.65)", lineHeight: 1.75 }}>{s.body}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.75)", lineHeight: 1.75 }}>{s.body}</p>
               </div>
             ))}
           </div>

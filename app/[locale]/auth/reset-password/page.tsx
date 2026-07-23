@@ -47,7 +47,7 @@ function ResetForm() {
         <CheckCircle2 size={24} color="#22C55E" />
       </div>
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 600, color: "#0A1535", marginBottom: 10 }}>Password updated</h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)", marginBottom: 28 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)", marginBottom: 28 }}>
         Your password has been reset successfully. You can now sign in with your new password.
       </p>
       <Link href="/en/auth/login" className="btn-primary" style={{ fontSize: 14, padding: "12px 24px", display: "inline-block" }}>
@@ -59,7 +59,7 @@ function ResetForm() {
   return (
     <div>
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 600, color: "#0A1535", marginBottom: 8 }}>Set new password</h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 28 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 28 }}>
         Choose a strong password with at least 8 characters.
       </p>
 
@@ -97,7 +97,7 @@ function ResetForm() {
       </form>
 
       <div style={{ marginTop: 24, textAlign: "center" }}>
-        <Link href="/en/auth/login" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.45)", textDecoration: "none" }}>
+        <Link href="/en/auth/login" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.66)", textDecoration: "none" }}>
           <ArrowLeft size={13} /> Back to sign in
         </Link>
       </div>

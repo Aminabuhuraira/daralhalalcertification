@@ -23,7 +23,7 @@ export default async function AdminSettingsPage({ params }: Params) {
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
         Admin Settings
       </h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 32 }}>
         Create courses, view platform stats, and manage configuration.
       </p>
       <AdminSettings stats={{ userCount, courseCount, pendingApplications, certificateCount }} />

@@ -52,7 +52,7 @@ export default function QuizForm({
   return (
     <div>
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 400, color: "#0A1535", marginBottom: 8 }}>{title}</h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)", marginBottom: 28 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", marginBottom: 28 }}>
         This quiz is optional. Score 70% or higher to earn a Certificate of Distinction.
       </p>
 

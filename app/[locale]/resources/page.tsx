@@ -30,7 +30,7 @@ export default function ResourcesPage() {
             <motion.h1 {...fin(0.15)} style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: "#4C1D95", marginBottom: 20, lineHeight: 1.1 }}>
               Tools for Halal<br /><span className="text-gold-shimmer">Market Intelligence</span>
             </motion.h1>
-            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.6)", maxWidth: 500, lineHeight: 1.75 }}>
+            <motion.p {...fin(0.3)} style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "rgba(10,21,53,0.72)", maxWidth: 500, lineHeight: 1.75 }}>
               Free tools and data resources for businesses navigating halal certification and global market access.
             </motion.p>
           </div>

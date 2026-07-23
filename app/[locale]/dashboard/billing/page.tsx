@@ -47,7 +47,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, color: "#0A1535", marginBottom: 4 }}>
         Billing
       </h1>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.5)", marginBottom: 32 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.68)", marginBottom: 32 }}>
         Certification fees and payment history.
       </p>
 
@@ -70,14 +70,14 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
                     borderBottom: i < arr.length - 1 ? "1px solid rgba(10,21,53,0.06)" : "none",
                   }}
                 >
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)" }}>{label}</span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.78)" }}>{label}</span>
                   <span style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 700, color: "#0A1535" }}>{fmt(val)}</span>
                 </div>
               );
             })}
           </div>
           {!isPaystackLive && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.4)", marginTop: 16, padding: "10px 14px", background: "rgba(10,21,53,0.03)", borderRadius: 8 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.64)", marginTop: 16, padding: "10px 14px", background: "rgba(10,21,53,0.03)", borderRadius: 8 }}>
               Online payment will be available shortly. To pay, contact our team at{" "}
               <a href="mailto:info@daralhalalcertification.com" style={{ color: "#C9A227" }}>info@daralhalalcertification.com</a>.
             </p>
@@ -91,7 +91,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
       </h2>
       {payments.length === 0 ? (
         <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)", padding: "40px 32px", textAlign: "center", boxShadow: "0 1px 4px rgba(10,21,53,0.05)" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.45)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.66)" }}>
             No payment history yet. Once your application is processed, invoices will appear here.
           </p>
         </div>

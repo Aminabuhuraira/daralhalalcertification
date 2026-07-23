@@ -85,7 +85,7 @@ function ChartCard({ title, subtitle, children, span = false }: {
       gridColumn: span ? "1 / -1" : undefined,
     }}>
       <p style={{ fontFamily: "var(--font-display)", fontSize: 14, fontWeight: 600, color: "#0A1535", marginBottom: 2 }}>{title}</p>
-      {subtitle && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", marginBottom: 16 }}>{subtitle}</p>}
+      {subtitle && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)", marginBottom: 16 }}>{subtitle}</p>}
       {!subtitle && <div style={{ marginBottom: 16 }} />}
       {children}
     </div>
@@ -115,7 +115,7 @@ function SimpleLegend({ items }: { items: { label: string; color: string; value:
       {items.map(i => (
         <div key={i.label} style={{ display: "flex", alignItems: "center", gap: 7 }}>
           <div style={{ width: 10, height: 10, borderRadius: 3, background: i.color, flexShrink: 0 }} />
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.6)" }}>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}>
             {i.label} <strong style={{ color: "#0A1535" }}>{i.value}</strong>
           </span>
         </div>
@@ -146,7 +146,7 @@ export default function ApplicationCharts({
   if (total === 0 && totalEnrollments === 0) {
     return (
       <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)", padding: "40px", textAlign: "center" }}>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.4)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.64)" }}>
           Charts will populate as applications and enrolments come in.
         </p>
       </div>
@@ -257,11 +257,11 @@ export default function ApplicationCharts({
                   <div key={c.category} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div style={{ width: 10, height: 10, borderRadius: 3, background: MULTI_PALETTE[i % MULTI_PALETTE.length], flexShrink: 0 }} />
                     <span style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 13, color: "#0A1535" }}>{c.category}</span>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.45)", minWidth: 28, textAlign: "right" }}>{pct}%</span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.66)", minWidth: 28, textAlign: "right" }}>{pct}%</span>
                     <div style={{ width: 80, height: 5, background: "rgba(10,21,53,0.06)", borderRadius: 3, overflow: "hidden" }}>
                       <div style={{ height: "100%", width: `${pct}%`, background: MULTI_PALETTE[i % MULTI_PALETTE.length], borderRadius: 3 }} />
                     </div>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.4)", minWidth: 20, textAlign: "right" }}>{c.count}</span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.64)", minWidth: 20, textAlign: "right" }}>{c.count}</span>
                   </div>
                 );
               })}

@@ -47,7 +47,7 @@ function QuizResultsInner() {
   if (!result) {
     return (
       <GlowingCard style={{ padding: "32px", textAlign: "center" }}>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.55)", marginBottom: 16 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)", marginBottom: 16 }}>
           We couldn't find that quiz result. It may have expired from your session.
         </p>
         <Link href={`/${locale}/dashboard/courses/${courseId}/quiz`} className="btn-primary">Retake Quiz</Link>
@@ -64,11 +64,11 @@ function QuizResultsInner() {
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 400, color: "#0A1535", marginBottom: 8 }}>
           {result.passed ? "You Passed!" : "Not Quite There"}
         </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.6)", marginBottom: 4 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "rgba(10,21,53,0.72)", marginBottom: 4 }}>
           Your score: <strong style={{ color: "#6D28D9" }}>{result.score}%</strong>
         </p>
         {result.passed && result.certificate && (
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.5)" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)" }}>
             Certificate of Distinction issued — serial {result.certificate.serial}.{" "}
             <Link href={`/${locale}/dashboard/certificates`} style={{ color: "#6D28D9" }}>View certificates</Link>
           </p>
@@ -103,7 +103,7 @@ function QuizResultsInner() {
               })}
             </div>
             {b.explanation && (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)", marginTop: 10, marginLeft: 28 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)", marginTop: 10, marginLeft: 28 }}>
                 {b.explanation}
               </p>
             )}

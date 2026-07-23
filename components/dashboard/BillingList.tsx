@@ -67,7 +67,7 @@ export default function BillingList({ payments, locale }: { payments: Payment[];
           <GlowingCard key={p.id} style={{ padding: "18px 22px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "#0A1535", fontWeight: 600, marginBottom: 4 }}>{p.description}</div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.5)" }}>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.68)" }}>
                 {p.application ? `${p.application.businessName} · ` : ""}{new Date(p.createdAt).toLocaleDateString()}
               </div>
             </div>

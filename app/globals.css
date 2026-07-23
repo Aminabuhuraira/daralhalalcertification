@@ -32,7 +32,7 @@
   /* ── Text ── */
   --text-primary:   #0D1B47;
   --text-secondary: #3A4B6B;
-  --text-muted:     #8A9AB8;
+  --text-muted:     #5C6B8A;
   --text-white:     #FFFFFF;
   --text-gold:      #C9A227;
 
@@ -49,7 +49,7 @@
   /* ── Legacy aliases for old components ── */
   --color-primary: #F9F7F4;
   --color-surface: #FDFCFA;
-  --color-silver-400: #8A9AB8;
+  --color-silver-400: #5C6B8A;
   --bg-light: #F9F7F4;
   --gold-600: #8B6508;
   --color-gold-50: #FFFBEB;
@@ -62,7 +62,7 @@
   --color-gold-glow: rgba(201,162,39,0.15);
   --color-text-primary: #0D1B47;
   --color-text-secondary: #3A4B6B;
-  --color-text-muted: #8A9AB8;
+  --color-text-muted: #5C6B8A;
   --color-text-gold: #C9A227;
   --color-border: #E8E3DB;
   --color-navy-600: #1B2A7B;
@@ -96,6 +96,13 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); line-height: 1.65; font-size: 15.5px; }
+
+/* ── Desktop legibility: nudge default body-copy weight up a touch (readable for
+   older users without visually "bolding" the design). Zero-specificity :where()
+   so any element with its own font-weight (headings, buttons, labels) is untouched. ── */
+@media (min-width: 769px) {
+  :where(body *) { font-weight: 450; }
+}
 
 /* ── Sections ── */
 .section-dark  { background: var(--grad-hero); color: white; position: relative; overflow: hidden; }
@@ -345,25 +352,14 @@ body { font-family: var(--font-body); background: var(--bg-base); color: var(--t
   .stats-strip { grid-template-columns: repeat(2, 1fr) !important; }
   /* Team grid: 4-col → 2-col */
   .team-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  /* Orbital: hide on mobile */
-  .hero-orbital { display: none !important; }
+  /* Orbital: shrink and center below hero copy on mobile (was hidden entirely) */
+  .hero-orbital { margin: 0 auto !important; max-width: 100% !important; overflow: hidden !important; }
   /* Process stepper: horizontal → vertical */
   .process-stepper { flex-direction: column !important; gap: 16px !important; }
   .process-stepper > div { flex: unset !important; width: 100% !important; padding: 0 0 0 16px !important; text-align: left !important; display: flex !important; align-items: center !important; gap: 12px !important; }
   /* Reviews / partners grids */
   .reviews-grid { grid-template-columns: 1fr !important; }
   .partners-layout { grid-template-columns: 1fr !important; }
-
-  /* CertificationTrust: collapse 400vh sticky timeline to a simple list */
-  .cert-timeline-wrapper { height: auto !important; }
-  .cert-timeline-sticky {
-    position: relative !important; height: auto !important;
-    padding: 32px 16px !important; display: flex !important;
-    flex-direction: column !important; gap: 16px !important;
-  }
-  .cert-timeline-sticky > * { position: relative !important; top: auto !important; left: auto !important; right: auto !important; transform: none !important; opacity: 1 !important; max-width: 100% !important; text-align: left !important; }
-  /* Spine: hide on mobile */
-  .cert-spine { display: none !important; }
 
   /* Market opportunity: stack columns */
   .market-grid { grid-template-columns: 1fr !important; }
@@ -374,6 +370,8 @@ body { font-family: var(--font-body); background: var(--bg-base); color: var(--t
 
   /* Admin / dashboard: tighten padding */
   .dashboard-main { padding: 20px 16px !important; }
+  .admin-pipeline-grid { grid-template-columns: 1fr !important; }
+  .admin-stat-strip { grid-template-columns: repeat(2, 1fr) !important; }
 
   /* Certification page: steps grid → 1 col */
   .cert-steps-grid { grid-template-columns: 1fr !important; }
