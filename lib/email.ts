@@ -81,8 +81,8 @@ export async function emailAuditScheduled(to: string, name: string, appNum: stri
       <p style="margin:6px 0 0;font-size:18px;font-weight:700;color:#0D9488;">${new Date(auditDate).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</p>
       ${auditTeam ? `<p style="margin:6px 0 0;font-size:13px;color:rgba(10,21,53,0.55);">Inspection Team: ${auditTeam}</p>` : ""}
     </div>` : ""}
-    ${p("For any queries regarding the audit, please contact our Inspection team at <a href='mailto:inspection@daralhalalcertification.com' style='color:#C9A227;'>inspection@daralhalalcertification.com</a>.")}
-    ${btn(`${SITE}/en/dashboard/certification`, "View Application")}
+    ${p("If this date doesn't work, you can request a different one from your dashboard — self-service rescheduling is available up to <strong>3 days</strong> before the audit. Within 3 days of the audit, please contact our Inspection team directly at <a href='mailto:inspection@daralhalalcertification.com' style='color:#C9A227;'>inspection@daralhalalcertification.com</a>.")}
+    ${btn(`${SITE}/en/dashboard/certification`, "View Application or Reschedule")}
   `));
 }
 

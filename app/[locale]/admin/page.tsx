@@ -1,33 +1,38 @@
 import { Building2, ShieldCheck, Package, Bell, Boxes, Users, FilePlus2, ClipboardList, Mail, GraduationCap } from "lucide-react";
-import { ensureDb, prisma } from "@/lib/db";
+import { ensureDb } from "@/lib/db";
 import StatTile from "@/components/dashboard/StatTile";
 import AdminOverviewCharts from "@/components/dashboard/AdminOverviewCharts";
+import ApplicationCharts from "@/components/dashboard/ApplicationCharts";
 import AdminPaymentPanel from "@/components/dashboard/AdminPaymentPanel";
 import AdminPipelinePanel from "@/components/dashboard/AdminPipelinePanel";
 import { getAdminDashboardStats } from "@/lib/admin-dashboard-stats";
+import { getApplicationChartData } from "@/lib/application-stats";
 
 export default async function AdminOverviewPage() {
   await ensureDb();
 
-  const stats = await getAdminDashboardStats().catch(() => ({
-    totalCompanies: 0,
-    certifiedCount: 0,
-    verifiedProductsCount: 0,
-    renewalAlerts: 0,
-    allProductsCount: 0,
-    scaleCounts: [],
-    statusCounts: [],
-    pipelineCounts: [],
-    actionRequired: [],
-    actionRequiredCount: 0,
-    upcomingRenewals: [],
-    recentPayments: [],
-    totalUsers: 0,
-    newApplicationsThisWeek: 0,
-    newEnquiriesThisWeek: 0,
-    totalEnrollments: 0,
-    completedEnrollments: 0,
-  }));
+  const [stats, chartData] = await Promise.all([
+    getAdminDashboardStats().catch(() => ({
+      totalCompanies: 0,
+      certifiedCount: 0,
+      verifiedProductsCount: 0,
+      renewalAlerts: 0,
+      allProductsCount: 0,
+      scaleCounts: [],
+      statusCounts: [],
+      pipelineCounts: [],
+      actionRequired: [],
+      actionRequiredCount: 0,
+      upcomingRenewals: [],
+      recentPayments: [],
+      totalUsers: 0,
+      newApplicationsThisWeek: 0,
+      newEnquiriesThisWeek: 0,
+      totalEnrollments: 0,
+      completedEnrollments: 0,
+    })),
+    getApplicationChartData().catch(() => ({ statusCounts: [], sectorCounts: [], monthlyCounts: [], categoryCounts: [], total: 0 })),
+  ]);
 
   return (
     <div>
@@ -66,12 +71,12 @@ export default async function AdminOverviewPage() {
         />
       </div>
 
-      {/* ── Charts ── */}
+      {/* ── Charts: full application analytics, matching the Applications tab ── */}
+      <div style={{ marginBottom: 16 }}>
+        <ApplicationCharts {...chartData} />
+      </div>
       <div style={{ marginBottom: 20 }}>
-        <AdminOverviewCharts
-          scaleCounts={stats.scaleCounts}
-          statusCounts={stats.statusCounts}
-        />
+        <AdminOverviewCharts scaleCounts={stats.scaleCounts} />
       </div>
 
       {/* ── Payments + Renewals ── */}

@@ -6,8 +6,8 @@ import { SCHEME_CODES } from "@/lib/sectors";
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "12px 16px",
-  background: "rgba(109,40,217,0.04)",
-  border: "1px solid rgba(109,40,217,0.2)",
+  background: "white",
+  border: "1px solid rgba(10,21,53,0.15)",
   borderRadius: 8,
   fontFamily: "var(--font-body)", fontSize: 14, color: "#0A1535",
   outline: "none", transition: "border-color 0.2s",
@@ -90,14 +90,14 @@ export default function CertificationApplicationForm() {
                   style={{
                     padding: "12px 14px",
                     borderRadius: 8,
-                    border: selected ? "2px solid #C9A227" : "2px solid rgba(109,40,217,0.18)",
-                    background: selected ? "rgba(201,162,39,0.06)" : "rgba(109,40,217,0.02)",
+                    border: selected ? "2px solid #C9A227" : "2px solid rgba(10,21,53,0.12)",
+                    background: selected ? "rgba(201,162,39,0.06)" : "white",
                     cursor: "pointer",
                     textAlign: "left",
                     transition: "all 0.2s",
                   }}
                 >
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: selected ? "#9a7810" : "#6D28D9", letterSpacing: "0.05em", display: "block", marginBottom: 2 }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: selected ? "#9a7810" : "#0A1535", letterSpacing: "0.05em", display: "block", marginBottom: 2 }}>
                     {s.code}
                   </span>
                   <span style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: selected ? "#0A1535" : "rgba(10,21,53,0.6)", lineHeight: 1.3, display: "block" }}>
@@ -128,8 +128,8 @@ export default function CertificationApplicationForm() {
                   style={{
                     padding: "14px 12px",
                     borderRadius: 10,
-                    border: selected ? "2px solid #C9A227" : "2px solid rgba(109,40,217,0.2)",
-                    background: selected ? "rgba(201,162,39,0.06)" : "rgba(109,40,217,0.02)",
+                    border: selected ? "2px solid #C9A227" : "2px solid rgba(10,21,53,0.12)",
+                    background: selected ? "rgba(201,162,39,0.06)" : "white",
                     cursor: "pointer",
                     textAlign: "left",
                     transition: "all 0.2s",

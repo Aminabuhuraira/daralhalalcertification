@@ -66,7 +66,7 @@ export default function NotificationBell({ locale }: { locale: string }) {
 
       {open && (
         <div style={{
-          position: "absolute", top: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)",
+          position: "absolute", top: "calc(100% + 8px)", right: 0,
           width: 320, background: "white", borderRadius: 14,
           border: "1px solid rgba(10,21,53,0.1)", boxShadow: "0 8px 32px rgba(10,21,53,0.12)",
           zIndex: 9999, overflow: "hidden",

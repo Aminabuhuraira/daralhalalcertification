@@ -69,9 +69,12 @@ const staffUpdateSchema = z.object({
 });
 
 const userActionSchema = z.object({
-  action:      z.enum(["submit", "submitNcrEvidence", "submitCarResponse"]),
-  carResponse: z.string().optional(),
+  action:        z.enum(["submit", "submitNcrEvidence", "submitCarResponse", "rescheduleAudit"]),
+  carResponse:   z.string().optional(),
+  newAuditDate:  z.string().optional(),
 });
+
+const RESCHEDULE_CUTOFF_DAYS = 3;
 
 const draftSchema = z.object({
   businessName:        z.string().min(1).max(160).optional(),
@@ -185,6 +188,43 @@ export async function PATCH(req: Request, { params }: Params) {
         return NextResponse.json({ application: updated });
       }
 
+      if (parsed.data.action === "rescheduleAudit") {
+        if (application.status !== "PENDING_AUDIT") {
+          return NextResponse.json({ error: "Audits can only be rescheduled while awaiting the on-site visit" }, { status: 400 });
+        }
+        if (!application.auditDate) {
+          return NextResponse.json({ error: "No audit date has been scheduled yet — contact DAHC to arrange one" }, { status: 400 });
+        }
+        if (!parsed.data.newAuditDate) {
+          return NextResponse.json({ error: "newAuditDate is required" }, { status: 400 });
+        }
+        const now = new Date();
+        const cutoff = new Date(application.auditDate);
+        cutoff.setDate(cutoff.getDate() - RESCHEDULE_CUTOFF_DAYS);
+        if (now >= cutoff) {
+          return NextResponse.json({
+            error: `This audit is less than ${RESCHEDULE_CUTOFF_DAYS} days away and can no longer be self-rescheduled. Please contact DAHC directly at inspection@daralhalalcertification.com.`,
+          }, { status: 400 });
+        }
+        const newDate = new Date(parsed.data.newAuditDate);
+        if (isNaN(newDate.getTime()) || newDate <= now) {
+          return NextResponse.json({ error: "Please choose a valid future date" }, { status: 400 });
+        }
+        const updated = await prisma.certificationApplication.update({
+          where: { id: appId }, data: { auditDate: newDate },
+        });
+        if (application.user?.email) {
+          emailAuditScheduled(
+            application.user.email,
+            application.user.name ?? "Applicant",
+            application.applicationNumber ?? appId.slice(0, 8),
+            newDate.toISOString(),
+            application.auditTeam ?? undefined,
+          ).catch(() => {});
+        }
+        return NextResponse.json({ application: updated });
+      }
+
       return NextResponse.json({ error: "Unknown action" }, { status: 400 });
     }
 
@@ -267,12 +307,21 @@ export async function PATCH(req: Request, { params }: Params) {
     certificate = await issueApplicationCertificateIfNeeded(updatedApp.id).catch(() => null);
   }
 
-  // Fire-and-forget notification emails on status change
-  if (parsed.data.status && parsed.data.status !== application.status && application.user?.email) {
+  // Fire-and-forget notification emails on status change — plus a resend whenever the
+  // audit date itself is set or moved while the application stays in PENDING_AUDIT, so
+  // the applicant always has an email reflecting the actual scheduled date (not just the
+  // date at the moment the stage first changed).
+  const statusChanged = !!parsed.data.status && parsed.data.status !== application.status;
+  const auditDateChanged = !!auditDate && (
+    !application.auditDate || auditDate.slice(0, 10) !== new Date(application.auditDate).toISOString().slice(0, 10)
+  );
+  const shouldNotify = statusChanged || (updatedApp.status === "PENDING_AUDIT" && auditDateChanged);
+
+  if (shouldNotify && application.user?.email) {
     const { email: toEmail, name: toName } = application.user;
     const appNum = application.applicationNumber ?? appId.slice(0, 8);
     const bizName = application.businessName;
-    const newStatus = parsed.data.status;
+    const newStatus = parsed.data.status ?? application.status;
 
     (async () => {
       try {

@@ -11,39 +11,40 @@ type ChecklistItem = {
   notes: string;
 };
 
+// Mirrors AP_HALAL CERTIFICATION APPLICATION CHECKLIST_Closed_17Dec25.pdf item-for-item.
 const INITIAL_CHECKLIST: Omit<ChecklistItem, "status" | "notes">[] = [
-  // A. Application Form
-  { id: "A1", section: "A. Application Form", label: "Completed & Signed Application Form (QMS/AP/AF/01)", required: true },
-  { id: "A2", section: "A. Application Form", label: "Authorized Signatory and Company Official Stamp", required: true },
-  // B. Legal & Corporate Documents
-  { id: "B1", section: "B. Legal & Corporate Documents", label: "Certificate of Business Registration (CAC Form C02/BN1 or equivalent)", required: true },
-  { id: "B2", section: "B. Legal & Corporate Documents", label: "Tax Identification Number (TIN) Certificate", required: true },
-  { id: "B3", section: "B. Legal & Corporate Documents", label: "Memorandum & Articles of Association (Ltd companies)", required: false },
-  // C. Products & Ingredients
-  { id: "C1", section: "C. Products & Ingredients", label: "Complete List of Products/Services to be Certified", required: true },
-  { id: "C2", section: "C. Products & Ingredients", label: "Product Ingredient/Recipe List for Each Product", required: true },
-  { id: "C3", section: "C. Products & Ingredients", label: "Halal Status Documentation for All Ingredients", required: true },
-  { id: "C4", section: "C. Products & Ingredients", label: "Supplier Information & Ingredient Source Certificates", required: true },
-  // D. Production Process
-  { id: "D1", section: "D. Production Process", label: "Production/Process Flow Chart", required: true },
-  { id: "D2", section: "D. Production Process", label: "HACCP/GMP Documentation", required: true },
-  { id: "D3", section: "D. Production Process", label: "Equipment List and Cleaning/Sanitation Procedures", required: true },
-  // E. Facility & Premises
-  { id: "E1", section: "E. Facility & Premises", label: "Factory/Premises Layout Plan", required: true },
-  { id: "E2", section: "E. Facility & Premises", label: "Water Quality Test Report (within 12 months)", required: true },
-  { id: "E3", section: "E. Facility & Premises", label: "Pest Control Records (within 6 months)", required: true },
-  // F. Packaging & Labelling
-  { id: "F1", section: "F. Packaging & Labelling", label: "Packaging Artwork or Samples", required: true },
-  { id: "F2", section: "F. Packaging & Labelling", label: "Product Label Samples Showing Full Ingredient List", required: true },
-  // G. Personnel
-  { id: "G1", section: "G. Personnel", label: "Designated Muslim Personnel Declaration (signed)", required: true },
-  { id: "G2", section: "G. Personnel", label: "Personnel List with Halal Training Records", required: false },
-  // H. Other Certifications & Compliance
-  { id: "H1", section: "H. Other Certifications & Compliance", label: "NAFDAC Registration Certificate(s) (if applicable)", required: false },
-  { id: "H2", section: "H. Other Certifications & Compliance", label: "Previous or Existing Halal Certification(s)", required: false },
-  { id: "H3", section: "H. Other Certifications & Compliance", label: "ISO / Quality Management System Documentation", required: false },
-  // I. Declaration & Agreement
-  { id: "I1", section: "I. Declaration & Agreement", label: "Signed DAHC Certification Agreement / Terms of Service", required: true },
+  // A. Company Information
+  { id: "A1", section: "A. Company Information", label: "Completed Application Form (signed & stamped)", required: true },
+  { id: "A2", section: "A. Company Information", label: "Copy of Business Registration / License", required: true },
+  { id: "A3", section: "A. Company Information", label: "Company Profile & Organization Chart", required: true },
+  { id: "A4", section: "A. Company Information", label: "Factory / Premises Address & Contact Details", required: true },
+  // B. Person in Charge (PIC)
+  { id: "B1", section: "B. Person in Charge (PIC)", label: "Appointment Letter / Authorization of PIC", required: true },
+  { id: "B2", section: "B. Person in Charge (PIC)", label: "PIC's Contact Details (phone & email)", required: true },
+  // C. Halal Certification Scheme
+  { id: "C1", section: "C. Halal Certification Scheme", label: "Selection of Relevant Halal Certification Scheme(s)", required: true },
+  // D. Products
+  { id: "D1", section: "D. Products", label: "List of Products (name, brand, category/HS code)", required: true },
+  { id: "D2", section: "D. Products", label: "Product Labels / Packaging Samples (if available)", required: false },
+  // E. Ingredients & Materials
+  { id: "E1", section: "E. Ingredients & Materials", label: "List of Ingredients & Raw Materials", required: true },
+  { id: "E2", section: "E. Ingredients & Materials", label: "Halal Certificates from Recognized CBs", required: true },
+  { id: "E3", section: "E. Ingredients & Materials", label: "Supplier Declarations (if no Halal Cert available)", required: false },
+  { id: "E4", section: "E. Ingredients & Materials", label: "Certificates of Analysis (CoA) / MSDS (if applicable)", required: false },
+  { id: "E5", section: "E. Ingredients & Materials", label: "Laboratory Reports (if applicable)", required: false },
+  { id: "E6", section: "E. Ingredients & Materials", label: "Validity Dates of Supporting Documents", required: true },
+  // F. Halal Assurance System (HAS)
+  { id: "F1", section: "F. Halal Assurance System (HAS)", label: "Halal Policy Statement", required: true },
+  { id: "F2", section: "F. Halal Assurance System (HAS)", label: "Internal Halal Committee Details", required: true },
+  { id: "F3", section: "F. Halal Assurance System (HAS)", label: "Halal Assurance / Monitoring Procedures", required: true },
+  // G. Other Certifications
+  { id: "G1", section: "G. Other Certifications", label: "ISO 22000 / HACCP Certificate (if available)", required: false },
+  { id: "G2", section: "G. Other Certifications", label: "GMP (Must Have)", required: true },
+  { id: "G3", section: "G. Other Certifications", label: "ISO 9001 / Other QMS Certificates (Good to Have)", required: false },
+  // H. Fee Payment
+  { id: "H1", section: "H. Fee Payment", label: "Proof of Application Fee Payment", required: true },
+  // I. Declaration
+  { id: "I1", section: "I. Declaration", label: "Signed Declaration by Authorized Representative", required: true },
 ];
 
 function buildInitial(savedJson: string | null): ChecklistItem[] {

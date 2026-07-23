@@ -116,19 +116,31 @@ export default async function DashboardOverviewPage({
         </div>
       )}
       {!application && (
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, background: "rgba(10,21,53,0.03)", border: "1px solid rgba(10,21,53,0.1)", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
-          <AlertCircle size={16} color="rgba(10,21,53,0.4)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <div style={{ flex: 1 }}>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 700, color: "#0A1535", margin: "0 0 3px" }}>
-              Start Your Halal Certification
-            </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "rgba(10,21,53,0.7)", margin: "0 0 10px" }}>
-              You haven't submitted a certification application yet. Begin the process to have your business listed in the DAHC Halal Registry.
-            </p>
-            <Link href={lh("/dashboard/certification")} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 700, color: "#9a7810", textDecoration: "none" }}>
-              Apply for Certification <ChevronRight size={12} />
-            </Link>
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap",
+          background: "var(--grad-hero)", borderRadius: 14, padding: "24px 28px", marginBottom: 20,
+          border: "1px solid rgba(201,162,39,0.25)", boxShadow: "0 4px 20px rgba(10,21,53,0.15)",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(201,162,39,0.15)", border: "1px solid rgba(201,162,39,0.35)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <AlertCircle size={20} color="#F5C842" />
+            </div>
+            <div>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 700, color: "white", margin: "0 0 4px" }}>
+                Start Your Halal Certification
+              </p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0 }}>
+                Begin the process to have your business listed in the DAHC Halal Registry.
+              </p>
+            </div>
           </div>
+          <Link
+            href={lh("/dashboard/certification")}
+            className="btn-primary"
+            style={{ flexShrink: 0, fontSize: 14, padding: "13px 26px", display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap" }}
+          >
+            Apply for Certification <ChevronRight size={14} />
+          </Link>
         </div>
       )}
 
@@ -156,7 +168,7 @@ export default async function DashboardOverviewPage({
             <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(10,21,53,0.7)", marginBottom: 16 }}>
               You haven't enrolled in any courses yet.
             </p>
-            <Link href={lh("/learn")} className="btn-primary" style={{ fontSize: 13, padding: "9px 22px" }}>Browse Courses</Link>
+            <Link href={lh("/dashboard/certification")} className="btn-primary" style={{ fontSize: 13, padding: "9px 22px" }}>Start Application</Link>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
@@ -214,32 +226,29 @@ export default async function DashboardOverviewPage({
         )}
       </div>
 
-      {/* Certification status */}
-      <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)", padding: "20px 24px", boxShadow: "0 1px 4px rgba(10,21,53,0.05)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 600, color: "#0A1535", marginBottom: 6 }}>Certification Application</h3>
-            {application ? (
+      {/* Certification status — only shown once an application exists; the banner above
+          is the single, bold entry point for starting one, to avoid two competing CTAs. */}
+      {application && (
+        <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid rgba(10,21,53,0.08)", padding: "20px 24px", boxShadow: "0 1px 4px rgba(10,21,53,0.05)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 600, color: "#0A1535", marginBottom: 6 }}>Certification Application</h3>
               <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.25)", borderRadius: 6, padding: "2px 10px", fontSize: 12, fontWeight: 700, color: "#9a7810", marginRight: 8 }}>
                   {application.status.replace(/_/g, " ")}
                 </span>
                 {application.businessName}
               </p>
-            ) : (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.7)" }}>
-                You haven't submitted a certification application yet.
-              </p>
-            )}
+            </div>
+            <Link
+              href={lh("/dashboard/certification")}
+              style={{ flexShrink: 0, marginLeft: 16, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 600, color: "#C9A227", textDecoration: "none" }}
+            >
+              View application <ChevronRight size={13} />
+            </Link>
           </div>
-          <Link
-            href={lh("/dashboard/certification")}
-            style={{ flexShrink: 0, marginLeft: 16, display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 600, color: "#C9A227", textDecoration: "none" }}
-          >
-            {application ? "View application" : "Start application"} <ChevronRight size={13} />
-          </Link>
         </div>
-      </div>
+      )}
     </div>
   );
 }

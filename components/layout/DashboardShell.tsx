@@ -5,7 +5,7 @@ import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Award, CreditCard, Users, BookOpen,
   ClipboardCheck, ShieldCheck, LogOut, ArrowLeftRight, FileText,
-  Settings, Mail, ClipboardList, FileSearch,
+  Settings, Mail, ClipboardList, FileSearch, CalendarClock,
   Microscope, Moon, Briefcase, Archive, UserCircle,
 } from "lucide-react";
 import NotificationBell from "@/components/dashboard/NotificationBell";
@@ -31,12 +31,13 @@ const USER_NAV = [
 ];
 
 const ADMIN_NAV = [
-  { label: "Overview",      href: "/admin",              icon: LayoutDashboard },
-  { label: "Users",         href: "/admin/users",        icon: Users },
-  { label: "Courses",       href: "/admin/courses",      icon: BookOpen },
-  { label: "Applications",  href: "/admin/applications", icon: ClipboardCheck },
-  { label: "Contacts",      href: "/admin/contacts",     icon: Mail },
-  { label: "Settings",      href: "/admin/settings",     icon: Settings },
+  { label: "Overview",       href: "/admin",               icon: LayoutDashboard },
+  { label: "Users",          href: "/admin/users",         icon: Users },
+  { label: "Courses",        href: "/admin/courses",       icon: BookOpen },
+  { label: "Applications",   href: "/admin/applications",  icon: ClipboardCheck },
+  { label: "Audit Calendar", href: "/admin/audit-calendar",icon: CalendarClock },
+  { label: "Contacts",       href: "/admin/contacts",      icon: Mail },
+  { label: "Settings",       href: "/admin/settings",      icon: Settings },
 ];
 
 const REVIEWER_NAV = [
@@ -167,12 +168,9 @@ export default function DashboardShell({ children, variant, userName, userRole }
 
         {/* Bottom user info + sign out */}
         <div style={{ borderTop: "1px solid rgba(10,21,53,0.08)", paddingTop: 16, marginTop: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 8px", marginBottom: 12 }}>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userName}</div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole.replace(/_/g, " ")}</div>
-            </div>
-            <NotificationBell locale={locale} />
+          <div style={{ padding: "0 8px", marginBottom: 12, minWidth: 0 }}>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#0A1535", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userName}</div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(10,21,53,0.64)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{userRole.replace(/_/g, " ")}</div>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: `/${locale}` })}
@@ -192,8 +190,14 @@ export default function DashboardShell({ children, variant, userName, userRole }
       </aside>
 
       {/* ── Main content ── */}
-      <main style={{ flex: 1, minWidth: 0, padding: "40px clamp(28px, 4vw, 72px)", overflowX: "hidden" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>{children}</div>
+      <main style={{ flex: 1, minWidth: 0, padding: "24px clamp(28px, 4vw, 72px) 40px", overflowX: "hidden" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          {/* Top bar */}
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+            <NotificationBell locale={locale} />
+          </div>
+          {children}
+        </div>
       </main>
     </div>
   );

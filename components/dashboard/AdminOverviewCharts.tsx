@@ -1,14 +1,8 @@
 "use client";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import type { ScaleCount, StatusCount } from "@/lib/admin-dashboard-stats";
+import type { ScaleCount } from "@/lib/admin-dashboard-stats";
 
 const SCALE_COLORS = ["#0A1535", "#C9A227", "#6D28D9"];
-const STATUS_COLORS: Record<string, string> = {
-  Verified:     "#16A34A",
-  Pending:      "#D97706",
-  "Under Review": "#2563EB",
-  Rejected:     "#DC2626",
-};
 
 const tooltipStyle: React.CSSProperties = {
   background: "#ffffff",
@@ -104,28 +98,18 @@ function PieWithLegend({
 
 export default function AdminOverviewCharts({
   scaleCounts,
-  statusCounts,
 }: {
   scaleCounts: ScaleCount[];
-  statusCounts: StatusCount[];
 }) {
   const scaleData = scaleCounts.map(s => ({ name: s.scale, value: s.count }));
-  const statusData = statusCounts.map(s => ({ name: s.label, value: s.count }));
 
   return (
-    <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+    <div style={{ maxWidth: 420 }}>
       <ChartCard title="Production Scale">
         <PieWithLegend
           data={scaleData}
           getColor={(_, i) => SCALE_COLORS[i % SCALE_COLORS.length]}
           centerLabel="Scale"
-        />
-      </ChartCard>
-      <ChartCard title="Company Status">
-        <PieWithLegend
-          data={statusData}
-          getColor={(name) => STATUS_COLORS[name] ?? "#94a3b8"}
-          centerLabel="Status"
         />
       </ChartCard>
     </div>

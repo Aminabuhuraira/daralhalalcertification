@@ -57,12 +57,14 @@ export async function GET() {
       if (trc > 0) notifications.push({ id: "ops-trc", title: `${trc} TRC Escalations`, message: "Applications pending Technical & Sharia pre-review committee", href: "/ops", severity: "warning" });
       if (payment > 0) notifications.push({ id: "ops-payment", title: `${payment} Awaiting Payment`, message: "Applications approved — confirm when payment is received", href: "/ops", severity: "info" });
     } else if (role === "INSPECTOR") {
-      const [scheduled, auditing, ncr] = await Promise.all([
-        prisma.certificationApplication.count({ where: { status: "PENDING_AUDIT" } }),
+      const [needsScheduling, scheduled, auditing, ncr] = await Promise.all([
+        prisma.certificationApplication.count({ where: { status: "PENDING_AUDIT", auditDate: null } }),
+        prisma.certificationApplication.count({ where: { status: "PENDING_AUDIT", auditDate: { not: null } } }),
         prisma.certificationApplication.count({ where: { status: "AUDITING" } }),
         prisma.certificationApplication.count({ where: { status: "VERIFYING_NCR" } }),
       ]);
-      if (scheduled > 0) notifications.push({ id: "insp-scheduled", title: `${scheduled} Audits Scheduled`, message: "On-site audits pending — ensure inspection teams are assigned", href: "/inspector", severity: "urgent" });
+      if (needsScheduling > 0) notifications.push({ id: "insp-needs-sched", title: `${needsScheduling} Audits Need a Date`, message: "Payment confirmed — set an audit date to notify the applicant", href: "/inspector", severity: "urgent" });
+      if (scheduled > 0) notifications.push({ id: "insp-scheduled", title: `${scheduled} Audits Scheduled`, message: "On-site audits pending — ensure inspection teams are assigned", href: "/inspector", severity: "warning" });
       if (auditing > 0) notifications.push({ id: "insp-active", title: `${auditing} Audits In Progress`, message: "Active audits — update findings and issue NCRs or advance to board", href: "/inspector", severity: "warning" });
       if (ncr > 0) notifications.push({ id: "insp-ncr", title: `${ncr} NCR Responses to Verify`, message: "Applicants have submitted corrective action responses for review", href: "/inspector", severity: "info" });
     } else if (role === "TECHNICAL") {
@@ -91,6 +93,9 @@ export async function GET() {
 
       const newUsers = await prisma.user.count({ where: { createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } } });
       if (newUsers > 0) notifications.push({ id: "admin-users", title: `${newUsers} New Users This Week`, message: "New registrations in the last 7 days", href: "/admin/users", severity: "info" });
+
+      const needsScheduling = await prisma.certificationApplication.count({ where: { status: "PENDING_AUDIT", auditDate: null } });
+      if (needsScheduling > 0) notifications.push({ id: "admin-needs-sched", title: `${needsScheduling} Audits Need a Date`, message: "Payment confirmed — set an audit date on the Audit Calendar", href: "/admin/audit-calendar", severity: "urgent" });
     }
   } catch { /* DB not ready */ }
 

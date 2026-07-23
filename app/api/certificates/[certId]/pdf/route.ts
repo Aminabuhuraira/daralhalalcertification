@@ -3,6 +3,9 @@ import QRCode from "qrcode";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { generateCertificatePdf } from "@/lib/certificate-pdf";
+import { SCHEME_CODES } from "@/lib/sectors";
+
+const REFERENCE_STANDARDS = "MS 1500:2019 · OIC/SMIIC 1:2019 · ISO/IEC 17065:2012";
 
 type Params = { params: Promise<{ certId: string }> };
 
@@ -17,7 +20,7 @@ export async function GET(_req: Request, { params }: Params) {
     where: { id: certId },
     include: {
       course:      { select: { title: true } },
-      application: { select: { businessName: true, sector: true } },
+      application: { select: { businessName: true, sector: true, schemeCode: true, productList: true } },
       user:        { select: { name: true, businessName: true } },
     },
   });
@@ -35,6 +38,12 @@ export async function GET(_req: Request, { params }: Params) {
     errorCorrectionLevel: "M",
   }).catch(() => null);
 
+  const scopeLabel = SCHEME_CODES.find(s => s.code === certificate.application?.schemeCode)?.label
+    ?? certificate.application?.sector
+    ?? "General Halal Compliance";
+  const productList = certificate.application?.productList?.trim() || "";
+  const productItems = productList.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+
   const pdf = await generateCertificatePdf({
     serial:      certificate.serial,
     tier:        certificate.tier,
@@ -46,6 +55,13 @@ export async function GET(_req: Request, { params }: Params) {
     courseTitle: certificate.course?.title,
     sector:      certificate.application?.sector,
     qrDataUrl,
+    referenceStandards: REFERENCE_STANDARDS,
+    scopeOfCertification: scopeLabel,
+    productCategory: certificate.application?.sector ?? scopeLabel,
+    product: productItems.length ? productItems.join(", ") : "As per approved product schedule",
+    productDescription: productItems.length
+      ? `${productItems.slice(0, 3).join(", ")}${productItems.length > 3 ? `, and ${productItems.length - 3} more` : ""} — manufactured and processed under Halal-compliant conditions within the approved ${scopeLabel} scope.`
+      : `Products manufactured and processed under Halal-compliant conditions within the approved ${scopeLabel} scope.`,
   });
 
   return new NextResponse(new Uint8Array(pdf), {

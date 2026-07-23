@@ -10,6 +10,7 @@ import CertificationApplicationForm from "@/components/dashboard/CertificationAp
 import PaymentCTA from "@/components/dashboard/PaymentCTA";
 import TrustmarkDownload from "@/components/dashboard/TrustmarkDownload";
 import CARResponseForm from "@/components/dashboard/CARResponseForm";
+import AuditRescheduleControl from "@/components/dashboard/AuditRescheduleControl";
 
 // Spec-defined dashboard status block messages
 const STATUS_MESSAGE: Record<string, { title: string; body: string; color: string }> = {
@@ -110,8 +111,7 @@ export default async function CertificationApplicationPage({
 
   const activeApplication = applications.find(a => !TERMINAL_STATES.includes(a.status)) || null;
   const hasDraft = activeApplication?.status === "DRAFT";
-  const canApplyAgain = !activeApplication || TERMINAL_STATES.includes(activeApplication.status ?? "");
-  const allTerminal = applications.length > 0 && applications.every(a => TERMINAL_STATES.includes(a.status));
+  const canApplyAgain = !activeApplication;
 
   return (
     <div>
@@ -308,6 +308,7 @@ export default async function CertificationApplicationPage({
                         </p>
                       </div>
                     )}
+                    {app.auditDate && <AuditRescheduleControl appId={app.id} auditDate={app.auditDate} />}
                   </div>
                 )}
 
@@ -444,7 +445,9 @@ export default async function CertificationApplicationPage({
         </div>
       )}
 
-      {/* New application form */}
+      {/* New application form — covers both first-time applicants (no application yet)
+          and re-applicants (every prior application rejected/closed), since canApplyAgain
+          is true in both cases. */}
       {canApplyAgain && !hasDraft ? (
         <CertificationApplicationForm />
       ) : !hasDraft && !canApplyAgain ? (
@@ -454,13 +457,6 @@ export default async function CertificationApplicationPage({
           </p>
         </GlowingCard>
       ) : null}
-
-      {/* Re-apply button when all are terminal */}
-      {allTerminal && (
-        <div style={{ marginTop: 8 }}>
-          <CertificationApplicationForm />
-        </div>
-      )}
     </div>
   );
 }

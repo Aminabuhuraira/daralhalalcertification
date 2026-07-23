@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { BookOpen, Users, Settings2, CheckCircle2, Loader2, Plus, DollarSign } from "lucide-react";
+import { BookOpen, Users, Settings2, CheckCircle2, Loader2, Plus, DollarSign, Database } from "lucide-react";
 import GlowingCard from "@/components/ui/GlowingCard";
 import { CERTIFICATION_SECTORS } from "@/lib/sectors";
 
@@ -247,9 +247,60 @@ function PricingPanel() {
   );
 }
 
+function SeedDemoDataCard() {
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg]   = useState<{ ok: boolean; text: string } | null>(null);
+
+  const run = async () => {
+    if (!confirm("Populate this environment with realistic demo data (21 companies across every pipeline stage, courses, payments, certificates)? This is a no-op if applications already exist.")) return;
+    setBusy(true); setMsg(null);
+    try {
+      const res = await fetch("/api/admin/seed-demo", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to seed demo data.");
+      setMsg({
+        ok: true,
+        text: data.seeded
+          ? `Seeded successfully — ${data.applications} demo applications created. Refresh to see them.`
+          : data.message || "Nothing to do — demo data already present.",
+      });
+    } catch (e) {
+      setMsg({ ok: false, text: e instanceof Error ? e.message : "Failed to seed demo data." });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <GlowingCard style={{ padding: "20px 24px" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 14 }}>
+        <Database size={18} color="#C9A227" style={{ marginTop: 2, flexShrink: 0 }} />
+        <div>
+          <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, color: "#0A1535", marginBottom: 4 }}>Demo Data</h3>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(10,21,53,0.68)", lineHeight: 1.6, margin: 0 }}>
+            Populate this environment with 21 realistic companies spanning every pipeline stage, plus courses, payments, and certificates — useful for testing before real applicants sign up. Safe to run more than once; it skips if applications already exist.
+          </p>
+        </div>
+      </div>
+      {msg && (
+        <div style={{ display: "flex", gap: 8, alignItems: "center", padding: "10px 14px", borderRadius: 8, marginBottom: 14, background: msg.ok ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)", border: `1px solid ${msg.ok ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)"}` }}>
+          <CheckCircle2 size={14} color={msg.ok ? "#22c55e" : "#ef4444"} />
+          <span style={{ fontSize: 13, fontFamily: "var(--font-body)", color: msg.ok ? "#16a34a" : "#ef4444" }}>{msg.text}</span>
+        </div>
+      )}
+      <button onClick={run} disabled={busy} className="btn-primary" style={{ opacity: busy ? 0.6 : 1, cursor: busy ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8 }}>
+        {busy ? <Loader2 size={14} style={{ animation: "rotateSeal 1s linear infinite" }} /> : <Database size={14} />}
+        {busy ? "Seeding…" : "Seed Demo Data"}
+      </button>
+    </GlowingCard>
+  );
+}
+
 function PlatformPanel({ stats }: { stats: Stats }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18, maxWidth: 580 }}>
+      <SeedDemoDataCard />
+
       {/* Platform stats */}
       <GlowingCard style={{ padding: "24px 28px" }}>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 500, color: "#0A1535", marginBottom: 18 }}>Platform Summary</h2>
