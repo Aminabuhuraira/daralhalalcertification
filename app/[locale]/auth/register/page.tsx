@@ -6,18 +6,16 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Check, Eye, EyeOff, Building2, BookOpen, Search, Users, Loader2, FileText, CheckSquare, Square, ExternalLink } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, Eye, EyeOff, Loader2, FileText, CheckSquare, Square, ExternalLink } from "lucide-react";
 
-const STEPS = ["Client Manual", "Account Type", "Business Info", "Profile", "Confirm"];
+const STEPS = ["Client Manual", "Business Info", "Profile", "Confirm"];
 
-const ACCOUNT_TYPES = [
-  { id: "business", icon: Building2, title: "Business", desc: "Certify my products/services", color: "var(--color-gold-400)" },
-  { id: "student", icon: BookOpen, title: "Student", desc: "Learn halal standards", color: "var(--color-purple-500)" },
-  { id: "consumer", icon: Search, title: "Consumer", desc: "Verify halal products", color: "var(--color-silver-500)" },
-  { id: "partner", icon: Users, title: "Partner", desc: "Certification body or trade org", color: "var(--color-gold-600)" },
+const SECTORS = [
+  "Food & Beverage", "Restaurants & Food Premises", "Cosmetics", "Pharmaceuticals",
+  "Nutraceuticals", "Medical Devices", "Abattoir & Slaughter Slabs", "Aquatic",
+  "Hospitality", "Tourism", "Logistics", "Packaging", "Manufacturing",
+  "Fashion & Textiles", "Agriculture", "Other",
 ];
-
-const SECTORS = ["Food & Beverage", "Cosmetics & Beauty", "Pharmaceuticals", "Hospitality", "Logistics", "Manufacturing", "Fashion & Textiles", "Finance", "Agriculture", "Healthcare", "Education", "Other"];
 
 export default function RegisterPage() {
   const params = useParams();
@@ -29,7 +27,9 @@ export default function RegisterPage() {
   const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ accountType: "", businessName: "", sector: "", state: "", phone: "", fullName: "", email: "", password: "", confirmPassword: "", newsletter: false, updates: true });
+  const [form, setForm] = useState({ businessName: "", sector: "", state: "", phone: "", firstName: "", middleName: "", lastName: "", email: "", password: "", confirmPassword: "", newsletter: false, updates: true });
+
+  const fullName = [form.firstName, form.middleName, form.lastName].map(s => s.trim()).filter(Boolean).join(" ");
 
   const handleCreateAccount = async () => {
     if (!agreed || submitting) return;
@@ -40,7 +40,7 @@ export default function RegisterPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: form.fullName,
+          name: fullName,
           email: form.email,
           password: form.password,
           businessName: form.businessName || undefined,
@@ -77,17 +77,16 @@ export default function RegisterPage() {
 
   const canNext = () => {
     if (step === 0) return manualRead;
-    if (step === 1) return !!form.accountType;
-    if (step === 2) return !!(form.businessName && form.sector);
-    if (step === 3) return !!(form.fullName && form.email && form.password && form.password === form.confirmPassword);
+    if (step === 1) return !!(form.businessName && form.sector && form.firstName && form.lastName && form.email);
+    if (step === 2) return !!(form.password && form.password === form.confirmPassword);
     return true;
   };
 
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 72, minHeight: "100vh", background: "var(--gradient-hero)" }}>
-        <div className="glow-orb glow-orb-purple" style={{ width: 600, height: 600, top: -200, left: "50%", transform: "translateX(-50%)" }} />
+      <main style={{ paddingTop: 72, minHeight: "100vh", background: "var(--bg-base)" }}>
+        <div className="glow-orb glow-orb-gold" style={{ width: 600, height: 600, top: -200, left: "50%", transform: "translateX(-50%)", opacity: 0.5 }} />
         <div className="pattern-overlay" style={{ position: "fixed" }} />
         <div className="section-container" style={{ position: "relative", zIndex: 1, padding: "60px 24px 100px" }}>
 
@@ -98,7 +97,7 @@ export default function RegisterPage() {
                 <div style={{ width: 32, height: 32, borderRadius: "50%", background: i <= step ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.3s" }}>
                   {i < step ? <Check size={14} color="white" /> : <span style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: i <= step ? "white" : "var(--color-text-muted)" }}>{i + 1}</span>}
                 </div>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: i === step ? "var(--color-text-gold)" : "var(--color-text-muted)", fontWeight: i === step ? 700 : 400, display: i === 4 ? "inline" : "none" }}>{s}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: i === step ? "var(--color-text-gold)" : "var(--color-text-muted)", fontWeight: i === step ? 700 : 400, display: i === STEPS.length - 1 ? "inline" : "none" }}>{s}</span>
                 {i < STEPS.length - 1 && <div style={{ width: 40, height: 2, background: i < step ? "var(--gradient-gold)" : "var(--color-border)", borderRadius: 1 }} />}
               </div>
             ))}
@@ -169,28 +168,8 @@ export default function RegisterPage() {
 
             {step === 1 && (
               <>
-                <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Choose Account Type</h2>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Select how you plan to use the platform</p>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                  {ACCOUNT_TYPES.map((type) => (
-                    <div
-                      key={type.id}
-                      onClick={() => setForm(p => ({...p, accountType: type.id}))}
-                      style={{ padding: "20px 16px", border: `2px solid ${form.accountType === type.id ? type.color : "var(--color-border)"}`, borderRadius: 14, cursor: "pointer", textAlign: "center", transition: "all 0.2s", background: form.accountType === type.id ? type.color + "12" : "white" }}
-                    >
-                      <type.icon size={24} color={form.accountType === type.id ? type.color : "var(--color-text-muted)"} style={{ margin: "0 auto 10px" }} />
-                      <div style={{ fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, color: "var(--color-text-primary)", marginBottom: 4 }}>{type.title}</div>
-                      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--color-text-muted)" }}>{type.desc}</div>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {step === 2 && (
-              <>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Business Information</h2>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Tell us about your business</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Tell us about your business and who's registering it</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {[["Business Name", "businessName", "text", "Your registered business name"], ["Phone Number", "phone", "tel", "+234 xxx xxx xxxx"]].map(([label, key, type, placeholder]) => (
                     <div key={key}>
@@ -205,23 +184,34 @@ export default function RegisterPage() {
                       {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
-                </div>
-              </>
-            )}
-
-            {step === 3 && (
-              <>
-                <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Personal Profile</h2>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Create your login credentials</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  <div style={{ height: 1, background: "var(--color-border)", margin: "4px 0" }} />
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                    <div>
+                      <label style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "var(--color-text-secondary)", display: "block", marginBottom: 8 }}>First Name</label>
+                      <input style={inputStyle} value={form.firstName} onChange={e => setForm(p => ({...p, firstName: e.target.value}))} onFocus={focus} onBlur={blur} placeholder="First name" />
+                    </div>
+                    <div>
+                      <label style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "var(--color-text-secondary)", display: "block", marginBottom: 8 }}>Last Name</label>
+                      <input style={inputStyle} value={form.lastName} onChange={e => setForm(p => ({...p, lastName: e.target.value}))} onFocus={focus} onBlur={blur} placeholder="Last name" />
+                    </div>
+                  </div>
                   <div>
-                    <label style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "var(--color-text-secondary)", display: "block", marginBottom: 8 }}>Full Name</label>
-                    <input style={inputStyle} value={form.fullName} onChange={e => setForm(p => ({...p, fullName: e.target.value}))} onFocus={focus} onBlur={blur} placeholder="Your full name" />
+                    <label style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "var(--color-text-secondary)", display: "block", marginBottom: 8 }}>Middle Name <span style={{ fontWeight: 400, color: "var(--color-text-muted)" }}>(optional)</span></label>
+                    <input style={inputStyle} value={form.middleName} onChange={e => setForm(p => ({...p, middleName: e.target.value}))} onFocus={focus} onBlur={blur} placeholder="Middle name" />
                   </div>
                   <div>
                     <label style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "var(--color-text-secondary)", display: "block", marginBottom: 8 }}>Email Address</label>
                     <input type="email" style={inputStyle} value={form.email} onChange={e => setForm(p => ({...p, email: e.target.value}))} onFocus={focus} onBlur={blur} placeholder="your@email.com" />
                   </div>
+                </div>
+              </>
+            )}
+
+            {step === 2 && (
+              <>
+                <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Set Your Password</h2>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Create your login credentials</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <div>
                     <label style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 700, color: "var(--color-text-secondary)", display: "block", marginBottom: 8 }}>Password</label>
                     <div style={{ position: "relative" }}>
@@ -240,12 +230,12 @@ export default function RegisterPage() {
               </>
             )}
 
-            {step === 4 && (
+            {step === 3 && (
               <>
                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 400, marginBottom: 8 }}>Review & Confirm</h2>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--color-text-muted)", marginBottom: 28 }}>Confirm your details before creating your account</p>
                 <div style={{ background: "var(--color-surface)", borderRadius: 12, padding: "24px", marginBottom: 24 }}>
-                  {[["Account Type", form.accountType], ["Business", form.businessName || "N/A"], ["Sector", form.sector || "N/A"], ["Name", form.fullName], ["Email", form.email]].map(([l, v]) => (
+                  {[["Business", form.businessName || "N/A"], ["Sector", form.sector || "N/A"], ["Name", fullName], ["Email", form.email]].map(([l, v]) => (
                     <div key={l} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--color-border)" }}>
                       <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--color-text-muted)" }}>{l}</span>
                       <span style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "var(--color-text-primary)", textTransform: "capitalize" }}>{v}</span>
@@ -271,13 +261,13 @@ export default function RegisterPage() {
               )}
               <button
                 onClick={() => {
-                  if (step === 4) { handleCreateAccount(); return; }
+                  if (step === 3) { handleCreateAccount(); return; }
                   setStep(s => s + 1);
                 }}
-                disabled={!canNext() || (step === 4 && (!agreed || submitting))}
-                style={{ flex: 2, padding: "13px", background: (canNext() && !(step === 4 && !agreed)) ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", color: "white", border: "none", borderRadius: 12, cursor: (canNext() && !(step === 4 && (!agreed || submitting))) ? "pointer" : "not-allowed", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: canNext() ? "0 4px 16px rgba(219,168,32,0.3)" : "none" }}
+                disabled={!canNext() || (step === 3 && (!agreed || submitting))}
+                style={{ flex: 2, padding: "13px", background: (canNext() && !(step === 3 && !agreed)) ? "linear-gradient(135deg,#F5C842,#B8890A)" : "var(--color-border)", color: "white", border: "none", borderRadius: 12, cursor: (canNext() && !(step === 3 && (!agreed || submitting))) ? "pointer" : "not-allowed", fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: canNext() ? "0 4px 16px rgba(219,168,32,0.3)" : "none" }}
               >
-                {submitting ? <Loader2 size={16} style={{ animation: "rotateSeal 1s linear infinite" }} /> : step === 4 ? "Create My Account" : "Continue"}
+                {submitting ? <Loader2 size={16} style={{ animation: "rotateSeal 1s linear infinite" }} /> : step === 3 ? "Create My Account" : "Continue"}
                 {!submitting && <ArrowRight size={16} />}
               </button>
             </div>
