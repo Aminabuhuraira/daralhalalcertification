@@ -6,6 +6,13 @@
    ═══════════════════════════════════════════════════ */
 
 :root {
+  /* ── Fonts (loaded via next/font in app/layout.tsx) ──
+     These were referenced everywhere but never actually defined, so the
+     whole site was silently falling back to the browser default font. */
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-body:    var(--font-dm-sans), 'DM Sans', -apple-system, sans-serif;
+  --font-accent:  var(--font-cinzel), Cinzel, Georgia, serif;
+
   /* ── Backgrounds ── */
   --bg-base:    #F9F7F4;
   --bg-surface: #FDFCFA;

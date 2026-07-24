@@ -125,11 +125,15 @@ type Application = {
   businessRegNo: string | null;
   entityType: string | null;
   headOfficeAddress: string | null;
+  factoryAddress: string | null;
   telephone: string | null;
+  website: string | null;
   picName: string | null;
   picDesignation: string | null;
   picPhone: string | null;
   picEmail: string | null;
+  ingredientList: string | null;
+  otherCertifications: string | null;
   checklistData: string | null;
   deficiencyItems: string | null;
   auditTeam: string | null;
@@ -318,13 +322,80 @@ function ApplicationRow({
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(10,21,53,0.02)", border: "1px solid rgba(10,21,53,0.07)" }}>
               {app.businessRegNo && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Reg No:</strong> {app.businessRegNo}</p>}
               {app.entityType && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Entity:</strong> {app.entityType}</p>}
-              {app.headOfficeAddress && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)", gridColumn: "1 / -1" }}><strong>Address:</strong> {app.headOfficeAddress}</p>}
+              {app.headOfficeAddress && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)", gridColumn: "1 / -1" }}><strong>Head Office:</strong> {app.headOfficeAddress}</p>}
+              {app.factoryAddress && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)", gridColumn: "1 / -1" }}><strong>Factory / Premises:</strong> {app.factoryAddress}</p>}
               {app.telephone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Tel:</strong> {app.telephone}</p>}
+              {app.website && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Website:</strong> {app.website}</p>}
               {app.picName && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>PIC:</strong> {app.picName}{app.picDesignation ? ` (${app.picDesignation})` : ""}</p>}
               {app.picPhone && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>PIC Phone:</strong> {app.picPhone}</p>}
               {app.picEmail && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>PIC Email:</strong> {app.picEmail}</p>}
             </div>
           )}
+
+          {/* Ingredients (structured, from Section E) */}
+          {app.ingredientList && (() => {
+            let ingredients: { name: string; source: string; manufacturer: string; halalStatus: string; certBody: string; certExpiry: string }[] = [];
+            try { const arr = JSON.parse(app.ingredientList); if (Array.isArray(arr)) ingredients = arr; } catch {}
+            if (ingredients.length === 0) return null;
+            return (
+              <div style={{ marginBottom: 12 }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.55)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                  Ingredients & Raw Materials
+                </p>
+                <div style={{ overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 480 }}>
+                    <thead>
+                      <tr style={{ background: "rgba(10,21,53,0.04)" }}>
+                        {["Ingredient", "Source", "Manufacturer", "Halal Status", "Cert Body", "Expiry"].map(h => (
+                          <th key={h} style={{ padding: "6px 8px", textAlign: "left", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: 10, color: "rgba(10,21,53,0.6)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ingredients.map((ing, i) => (
+                        <tr key={i} style={{ borderBottom: "1px solid rgba(10,21,53,0.06)" }}>
+                          <td style={{ padding: "6px 8px", fontFamily: "var(--font-body)", fontSize: 12, color: "#0A1535" }}>{ing.name}</td>
+                          <td style={{ padding: "6px 8px", fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}>{ing.source}</td>
+                          <td style={{ padding: "6px 8px", fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}>{ing.manufacturer || "—"}</td>
+                          <td style={{ padding: "6px 8px", fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}>{ing.halalStatus}</td>
+                          <td style={{ padding: "6px 8px", fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}>{ing.certBody || "—"}</td>
+                          <td style={{ padding: "6px 8px", fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}>{ing.certExpiry || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Other quality certifications held (Section F) */}
+          {app.otherCertifications && (() => {
+            let oc: { iso22000?: boolean; iso22000Ref?: string; haccp?: boolean; haccpRef?: string; gmp?: boolean; gmpRef?: string; iso9001?: boolean; iso9001Ref?: string; others?: string } = {};
+            try { oc = JSON.parse(app.otherCertifications); } catch {}
+            const held = [
+              oc.iso22000 && { label: "ISO 22000", ref: oc.iso22000Ref },
+              oc.haccp    && { label: "HACCP",      ref: oc.haccpRef },
+              oc.gmp      && { label: "GMP",         ref: oc.gmpRef },
+              oc.iso9001  && { label: "ISO 9001",    ref: oc.iso9001Ref },
+            ].filter(Boolean) as { label: string; ref?: string }[];
+            if (held.length === 0 && !oc.others) return null;
+            return (
+              <div style={{ marginBottom: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(10,21,53,0.02)", border: "1px solid rgba(10,21,53,0.07)" }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "rgba(10,21,53,0.55)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                  Other Quality Certifications Held
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: oc.others ? 6 : 0 }}>
+                  {held.map(h => (
+                    <span key={h.label} style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "var(--font-body)", fontSize: 11.5, fontWeight: 600, color: "#16A34A", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)", borderRadius: 6, padding: "3px 9px" }}>
+                      {h.label}{h.ref ? ` — ${h.ref}` : ""}
+                    </span>
+                  ))}
+                </div>
+                {oc.others && <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(10,21,53,0.72)" }}><strong>Others:</strong> {oc.others}</p>}
+              </div>
+            );
+          })()}
 
           {/* Screening checklist (SCREENING status only) */}
           {app.status === "SCREENING" && (

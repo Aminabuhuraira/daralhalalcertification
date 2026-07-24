@@ -154,7 +154,7 @@ export default function AdminScreeningChecklist({ appId, initialChecklistData, o
       <div style={{ padding: "14px 18px", background: "rgba(59,130,246,0.06)", borderBottom: "1px solid rgba(59,130,246,0.12)", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
         <ClipboardList size={16} color="#2563EB" />
         <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 700, color: "#1D4ED8" }}>
-          Administrative Screening Checklist — QMS/AP/AC/01
+          Administrative Screening Checklist
         </p>
         <div style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
           <span style={{ padding: "3px 10px", borderRadius: 20, background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 700, color: "#16A34A" }}>

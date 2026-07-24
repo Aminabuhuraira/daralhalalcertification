@@ -1,8 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Plus, Trash2 } from "lucide-react";
 import GlowingCard from "@/components/ui/GlowingCard";
 import { SCHEME_CODES } from "@/lib/sectors";
+
+type Product = { name: string; brand: string };
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "12px 16px",
@@ -24,16 +27,21 @@ export default function CertificationApplicationForm() {
   const [businessName,    setBusinessName]    = useState("");
   const [schemeCode,      setSchemeCode]      = useState("");
   const [productionScale, setProductionScale] = useState("");
-  const [productList,     setProductList]     = useState("");
+  const [products,        setProducts]        = useState<Product[]>([{ name: "", brand: "" }]);
   const [notes,           setNotes]           = useState("");
   const [submitting,      setSubmitting]      = useState(false);
   const [error,           setError]           = useState("");
 
   const selectedScheme = SCHEME_CODES.find(s => s.code === schemeCode);
 
+  const addProduct = () => setProducts(prev => [...prev, { name: "", brand: "" }]);
+  const removeProduct = (i: number) => setProducts(prev => prev.filter((_, idx) => idx !== i));
+  const updateProduct = (i: number, field: keyof Product, value: string) =>
+    setProducts(prev => prev.map((p, idx) => idx === i ? { ...p, [field]: value } : p));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!schemeCode || !productionScale) return;
+    if (!schemeCode || !productionScale || !products.some(p => p.name.trim())) return;
     setSubmitting(true);
     setError("");
     try {
@@ -45,7 +53,7 @@ export default function CertificationApplicationForm() {
           sector: selectedScheme?.label ?? schemeCode,
           schemeCode,
           productionScale,
-          productList,
+          productList: JSON.stringify(products.filter(p => p.name.trim())),
           notes: notes || undefined,
         }),
       });
@@ -147,14 +155,46 @@ export default function CertificationApplicationForm() {
           </div>
         </div>
 
-        <textarea
-          required
-          rows={4}
-          value={productList}
-          onChange={(e) => setProductList(e.target.value)}
-          style={{ ...inputStyle, resize: "vertical" }}
-          placeholder="List products / services to be certified (one per line or comma-separated) *"
-        />
+        {/* Products / Services */}
+        <div>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, color: "rgba(10,21,53,0.68)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            Products / Services to be Certified *
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {products.map((p, i) => (
+              <div key={i} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <input
+                  value={p.name}
+                  onChange={e => updateProduct(i, "name", e.target.value)}
+                  style={{ ...inputStyle, flex: 1.4, padding: "10px 14px", fontSize: 13.5 }}
+                  placeholder="Product / service name"
+                />
+                <input
+                  value={p.brand}
+                  onChange={e => updateProduct(i, "brand", e.target.value)}
+                  style={{ ...inputStyle, flex: 1, padding: "10px 14px", fontSize: 13.5 }}
+                  placeholder="Brand (if different)"
+                />
+                {products.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeProduct(i)}
+                    style={{ flexShrink: 0, background: "none", border: "none", cursor: "pointer", color: "rgba(239,68,68,0.6)", padding: 6 }}
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={addProduct}
+            style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, color: "#9a7810", background: "none", border: "1px dashed rgba(201,162,39,0.4)", borderRadius: 6, padding: "7px 14px", cursor: "pointer" }}
+          >
+            <Plus size={13} /> Add Product
+          </button>
+        </div>
         <textarea
           rows={3}
           value={notes}
@@ -167,9 +207,9 @@ export default function CertificationApplicationForm() {
 
         <button
           type="submit"
-          disabled={submitting || !schemeCode || !productionScale}
+          disabled={submitting || !schemeCode || !productionScale || !products.some(p => p.name.trim())}
           className="btn-primary"
-          style={{ opacity: submitting || !schemeCode || !productionScale ? 0.6 : 1, cursor: submitting || !schemeCode || !productionScale ? "not-allowed" : "pointer" }}
+          style={{ opacity: submitting || !schemeCode || !productionScale || !products.some(p => p.name.trim()) ? 0.6 : 1, cursor: submitting || !schemeCode || !productionScale || !products.some(p => p.name.trim()) ? "not-allowed" : "pointer" }}
         >
           {submitting ? "Submitting…" : "Submit Application"}
         </button>
