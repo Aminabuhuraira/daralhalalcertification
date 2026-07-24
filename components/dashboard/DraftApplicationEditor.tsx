@@ -198,9 +198,10 @@ export default function DraftApplicationEditor({ app }: { app: App }) {
         method: "PATCH", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "submit" }),
       });
-      if (!res.ok) { setMessage("Could not submit. Please try again."); setSubmitting(false); return; }
+      if (!res.ok) { setMessage("Could not submit. Please try again."); return; }
       router.refresh();
-    } catch { setMessage("Network error."); setSubmitting(false); }
+    } catch { setMessage("Network error."); }
+    finally { setSubmitting(false); }
   };
 
   // Product helpers

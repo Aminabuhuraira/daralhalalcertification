@@ -52,12 +52,12 @@ export default function CertificationApplicationForm() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Something went wrong.");
-        setSubmitting(false);
         return;
       }
       router.refresh();
     } catch {
       setError("Network error. Please try again.");
+    } finally {
       setSubmitting(false);
     }
   };
